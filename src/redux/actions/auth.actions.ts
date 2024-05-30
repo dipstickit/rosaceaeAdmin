@@ -31,7 +31,7 @@ export const getUserDataFromToken = async () => {
   const token = localStorage.getItem('token')
   if (token) {
     try {
-      const res = await instance.post<ResponseSuccessful<UserToken>>('/auth/getUser', { access_token: token })
+      const res = await instance.post<ResponseSuccessful<UserToken>>('/user/getUser', { access_token: token })
       const data = res.data.data
       localStorage.setItem('user', JSON.stringify(data))
       return data
