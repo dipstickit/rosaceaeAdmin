@@ -6,6 +6,7 @@ import SidebarLayout from 'src/layouts/SidebarLayout';
 import BaseLayout from 'src/layouts/BaseLayout';
 
 import SuspenseLoader from 'src/components/SuspenseLoader';
+import LoginPage from './content/pages/Login';
 
 const Loader = (Component) => (props) =>
   (
@@ -53,16 +54,16 @@ const StatusMaintenance = Loader(
 const routes: RouteObject[] = [
   {
     path: '',
-    element: <SidebarLayout />,
+    element: <BaseLayout />,
     children: [
       {
         path: '',
-        element: <Navigate to="dashboard/rosaceae" replace />
+        element: <Navigate to="login" replace />
       },
       {
-        path: 'dashboard/rosaceae',
-        element: <Crypto />
-      }
+        path: 'login',
+        element: <LoginPage />
+      },
     ]
   },
   {
