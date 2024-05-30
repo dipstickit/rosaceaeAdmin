@@ -30,9 +30,15 @@ export default function LoginPage() {
     },
     validationSchema: loginValidateSchema,
     onSubmit: (values) => {
+<<<<<<< HEAD
       handleSubmit(values.email, values.password, navigate, dispatch);
       console.log('values', values);
       navigate("/dashboards/rosaceae")
+=======
+      handleSubmit(values.email, values.password, dispatch);
+      console.log('values', values)
+      navigate("/dashboards");
+>>>>>>> fce5fa4e5267df5696e7af32287827bb4cc4a8c5
     }
   });
 

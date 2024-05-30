@@ -9,7 +9,6 @@ import { ResponseSuccessful } from "../types/response.type";
 
 const instance: AxiosInstance = axios.create({
     baseURL: "https://b3c5-2405-4802-900a-df30-81c6-4a8a-a7bb-3a4c.ngrok-free.app/api/v1/",
-    // baseURL: "http://localhost:8080/api/v1/",
     withCredentials: false,
     headers: {
         "Access-Control-Allow-Origin": "*",
