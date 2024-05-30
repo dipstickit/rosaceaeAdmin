@@ -107,8 +107,8 @@ const routes: RouteObject[] = [
     element: <SidebarLayout />,
     children: [
       {
-        path: '',
-        element: <Navigate to="rosaceae" replace />
+        // path: '',
+        // element: <Navigate to="rosaceae" replace />
       },
       {
         path: 'rosaceae',
