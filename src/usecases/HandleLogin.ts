@@ -26,7 +26,7 @@ export const handleSubmit = async (email: string, password: string, dispatch: Ap
         dispatch(setUser(userInfo));
         navigate('/dashboards/rosaceae');
       } else {
-        navigate('/')
+        navigate('/login')
         toast.error('You are not ADMIN!');
         localStorage.removeItem('userToken');
         localStorage.removeItem('user');
@@ -34,6 +34,7 @@ export const handleSubmit = async (email: string, password: string, dispatch: Ap
     } else {
       toast.error(resultAction.error.message);
     }
+    
   } catch (error: any) {
     console.error("Login error:", error);
     if (error.response && error.response.status === HttpStatusCode.Forbidden) {

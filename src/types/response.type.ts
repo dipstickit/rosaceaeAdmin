@@ -2,8 +2,11 @@ import { User } from "./user.type";
 
 export interface ResponseSuccessful<TData> {
   message: string
-  data: TData
+  // data: TData
   status: number;
+  access_token: string;
+  userInfo: User;
+
   
 }
 

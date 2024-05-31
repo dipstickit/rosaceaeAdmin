@@ -4,6 +4,7 @@ import { LoginResponse, ResponseSuccessful } from '../../types/response.type';
 import instance from 'src/api/axiosCustomize';
 import { LoginArgs } from '../types/auth.types';
 import { HttpStatusCode } from 'axios';
+import toast from 'react-hot-toast';
 
 export const loginAPI = createAsyncThunk('auth/login', async ({ email, password }: LoginArgs, thunkAPI) => {
   try {
@@ -11,15 +12,18 @@ export const loginAPI = createAsyncThunk('auth/login', async ({ email, password 
       email,
       password
     });
+    console.log('Login API Response:', response.data);
 
     if (response.status === HttpStatusCode.Unauthorized) {
-      throw new Error("Unauthorized: Incorrect credentials");
+      toast.error("Unauthorized: Incorrect credentials");
+      return;
     }
-
-    if (!response.data || !response.data.data || !response.data.data.access_token) {
-      throw new Error("Access token not found in response");
+    if (!response.data) {
+      toast.error("Access token not found in response");
+      return;
+    
     }
-    const { access_token, userInfo } = response.data.data;
+    const { access_token, userInfo } = response.data;
     return { access_token, userInfo };
   } catch (error: any) {
     console.log("Login API Error:", error);
