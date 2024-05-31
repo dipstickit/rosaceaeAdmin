@@ -31,7 +31,6 @@ interface RecentOrdersTableProps {
   items: ResponseData['content'];
 }
 
-
 const applyFilters = (
   items: ResponseData['content'],
 ): ResponseData['content'] => {
@@ -61,7 +60,6 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
     setSelectedItems([]);
   }, [items]);
 
-  
 
   const handleSelectAllItems = (
     event: ChangeEvent<HTMLInputElement>
