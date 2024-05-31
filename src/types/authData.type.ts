@@ -1,4 +1,4 @@
 export interface AuthData {
-    accessToken: string;
+    access_Token: string;
     // Add other properties if needed
 }

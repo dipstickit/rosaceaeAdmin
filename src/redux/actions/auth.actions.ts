@@ -2,16 +2,27 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { LoginResponse, ResponseSuccessful } from '../../types/response.type';
 import instance from 'src/api/axiosCustomize';
-import { UserToken } from 'src/types/user.type';
+import { LoginArgs } from '../types/auth.types';
+import { HttpStatusCode } from 'axios';
 
-export const loginAPI = createAsyncThunk('auth/login', async (user, thunkAPI) => {
+export const loginAPI = createAsyncThunk('auth/login', async ({ email, password }: LoginArgs, thunkAPI) => {
   try {
-    const response = await instance.post<ResponseSuccessful<LoginResponse>>('/auth/login', {
-      email: user,
-      password: user
+    const response = await instance.post<ResponseSuccessful<LoginResponse>>('auth/login', {
+      email,
+      password
     });
-    return response.data.data.access_token;
-  } catch (error) {
+
+    if (response.status === HttpStatusCode.Unauthorized) {
+      throw new Error("Unauthorized: Incorrect credentials");
+    }
+
+    if (!response.data || !response.data.data || !response.data.data.access_token) {
+      throw new Error("Access token not found in response");
+    }
+    const { access_token, userInfo } = response.data.data;
+    return { access_token, userInfo };
+  } catch (error: any) {
+    console.log("Login API Error:", error);
     if (error.response && error.response.data.error_message) {
       return thunkAPI.rejectWithValue(error.response.data.error_message);
     } else {
@@ -20,27 +31,6 @@ export const loginAPI = createAsyncThunk('auth/login', async (user, thunkAPI) =>
   }
 });
 
-export const login = async (email: string, password: string) => {
-  return await instance.post<ResponseSuccessful<LoginResponse>>('/auth/login', {
-    email: email,
-    password: password
-  });
-};
-
-export const getUserDataFromToken = async () => {
-  const token = localStorage.getItem('token')
-  if (token) {
-    try {
-      const res = await instance.post<ResponseSuccessful<UserToken>>('/auth/getUser', { access_token: token })
-      const data = res.data.data
-      localStorage.setItem('user', JSON.stringify(data))
-      return data
-    } catch (error) {
-      console.log(error)
-    }
-  }
-  return null
-}
 
 export const logoutAPI = createAsyncThunk('auth/logout', async (token: string, thunkAPI) => {
   try {

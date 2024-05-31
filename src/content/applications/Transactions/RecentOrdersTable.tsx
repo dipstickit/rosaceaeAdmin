@@ -56,24 +56,6 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
   const [limit, setLimit] = useState<number>(5);
 
 
-  const statusOptions = [
-    {
-      id: 'all',
-      name: 'All'
-    },
-    {
-      id: 'completed',
-      name: 'Completed'
-    },
-    {
-      id: 'pending',
-      name: 'Pending'
-    },
-    {
-      id: 'failed',
-      name: 'Failed'
-    }
-  ];
 
   useEffect(() => {
     setSelectedItems([]);

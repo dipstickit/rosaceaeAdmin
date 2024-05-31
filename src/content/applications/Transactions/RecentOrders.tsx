@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Card } from '@mui/material';
 import RecentOrdersTable from './RecentOrdersTable';
 import ItemService from '../../../api/Item.service';

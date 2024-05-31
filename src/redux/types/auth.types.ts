@@ -1,6 +1,6 @@
 import { User } from '../../types/user.type'
 
-const userToken = localStorage.getItem('userToken') ?? null
+const userToken = localStorage.getItem('access_token') ?? null
 
 type initialAuthStateTypes = {
   isLoading: boolean

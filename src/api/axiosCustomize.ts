@@ -17,14 +17,12 @@ const instance: AxiosInstance = axios.create({
 
 instance.interceptors.request.use(
     function (config: InternalAxiosRequestConfig<any>) {
-        // Do something before request is sent
-        // Get the token from local storage
+
         const authDataString = localStorage.getItem("persist:root");
         if (authDataString) {
             const authData: AuthData = JSON.parse(authDataString).auth;
-            const token = authData?.accessToken;
+            const token = authData?.access_Token;
 
-            // Set the token to the Authorization header if token exists
             if (token) {
                 config.headers.Authorization = `Bearer ${token}`;
             }
@@ -32,29 +30,22 @@ instance.interceptors.request.use(
         return config;
     },
     function (error: AxiosError) {
-        // Do something with request error
         return Promise.reject(error);
     }
 );
 
 
 
-// Add a response interceptor
 instance.interceptors.response.use(
     function (response: AxiosResponse<ResponseSuccessful<any>>): AxiosResponse<ResponseSuccessful<any>> {
         return response;
     },
     function (error: AxiosError) {
-        // Any status codes that falls outside the range of 2xx cause this function to trigger
-        // Do something with response error
         const status = error.response?.status || 500;
-        // we can handle global errors here
         switch (status) {
-            // authentication (token related issues)
             case 401:
                 console.error('Unauthorized access. Redirecting to login page...');
                 break;
-            // generic api error (server related) unexpected
             default:
                 return error.response?.data ? error.response.data : error;
 

@@ -30,7 +30,7 @@ export default function LoginPage() {
     },
     validationSchema: loginValidateSchema,
     onSubmit: (values) => {
-      handleSubmit(values.email, values.password, dispatch);
+      handleSubmit(values.email, values.password, dispatch, navigate);
       console.log('values', values)
       navigate("/dashboards");
     }
