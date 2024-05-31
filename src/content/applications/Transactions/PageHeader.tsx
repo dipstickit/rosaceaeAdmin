@@ -23,7 +23,7 @@ function PageHeader() {
           variant="contained"
           startIcon={<AddTwoToneIcon fontSize="small" />}
         >
-          Create transaction
+          Create Item
         </Button>
       </Grid>
     </Grid>
