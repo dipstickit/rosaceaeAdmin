@@ -1,5 +1,4 @@
 import { useRoutes } from 'react-router-dom';
-import { RouteObject } from 'react-router-dom';
 import router from 'src/router';
 
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
@@ -9,7 +8,7 @@ import { CssBaseline } from '@mui/material';
 import ThemeProvider from './theme/ThemeProvider';
 
 function App() {
-  const content = useRoutes(router as RouteObject[]);
+  const content = useRoutes(router);
 
   return (
     <ThemeProvider>

@@ -64,6 +64,20 @@ const StatusMaintenance = Loader(
 );
 
 const routes: RouteObject[] = [
+  // {
+  //   path: '',
+  //   element: <BaseLayout />,
+  //   children: [
+  //     {
+  //       path: '',
+  //       element: <Navigate to="login" replace />
+  //     },
+  //     {
+  //       path: 'login',
+  //       element: <LoginPage />
+  //     },
+  //   ]
+  // },
   {
     path: '',
     element: <BaseLayout />,
@@ -76,12 +90,6 @@ const routes: RouteObject[] = [
         path: 'login',
         element: <LoginPage />
       },
-    ]
-  },
-  {
-    path: '',
-    element: <BaseLayout />,
-    children: [
       {
         path: 'status',
         children: [
