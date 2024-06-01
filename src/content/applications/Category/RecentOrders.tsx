@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Card } from '@mui/material';
 import RecentOrdersTable from './RecentOrdersTable';
-import ItemService from '../../../api/Item.service';
-import { Item, ResponseData } from 'src/models/Item.model';
+import CatgoryService from '../../../api/Category.service';
+
+import { Category, CategoryResponse } from 'src/models/Category.model';
 
 const RecentOrders: React.FC = () => {
-  const [listItem, setListItem] = useState<Item[]>([]);
+  const [listItem, setListItem] = useState<Category[]>([]);
   const [error, setError] = useState<string | null>(null);
-
+  const [items, setItems] = useState<CategoryResponse['content']>([]);
   const fetchItem = async () => {
     try {
-      const response = await ItemService.getItem({});
+      const response = await CatgoryService.getCategory({});
       console.log('Response headers:', response.headers);
       console.log('Response data:', response.data);
-
-      
 
       if (response.data.content) {
         setListItem(response.data.content);
@@ -36,7 +35,7 @@ const RecentOrders: React.FC = () => {
       {error ? (
         <div>Error: {error}</div>
       ) : (
-        <RecentOrdersTable items={listItem} />
+        <RecentOrdersTable items={listItem} setItems={setItems} />
       )}
     </Card>
   );

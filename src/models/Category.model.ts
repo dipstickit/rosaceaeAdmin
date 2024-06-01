@@ -1,19 +1,11 @@
-export interface Item {
-    itemId: number;
-    itemName: string;
-    itemPrice: number;
-    itemDescription: string;
-    itemRate: number;
-    commentCount: number;
-    countUsage: number;
-    quantity: number;
-    discount: number;
-    itemTypeId: number;
-    categoryId:number;
-};
+export interface Category {
+    categoryId: number;
+    categoryName: string;
+    status: number;
+}
 
-export interface ResponseData {
-    content: Item[];
+export interface CategoryResponse {
+    content: Category[];
     pageable: {
         pageNumber: number;
         pageSize: number;
@@ -39,4 +31,4 @@ export interface ResponseData {
     numberOfElements: number;
     first: boolean;
     empty: boolean;
-};
+}

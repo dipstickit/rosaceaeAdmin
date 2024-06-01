@@ -11,31 +11,31 @@ const instance: AxiosInstance = axios.create({
     },
 });
 
-instance.interceptors.request.use(
-    function (config: InternalAxiosRequestConfig<any>) {
-        try {
-            const authDataString = localStorage.getItem("userToken");
-            if (authDataString) {
-                const parsedData = JSON.parse(authDataString);
-                const authData: AuthData = JSON.parse(parsedData.auth);
-                const token = authData?.access_Token;
+// instance.interceptors.request.use(
+//     function (config: InternalAxiosRequestConfig<any>) {
+//         try {
+//             const authDataString = localStorage.getItem("userToken");
+//             if (authDataString) {
+//                 const parsedData = JSON.parse(authDataString);
+//                 const authData: AuthData = JSON.parse(parsedData.auth);
+//                 const token = authData?.access_Token;
 
-                if (token) {
-                    config.headers.Authorization = `Bearer ${token}`;
-                    console.log("Token:", token); 
-                } else {
-                    console.error("No token found");
-                }
-            }
-        } catch (error) {
-            console.error('Error parsing auth data from localStorage:', error);
-        }
-        return config;
-    },
-    function (error: AxiosError) {
-        return Promise.reject(error);
-    }
-);
+//                 if (token) {
+//                     config.headers.Authorization = `Bearer ${token}`;
+//                     console.log("Token:", token); 
+//                 } else {
+//                     console.error("No token found");
+//                 }
+//             }
+//         } catch (error) {
+//             console.error('Error parsing auth data from localStorage:', error);
+//         }
+//         return config;
+//     },
+//     function (error: AxiosError) {
+//         return Promise.reject(error);
+//     }
+// );
 
 // instance.interceptors.request.use(
 //     async function (config: InternalAxiosRequestConfig<any>) {
@@ -83,42 +83,42 @@ instance.interceptors.request.use(
 //     }
 // );
 
-instance.interceptors.response.use(
-    function (response: AxiosResponse<ResponseSuccessful<any>>): AxiosResponse<ResponseSuccessful<any>> {
-        return response;
-    },
-    function (error: AxiosError) {
-        const status = error.response?.status || 500;
-        switch (status) {
-            case 401:
-                console.error('Unauthorized access. Redirecting to login page...');
-                break;
-            case 403:
-                console.error('Forbidden access. You do not have the necessary permissions.');
-                break;
-            default:
-                console.error('An error occurred:', error.message);
-                break;
-        }
-        return Promise.reject(error);
-    }
-);
+// instance.interceptors.response.use(
+//     function (response: AxiosResponse<ResponseSuccessful<any>>): AxiosResponse<ResponseSuccessful<any>> {
+//         return response;
+//     },
+//     function (error: AxiosError) {
+//         const status = error.response?.status || 500;
+//         switch (status) {
+//             case 401:
+//                 console.error('Unauthorized access. Redirecting to login page...');
+//                 break;
+//             case 403:
+//                 console.error('Forbidden access. You do not have the necessary permissions.');
+//                 break;
+//             default:
+//                 console.error('An error occurred:', error.message);
+//                 break;
+//         }
+//         return Promise.reject(error);
+//     }
+// );
 
-async function refreshToken() {
-    try {
-        const response = await instance.post("auth/refresh-token", {
-            // Add any necessary data for refreshing token
-        });
-        const newToken = response.data.token;
-        if (newToken) {
-            // Update token in local storage or wherever it's stored
-            localStorage.setItem("token", newToken);
-        } else {
-            console.error("No new token received.");
-        }
-    } catch (error) {
-        console.error("Error refreshing token:", error);
-    }
-}
+// async function refreshToken() {
+//     try {
+//         const response = await instance.post("auth/refresh-token", {
+//             // Add any necessary data for refreshing token
+//         });
+//         const newToken = response.data.token;
+//         if (newToken) {
+//             // Update token in local storage or wherever it's stored
+//             localStorage.setItem("token", newToken);
+//         } else {
+//             console.error("No new token received.");
+//         }
+//     } catch (error) {
+//         console.error("Error refreshing token:", error);
+//     }
+// }
 
 export default instance;

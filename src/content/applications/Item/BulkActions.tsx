@@ -11,9 +11,12 @@ import {
   Typography
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-
+import ItemService from '../../../api/Item.service';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
+import { useNavigate } from 'react-router-dom';
 
 const ButtonError = styled(Button)(
   ({ theme }) => `
@@ -26,10 +29,48 @@ const ButtonError = styled(Button)(
     `
 );
 
-function BulkActions() {
+function BulkActions({ selectedItems }) {
   const [onMenuOpen, menuOpen] = useState<boolean>(false);
   const moreRef = useRef<HTMLButtonElement | null>(null);
-
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  
+  const deleteItem = (id: number) => {
+    setLoading(true);
+    ItemService.deleteItem(id)
+      .then(() => {
+        toast.success('Item deleted successfully', {
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark'
+        });
+        navigate("/management/item");
+      })
+      .catch((error) => {
+        console.error('Error deleting item:', error);
+        toast.error('Error deleting item', {
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark'
+        });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+  const handleDelete = (): void => {
+    if (selectedItems && Array.isArray(selectedItems)) {
+      selectedItems.forEach((id) => deleteItem(id));
+    }
+  };
   const openMenu = (): void => {
     menuOpen(true);
   };
@@ -46,9 +87,11 @@ function BulkActions() {
             Bulk actions:
           </Typography>
           <ButtonError
+            onClick={handleDelete}
             sx={{ ml: 1 }}
             startIcon={<DeleteTwoToneIcon />}
             variant="contained"
+            disabled={loading}
           >
             Delete
           </ButtonError>
@@ -78,10 +121,10 @@ function BulkActions() {
         }}
       >
         <List sx={{ p: 1 }} component="nav">
-          <ListItem button>
+          <ListItem >
             <ListItemText primary="Bulk delete selected" />
           </ListItem>
-          <ListItem button>
+          <ListItem >
             <ListItemText primary="Bulk edit selected" />
           </ListItem>
         </List>

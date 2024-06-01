@@ -7,6 +7,12 @@ import BaseLayout from 'src/layouts/BaseLayout';
 
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import LoginPage from './content/pages/Login';
+import CreateItem from './content/applications/Item/CreateItem';
+import UpdateItem from './content/applications/Item/UpdateItem';
+import UpdateItemType from './content/applications/ItemType/UpdateItemType';
+import CreateItemType from './content/applications/ItemType/CreateItemType';
+import UpdateCategory from './content/applications/Category/UpdateCategory';
+import CreateCategory from './content/applications/Category/CreateCategory';
 
 const Loader = (Component) => (props) =>
   (
@@ -27,13 +33,19 @@ const Messenger = Loader(
   lazy(() => import('src/content/applications/Messenger'))
 );
 const Transactions = Loader(
-  lazy(() => import('src/content/applications/Transactions'))
+  lazy(() => import('src/content/applications/Item'))
 );
 const UserProfile = Loader(
   lazy(() => import('src/content/applications/Users/profile'))
 );
 const UserSettings = Loader(
   lazy(() => import('src/content/applications/Users/settings'))
+);
+const ItemType = Loader(
+  lazy(() => import('src/content/applications/ItemType'))
+);
+const Category = Loader(
+  lazy(() => import('src/content/applications/Category'))
 );
 
 // Status
@@ -129,9 +141,43 @@ const routes: RouteObject[] = [
         element: <Navigate to="transactions" replace />
       },
       {
-        path: 'transactions',
+        path: 'item',
         element: <Transactions />
       },
+      {
+        path: 'item/:id/update',
+        element: <UpdateItem />
+      },
+      {
+        path: 'item/createItem',
+        element: <CreateItem />
+      },
+      {
+        path: 'itemType',
+        element: <ItemType />
+      },
+      {
+        path: 'itemType/:id/update',
+        element: <UpdateItemType />
+      },
+      {
+        path: 'itemType/createItemType',
+        element: <CreateItemType />
+      },
+      {
+        path: 'category',
+        element: <Category />
+      },
+      {
+        path: 'category/:id/update',
+        element: <UpdateCategory />
+      },
+      {
+        path: 'category/createCategory',
+        element: <CreateCategory />
+      },
+
+
       {
         path: 'profile',
         children: [

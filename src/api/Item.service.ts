@@ -20,7 +20,7 @@ const getItemById = (id: number): Promise<AxiosResponse<Item>> => {
 };
 
 const postItem = (values: Item): Promise<AxiosResponse<Item>> => {
-    return instance.post("item", values);
+    return instance.post(`item`, values);
 };
 
 const putItem = (id: number, values: Item): Promise<AxiosResponse<Item>> => {

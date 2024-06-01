@@ -45,4 +45,4 @@ export interface UserToken {
     accountNonLocked: boolean;
 }
 
-export type Role = 'ADMIN' ; // hoặc định nghĩa chi tiết hơn nếu cần
+export type Role = 'ADMIN'| 'SHOP' ; // hoặc định nghĩa chi tiết hơn nếu cần
