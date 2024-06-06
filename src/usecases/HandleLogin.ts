@@ -25,7 +25,13 @@ export const handleSubmit = async (email: string, password: string, dispatch: Ap
         console.log("User is admin, navigating to dashboard...");
         dispatch(setUser(userInfo));
         navigate('/dashboards/rosaceae');
-      } else {
+      } else if (userInfo && userInfo.role === 'SHOP') {
+        toast.success('Login Successfully!');
+        console.log("Shopper is, navigating to dashboard...");
+        dispatch(setUser(userInfo));
+        navigate('/dashboards/rosaceae');
+      }
+      else {
         navigate('/login')
         toast.error('You are not ADMIN!');
         localStorage.removeItem('userToken');
@@ -34,7 +40,7 @@ export const handleSubmit = async (email: string, password: string, dispatch: Ap
     } else {
       toast.error(resultAction.error.message);
     }
-    
+
   } catch (error: any) {
     console.error("Login error:", error);
     if (error.response && error.response.status === HttpStatusCode.Forbidden) {

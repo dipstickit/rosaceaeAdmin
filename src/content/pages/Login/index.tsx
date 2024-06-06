@@ -32,7 +32,7 @@ export default function LoginPage() {
     onSubmit: (values) => {
       handleSubmit(values.email, values.password, dispatch, navigate);
       console.log('values', values)
-      navigate("/dashboards");
+      navigate("/dashboards/rosaceae");
     }
   });
 

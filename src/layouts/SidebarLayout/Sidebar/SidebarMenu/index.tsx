@@ -220,10 +220,32 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/management/transactions"
+                  to="/management/item"
                   startIcon={<TableChartTwoToneIcon />}
                 >
-                  Transactions List
+                  Item
+                </Button>
+              </ListItem>
+              <ListItem component="div">
+                <Button
+                  disableRipple
+                  component={RouterLink}
+                  onClick={closeSidebar}
+                  to="/management/itemType"
+                  startIcon={<TableChartTwoToneIcon />}
+                >
+                  ItemType
+                </Button>
+              </ListItem>
+              <ListItem component="div">
+                <Button
+                  disableRipple
+                  component={RouterLink}
+                  onClick={closeSidebar}
+                  to="/management/category"
+                  startIcon={<TableChartTwoToneIcon />}
+                >
+                  Category
                 </Button>
               </ListItem>
             </List>

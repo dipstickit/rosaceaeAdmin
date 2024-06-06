@@ -20,21 +20,24 @@ import {
   useTheme,
   CardHeader
 } from '@mui/material';
-
-import { ResponseData } from 'src/models/Item.model';
+import 'react-toastify/dist/ReactToastify.css';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import BulkActions from './BulkActions';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { CategoryResponse } from 'src/models/Category.model';
+import CatgoryService from '../../../api/Category.service';
 
 interface RecentOrdersTableProps {
   className?: string;
-  items: ResponseData['content'];
+  items: CategoryResponse['content'];
+  setItems: React.Dispatch<React.SetStateAction<CategoryResponse['content']>>;
 }
 
-
 const applyFilters = (
-  items: ResponseData['content'],
-): ResponseData['content'] => {
+  items: CategoryResponse['content']
+): CategoryResponse['content'] => {
   return items.filter((item) => {
     let matches = true;
     return matches;
@@ -42,10 +45,10 @@ const applyFilters = (
 };
 
 const applyPagination = (
-  items: ResponseData['content'],
+  items: CategoryResponse['content'],
   page: number,
   limit: number
-): ResponseData['content'] => {
+): CategoryResponse['content'] => {
   return items.slice(page * limit, page * limit + limit);
 };
 
@@ -54,22 +57,39 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
   const selectedBulkActions = selectedItems.length > 0;
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
-
-
-
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  
+  const deleteItem = (id: number) => {
+    setLoading(true);
+    CatgoryService.deleteCategory(id)
+      .then(() => {
+        toast.success('Item deleted successfully', {
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark'
+        });
+        setItems(items.filter(item => item.categoryId !== id))
+        setLoading(false);
+        navigate("/management/category");
+      })
+      .catch((error) => {
+        console.error('Error deleting item:', error);
+      })
+      setLoading(false);
+  };
+  
   useEffect(() => {
     setSelectedItems([]);
   }, [items]);
 
-  
-
-  const handleSelectAllItems = (
-    event: ChangeEvent<HTMLInputElement>
-  ): void => {
+  const handleSelectAllItems = (event: ChangeEvent<HTMLInputElement>): void => {
     setSelectedItems(
-      event.target.checked
-        ? items.map((item) => item.itemId.toString())
-        : []
+      event.target.checked ? items.map((item) => item.categoryId.toString()) : []
     );
   };
 
@@ -78,10 +98,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
     itemId: string
   ): void => {
     if (!selectedItems.includes(itemId)) {
-      setSelectedItems((prevSelected) => [
-        ...prevSelected,
-        itemId
-      ]);
+      setSelectedItems((prevSelected) => [...prevSelected, itemId]);
     } else {
       setSelectedItems((prevSelected) =>
         prevSelected.filter((id) => id !== itemId)
@@ -100,17 +117,15 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
   const filteredItems = applyFilters(items);
   const paginatedItems = applyPagination(filteredItems, page, limit);
   const selectedSomeItems =
-    selectedItems.length > 0 &&
-    selectedItems.length < items.length;
-  const selectedAllItems =
-    selectedItems.length === items.length;
+    selectedItems.length > 0 && selectedItems.length < items.length;
+  const selectedAllItems = selectedItems.length === items.length;
   const theme = useTheme();
 
   return (
     <Card>
       {selectedBulkActions && (
         <Box flex={1} p={2}>
-          <BulkActions />
+          <BulkActions selectedItems={undefined} />
         </Box>
       )}
       {!selectedBulkActions && (
@@ -139,37 +154,28 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
                 />
               </TableCell>
               <TableCell>Item Name</TableCell>
-              <TableCell>Item ID</TableCell>
-              <TableCell>Item Description</TableCell>
-              <TableCell align="right">Item Price</TableCell>
-              <TableCell align="right">Status</TableCell>
               <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
-          
+
           <TableBody>
             {paginatedItems.map((item) => {
-              const isItemSelected = selectedItems.includes(item.itemId.toString());
+              const isItemSelected = selectedItems.includes(
+                item.categoryId.toString()
+              );
               return (
-                <TableRow
-                  hover
-                  key={item.itemId}
-                  selected={isItemSelected}
-                >
+                <TableRow hover key={item.categoryId} selected={isItemSelected}>
                   <TableCell padding="checkbox">
                     <Checkbox
                       color="primary"
                       checked={isItemSelected}
                       onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                        handleSelectOneItem(event, item.itemId.toString())
+                        handleSelectOneItem(event, item.categoryId.toString())
                       }
                       value={isItemSelected}
                     />
                   </TableCell>
-                  <TableCell>{item.itemName}</TableCell>
-                  <TableCell>{item.itemId}</TableCell>
-                  <TableCell>{item.itemDescription}</TableCell>
-                  <TableCell align="right">{numeral(item.itemPrice).format('$0,0.00')}</TableCell>
+                  <TableCell>{item.categoryName}</TableCell>
                   <TableCell align="right">
                     <Tooltip title="Edit Item" arrow>
                       <IconButton
@@ -182,11 +188,15 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
                         color="inherit"
                         size="small"
                       >
-                        <EditTwoToneIcon fontSize="small" />
+                        <Link to={`/management/category/${item?.categoryId}/update`}>
+                          {' '}
+                          <EditTwoToneIcon fontSize="small" />
+                        </Link>
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="Delete Item" arrow>
                       <IconButton
+                        onClick={() => deleteItem(item.categoryId)}
                         sx={{
                           '&:hover': { background: theme.colors.error.lighter },
                           color: theme.palette.error.main
@@ -220,11 +230,17 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
 };
 
 RecentOrdersTable.propTypes = {
-  items:PropTypes.array.isRequired 
+  items: PropTypes.array.isRequired,
+  setItems: PropTypes.func.isRequired
 };
 
 RecentOrdersTable.defaultProps = {
-  items: []
+  items: [],
+  setItems: () => {}
 };
 
 export default RecentOrdersTable;
+function setItems(arg0: import("src/models/Category.model").Category[]) {
+  throw new Error('Function not implemented.');
+}
+
