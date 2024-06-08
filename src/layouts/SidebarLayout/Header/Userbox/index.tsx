@@ -27,6 +27,7 @@ import { useSelector } from 'react-redux';
 import jwt_decode from "jwt-decode";
 import { setUser } from '../../../../redux/slices/auth.slice';
 import UserService from '../../../../api/User.services';
+import { logoutAPI } from 'src/redux/actions/auth.actions';
 
 
 const UserBoxButton = styled(Button)(
@@ -102,6 +103,12 @@ function HeaderUserbox() {
     setOpen(false);
   };
 
+  const handleLogout = async()=>{
+    localStorage.removeItem('userInfo');
+    localStorage.removeItem('userToken');
+    navigate('/login')
+  }
+
   return (
     <>
       <UserBoxButton color="secondary" ref={ref} onClick={handleOpen}>
@@ -160,7 +167,9 @@ function HeaderUserbox() {
         </List>
         <Divider />
         <Box sx={{ m: 1 }}>
-          <Button color="primary" fullWidth>
+          <Button color="primary" fullWidth onClick={() => {
+            handleLogout()
+            console.log("logout")}}>
             <LockOpenTwoToneIcon sx={{ mr: 1 }} />
             Sign out
           </Button>
