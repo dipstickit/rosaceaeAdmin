@@ -74,7 +74,8 @@ function UpdateItem() {
     fetchData();
   }, [id]);
 
-  const validationSchema = Yup.object({
+  const validationSchema = initialValues !== null && initialValues.itemTypeId === 2 ? 
+  Yup.object({
     itemName: Yup.string().required('Item name is required'),
     quantity: Yup.number()
       .required('Quantity is required')
@@ -92,7 +93,26 @@ function UpdateItem() {
     categoryId: Yup.number()
       .required('Category ID is required')
       .min(1, 'Category ID must be greater than 0')
-  });
+  }) :
+  Yup.object({
+    itemName: Yup.string().required('Item name is required'),
+    quantity: Yup.number()
+      .min(0, 'Quantity must be greater than 0'),
+    itemPrice: Yup.number()
+      .required('Price is required')
+      .min(1, 'Price must be greater than 0'),
+    itemDescription: Yup.string().required('Item Description is required'),
+    discount: Yup.number()
+      .required('Discount is required')
+      .min(1, 'Discount must be greater than or equal to 0'),
+    itemTypeId: Yup.number()
+      .required('Item Type ID is required')
+      .min(1, 'Item Type ID must be greater than 0'),
+    categoryId: Yup.number()
+      .required('Category ID is required')
+      .min(1, 'Category ID must be greater than 0')
+  })
+  ;
 
   const handleSubmit = async (
     values: any,
@@ -103,6 +123,8 @@ function UpdateItem() {
 
     try {
       const response = await ItemService.putItem(parseInt(id), values, accessToken);
+      console.log(id)
+      console.log(values)
       console.log(response.data);
       toast.success('Item updated successfully', {
         autoClose: 3000,
