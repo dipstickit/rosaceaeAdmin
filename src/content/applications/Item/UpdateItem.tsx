@@ -17,14 +17,28 @@ import CustomErrorMessage from '../../../components/CustomErrormessage';
 import { AxiosResponse } from 'axios';
 import { Item } from '../../../models/Item.model';
 import { toast } from 'react-toastify';
+import { useSelector } from 'react-redux';
 
 function UpdateItem() {
+  let accessToken: string = useSelector((state: any) => state.auth.userToken) !== null ? 
+  useSelector((state: any) => state.auth.userToken) : localStorage.getItem("userToken")
+  console.log(accessToken)
+  
   let navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const [newItem, setNewItem] = useState<Item | null>(null);
   const [dataLoaded, setDataLoaded] = useState(false);
+  const [initialValues, setInitialValues] = useState<any>({
+    itemName: '',
+    quantity: 0,
+    itemPrice: 0,
+    itemDescription: '',
+    discount: 0,
+    itemTypeId: 0,
+    categoryId: 0
+  })
 
   const { id } = useParams<{ id: string }>();
 
@@ -36,12 +50,21 @@ function UpdateItem() {
           return;
         }
 
-        const response: AxiosResponse<Item> = await ItemService.getItemById(
-          parseInt(id)
+        const response: AxiosResponse<any> = await ItemService.getItemById(
+          parseInt(id), accessToken
         );
         const data = response.data;
         console.log(data);
-        setNewItem(data);
+        setInitialValues({
+          itemName: data.itemName || '',
+          quantity: data.quantity || 0,
+          itemPrice: data.itemPrice || 0,
+          itemDescription: data.itemDescription || '',
+          discount: data.discount || 0,
+          itemTypeId: data.itemType.itemTypeId,
+          categoryId: data.category.categoryId
+        })
+        setNewItem(data.item);
         setDataLoaded(true);
       } catch (error: any) {
         console.error('Error fetching product:', error);
@@ -71,28 +94,6 @@ function UpdateItem() {
       .min(1, 'Category ID must be greater than 0')
   });
 
-  const initialValues: any = {
-    itemName: '',
-    quantity: 0,
-    itemPrice: 0,
-    itemDescription: '',
-    discount: 0,
-    itemTypeId: 0,
-    categoryId: 0
-  };
-
-  useEffect(() => {
-    if (newItem && dataLoaded) {
-      initialValues.itemName = newItem.itemName || '';
-      initialValues.quantity = newItem.quantity || 0;
-      initialValues.itemPrice = newItem.itemPrice || 0;
-      initialValues.itemDescription = newItem.itemDescription || '';
-      initialValues.discount = newItem.discount || 0;
-      initialValues.itemTypeId = newItem.itemTypeId || 0;
-      initialValues.categoryId = newItem.categoryId || 0;
-    }
-  }, [newItem, dataLoaded]);
-
   const handleSubmit = async (
     values: any,
     formikHelpers: FormikHelpers<any>
@@ -101,7 +102,7 @@ function UpdateItem() {
     setServerError(null);
 
     try {
-      const response = await ItemService.putItem(parseInt(id), values);
+      const response = await ItemService.putItem(parseInt(id), values, accessToken);
       console.log(response.data);
       toast.success('Item updated successfully', {
         autoClose: 3000,
@@ -143,9 +144,10 @@ function UpdateItem() {
   };
 
   return (
-    <Formik
-      initialValues={initialValues}
+          <Formik
+          initialValues={initialValues}
       validationSchema={validationSchema}
+      enableReinitialize={true} 
       onSubmit={handleSubmit}
     >
       {({ isSubmitting }) => (
@@ -167,6 +169,7 @@ function UpdateItem() {
                       label="Item Name"
                       fullWidth
                       variant="outlined"
+                      defaultValue={newItem ? newItem.itemName : ""}
                       {...field}
                       error={isFieldError(field)}
                       helperText={<CustomErrorMessage name="itemName" />}
@@ -267,6 +270,7 @@ function UpdateItem() {
         </Form>
       )}
     </Formik>
+
   );
 }
 

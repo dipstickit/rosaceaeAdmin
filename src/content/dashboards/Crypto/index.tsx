@@ -8,8 +8,11 @@ import AccountBalance from './AccountBalance';
 import Wallets from './Wallets';
 import AccountSecurity from './AccountSecurity';
 import WatchList from './WatchList';
+import { useSelector } from 'react-redux';
 
 function DashboardCrypto() {
+  let accessToken = useSelector((state: any) => state.auth.userToken)
+  console.log(accessToken)
   return (
     <>
       <Helmet>

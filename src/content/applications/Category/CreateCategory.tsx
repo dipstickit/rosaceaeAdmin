@@ -16,8 +16,12 @@ import {
 import CustomErrorMessage from '../../../components/CustomErrormessage';
 import CatgoryService from '../../../api/Category.service';
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 function CreateItem() {
+  let accessToken: string = useSelector((state: any) => state.auth.userToken) !== null ? 
+  useSelector((state: any) => state.auth.userToken) : localStorage.getItem("userToken")
+  console.log(accessToken)
   let navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
@@ -37,7 +41,7 @@ function CreateItem() {
     setServerError(null);
   
     try {
-      const item = await CatgoryService.postCategory({ ...formValue });
+      const item = await CatgoryService.postCategory({ ...formValue }, accessToken);
       console.log(item);
       toast.success('Create category successfully', {
         autoClose: 3000,

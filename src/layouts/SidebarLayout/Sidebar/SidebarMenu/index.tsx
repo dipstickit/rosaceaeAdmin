@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 
 import {
   ListSubheader,
@@ -9,7 +9,7 @@ import {
   Button,
   ListItem
 } from '@mui/material';
-import { NavLink as RouterLink } from 'react-router-dom';
+import { NavLink as RouterLink, useNavigate } from 'react-router-dom';
 import { SidebarContext } from 'src/contexts/SidebarContext';
 
 import BrightnessLowTwoToneIcon from '@mui/icons-material/BrightnessLowTwoTone';
@@ -21,7 +21,12 @@ import ChromeReaderModeTwoToneIcon from '@mui/icons-material/ChromeReaderModeTwo
 import WorkspacePremiumTwoToneIcon from '@mui/icons-material/WorkspacePremiumTwoTone';
 import CameraFrontTwoToneIcon from '@mui/icons-material/CameraFrontTwoTone';
 import DisplaySettingsTwoToneIcon from '@mui/icons-material/DisplaySettingsTwoTone';
-
+import { useSelector } from 'react-redux';
+import UserService from '../../../../api/User.services';
+import jwt_decode from "jwt-decode";
+import { useAppDispatch } from 'src/redux/store';
+import { setUser } from '../../../../redux/slices/auth.slice';
+ 
 const MenuWrapper = styled(Box)(
   ({ theme }) => `
   .MuiList-root {
@@ -166,11 +171,38 @@ const SubMenuWrapper = styled(Box)(
 
 function SidebarMenu() {
   const { closeSidebar } = useContext(SidebarContext);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const accessToken = useSelector((state: any) => state.auth.userToken) || localStorage.getItem("userToken");
+  let user = useSelector((state: any) => state.auth.userInfo)
+  console.log(user)
+  console.log(accessToken)
+
+  useEffect(() => {
+    if(user === null){
+      getUserByEmail()
+    }
+  }, [])
+
+  const getUserByEmail = async()=>{
+    var decoded = jwt_decode(accessToken);
+    console.log(decoded)
+    const response = await UserService.getUserByEmail(decoded["sub"], accessToken)
+    if(response.status === 403 || response.status === 401){
+      localStorage.removeItem('userToken');
+      navigate('/login')
+      return
+    }
+    user = response.data['userInfo']
+    console.log(user)
+    dispatch(setUser(user));
+  }
 
   return (
     <>
       <MenuWrapper>
-        <List
+         
+          <List
           component="div"
           subheader={
             <ListSubheader component="div" disableSticky>
@@ -205,6 +237,8 @@ function SidebarMenu() {
             </List>
           </SubMenuWrapper>
         </List>
+ 
+
         <List
           component="div"
           subheader={
@@ -226,7 +260,10 @@ function SidebarMenu() {
                   Item
                 </Button>
               </ListItem>
-              <ListItem component="div">
+              {
+          user !== null && user.role == 'ADMIN' ?
+          <>
+                        <ListItem component="div">
                 <Button
                   disableRipple
                   component={RouterLink}
@@ -248,6 +285,10 @@ function SidebarMenu() {
                   Category
                 </Button>
               </ListItem>
+          </>
+
+                        : ""
+                      }
             </List>
           </SubMenuWrapper>
         </List>
@@ -286,6 +327,8 @@ function SidebarMenu() {
             </List>
           </SubMenuWrapper>
         </List>
+        {
+          user !== null && user.role == 'ADMIN' ?
         <List
           component="div"
           subheader={
@@ -343,6 +386,9 @@ function SidebarMenu() {
             </List>
           </SubMenuWrapper>
         </List>
+        
+        : ""
+      }
       </MenuWrapper>
     </>
   );

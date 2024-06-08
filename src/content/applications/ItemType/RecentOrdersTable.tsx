@@ -28,6 +28,7 @@ import BulkActions from './BulkActions';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import ItemTypeService from '../../../api/Itemtype.service';
+import { useSelector } from 'react-redux';
 
 interface RecentOrdersTableProps {
   className?: string;
@@ -54,6 +55,10 @@ const applyPagination = (
 };
 
 const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
+  let accessToken: string = useSelector((state: any) => state.auth.userToken) !== null ? 
+  useSelector((state: any) => state.auth.userToken) : localStorage.getItem("userToken")
+  console.log(accessToken)
+  
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const selectedBulkActions = selectedItems.length > 0;
   const [page, setPage] = useState<number>(0);
@@ -63,7 +68,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
   
   const deleteItemType = (id: number) => {
     setLoading(true);
-    ItemTypeService.deleteItemType(id)
+    ItemTypeService.deleteItemType(id, accessToken)
       .then(() => {
         toast.success('Item deleted successfully', {
           autoClose: 3000,

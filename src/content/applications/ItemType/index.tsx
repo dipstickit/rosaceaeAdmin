@@ -10,7 +10,7 @@ function ApplicationsTransactions() {
   return (
     <>
       <Helmet>
-        <title>Items - Applications</title>
+        <title>Items Type</title>
       </Helmet>
       <PageTitleWrapper>
         <PageHeader />

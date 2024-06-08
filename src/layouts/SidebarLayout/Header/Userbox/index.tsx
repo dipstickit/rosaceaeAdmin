@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 import {
   Avatar,
@@ -22,6 +22,12 @@ import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import AccountBoxTwoToneIcon from '@mui/icons-material/AccountBoxTwoTone';
 import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
 import AccountTreeTwoToneIcon from '@mui/icons-material/AccountTreeTwoTone';
+import { useAppDispatch } from 'src/redux/store';
+import { useSelector } from 'react-redux';
+import jwt_decode from "jwt-decode";
+import { setUser } from '../../../../redux/slices/auth.slice';
+import UserService from '../../../../api/User.services';
+
 
 const UserBoxButton = styled(Button)(
   ({ theme }) => `
@@ -59,11 +65,31 @@ const UserBoxDescription = styled(Typography)(
 );
 
 function HeaderUserbox() {
-  const user = {
-    name: 'Shop',
-    avatar: '/static/images/avatars/1.jpg',
-    jobtitle: 'Rosaceae'
-  };
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const accessToken = useSelector((state: any) => state.auth.userToken) || localStorage.getItem("userToken");
+  let user = useSelector((state: any) => state.auth.userInfo)
+  console.log(user)
+  console.log(accessToken)
+
+  const getUserByEmail = async()=>{
+    var decoded = jwt_decode(accessToken);
+    console.log(decoded)
+    const response = await UserService.getUserByEmail(decoded["sub"], accessToken)
+    if(response.status === 403 || response.status === 401){
+      localStorage.removeItem('userToken');
+      navigate('/login')
+      return
+    }
+    user = response.data['userInfo']
+    console.log(user)
+    dispatch(setUser(user));
+  }
+
+    if(user === null){
+      console.log("user is null")
+      getUserByEmail()
+    }
 
   const ref = useRef<any>(null);
   const [isOpen, setOpen] = useState<boolean>(false);
@@ -79,12 +105,12 @@ function HeaderUserbox() {
   return (
     <>
       <UserBoxButton color="secondary" ref={ref} onClick={handleOpen}>
-        <Avatar variant="rounded" alt={user.name} src={user.avatar} />
+        <Avatar variant="rounded" alt={user !== null ? user.accountName : 'nigga'} src={'https://i.ytimg.com/vi/dMDyVBM1Sms/maxresdefault.jpg'} />
         <Hidden mdDown>
           <UserBoxText>
-            <UserBoxLabel variant="body1">{user.name}</UserBoxLabel>
+            <UserBoxLabel variant="body1">{user !== null ? user.accountName : 'nigga'}</UserBoxLabel>
             <UserBoxDescription variant="body2">
-              {user.jobtitle}
+              {user !== null ? user.role : 'lmao'}
             </UserBoxDescription>
           </UserBoxText>
         </Hidden>
@@ -106,11 +132,11 @@ function HeaderUserbox() {
         }}
       >
         <MenuUserBox sx={{ minWidth: 210 }} display="flex">
-          <Avatar variant="rounded" alt={user.name} src={user.avatar} />
+          <Avatar variant="rounded" alt={user !== null ? user.accountName : 'nigga'} src={'https://i.ytimg.com/vi/dMDyVBM1Sms/maxresdefault.jpg'} />
           <UserBoxText>
-            <UserBoxLabel variant="body1">{user.name}</UserBoxLabel>
+            <UserBoxLabel variant="body1">{user !== null ? user.accountName : 'nigga'}</UserBoxLabel>
             <UserBoxDescription variant="body2">
-              {user.jobtitle}
+            {user !== null ? user.role : 'lmao'}
             </UserBoxDescription>
           </UserBoxText>
         </MenuUserBox>

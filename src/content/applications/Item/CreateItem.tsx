@@ -16,12 +16,18 @@ import {
 import CustomErrorMessage from '../../../components/CustomErrormessage';
 import { Item } from "src/models/Item.model";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 function CreateItem() {
+  let accessToken: string = useSelector((state: any) => state.auth.userToken) !== null ? 
+  useSelector((state: any) => state.auth.userToken) : localStorage.getItem("userToken")
+  console.log(accessToken)
+  
   let navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+  const [files, setFiles] = useState<any>(null);
 
   const initialValues = {
     itemName: "",
@@ -57,13 +63,33 @@ function CreateItem() {
       .min(1, 'Shop ID must be greater than 0')
   });
 
+  const handleFileChange = (e: any) => {
+    setFiles({
+      files: e.target.files,
+    });
+  };
+
   const handleSubmit = async (formValue) => {
     console.log(formValue);
+    console.log(files)
     setLoading(true);
     setServerError(null);
   
     try {
-      const item = await ItemService.postItem({ ...formValue });
+      const data = new FormData();
+      data.append('itemName', formValue.itemName);
+      data.append('quantity', formValue.quantity);
+      data.append('itemPrice', formValue.itemPrice);
+      data.append('itemDescription', formValue.itemDescription);
+      data.append('discount', formValue.discount);
+      data.append('shopId', formValue.shopId);
+      data.append('itemTypeId', formValue.itemTypeId);
+      data.append('categoryId', formValue.categoryId);
+      for (let i = 0; i < files.files.length; i++) {
+        data.append('files', files.files[i]);
+      }
+      console.log([...data.entries()])
+      const item = await ItemService.postItem(data, accessToken);
       console.log(item);
       toast.success('Create Item successfully', {
         autoClose: 3000,
@@ -213,6 +239,12 @@ function CreateItem() {
                     />
                   )}
                 </Field>
+                <input 
+                  type="file"
+                  name="files"
+                  onChange={handleFileChange}
+                  multiple
+                />
               </Box>
               <Box mt={2}>
                 <Button

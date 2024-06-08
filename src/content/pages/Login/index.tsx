@@ -18,6 +18,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { handleSubmit } from 'src/usecases/HandleLogin';
 import { useNavigate } from 'react-router';
 import { useAppDispatch } from 'src/redux/store';
+import { loginAPI } from 'src/redux/actions/auth.actions';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -29,10 +30,9 @@ export default function LoginPage() {
       password: ''
     },
     validationSchema: loginValidateSchema,
-    onSubmit: (values) => {
-      handleSubmit(values.email, values.password, dispatch, navigate);
+    onSubmit: async(values) => {
+      const res = await handleSubmit(values.email, values.password, dispatch, navigate);
       console.log('values', values)
-      navigate("/dashboards/rosaceae");
     }
   });
 

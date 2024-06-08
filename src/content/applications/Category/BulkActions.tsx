@@ -16,6 +16,7 @@ import { toast } from 'react-toastify';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const ButtonError = styled(Button)(
   ({ theme }) => `
@@ -29,14 +30,19 @@ const ButtonError = styled(Button)(
 );
 
 function BulkActions({ selectedItems }) {
+  let accessToken: string = useSelector((state: any) => state.auth.userToken) !== null ? 
+  useSelector((state: any) => state.auth.userToken) : localStorage.getItem("userToken")
+  console.log(accessToken)
+  
   const [onMenuOpen, menuOpen] = useState<boolean>(false);
   const moreRef = useRef<HTMLButtonElement | null>(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   
   const deleteItem = (id: number) => {
+
     setLoading(true);
-    CatgoryService.deleteCategory(id)
+    CatgoryService.deleteCategory(id, accessToken)
       .then(() => {
         toast.success('Category deleted successfully', {
           autoClose: 3000,

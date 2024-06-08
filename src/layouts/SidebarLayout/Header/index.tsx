@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 
 import {
   Box,
@@ -18,6 +18,12 @@ import CloseTwoToneIcon from '@mui/icons-material/CloseTwoTone';
 import HeaderButtons from './Buttons';
 import HeaderUserbox from './Userbox';
 import HeaderMenu from './Menu';
+import { useSelector } from 'react-redux';
+import UserService from '../../../api/User.services';
+import jwt_decode from "jwt-decode";
+import { useAppDispatch } from 'src/redux/store';
+import { setUser } from '../../../redux/slices/auth.slice';
+import { useNavigate } from 'react-router-dom';
 
 const HeaderWrapper = styled(Box)(
   ({ theme }) => `
@@ -41,6 +47,33 @@ const HeaderWrapper = styled(Box)(
 function Header() {
   const { sidebarToggle, toggleSidebar } = useContext(SidebarContext);
   const theme = useTheme();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const accessToken = useSelector((state: any) => state.auth.userToken) || localStorage.getItem("userToken");
+  let user = useSelector((state: any) => state.auth.userInfo)
+  console.log(user)
+  console.log(accessToken)
+
+  const getUserByEmail = async()=>{
+    var decoded = jwt_decode(accessToken);
+    console.log(decoded)
+    const response = await UserService.getUserByEmail(decoded["sub"], accessToken)
+    if(response.status === 403 || response.status === 401){
+      localStorage.removeItem('userToken');
+      navigate('/login')
+      return
+    }
+    user = response.data['userInfo']
+    console.log(user)
+    dispatch(setUser(user));
+  }
+
+    if(user === null){
+      console.log("user is null")
+      getUserByEmail()
+    }
+
+
 
   return (
     <HeaderWrapper

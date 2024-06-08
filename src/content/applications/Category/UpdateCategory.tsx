@@ -19,8 +19,12 @@ import { AxiosResponse } from 'axios';
 import { Item } from '../../../models/Item.model';
 import { Category } from 'src/models/Category.model';
 import { toast } from 'react-toastify';
+import { useSelector } from 'react-redux';
 
 function UpdateItem() {
+  let accessToken: string = useSelector((state: any) => state.auth.userToken) !== null ? 
+  useSelector((state: any) => state.auth.userToken) : localStorage.getItem("userToken")
+  console.log(accessToken)
   let navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
@@ -39,7 +43,7 @@ function UpdateItem() {
         }
 
         const response: AxiosResponse<Category> = await CatgoryService.getCategoryById(
-          parseInt(id)
+          parseInt(id), accessToken
         );
         const data = response.data;
         console.log(data);
@@ -76,7 +80,7 @@ function UpdateItem() {
     setServerError(null);
 
     try {
-      const response = await CatgoryService.putCategory(parseInt(id), values);
+      const response = await CatgoryService.putCategory(parseInt(id), values, accessToken);
       console.log(response.data);
       toast.success('Category updated successfully', {
         autoClose: 3000,

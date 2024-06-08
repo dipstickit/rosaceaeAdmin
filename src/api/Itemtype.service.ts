@@ -7,28 +7,53 @@ type GetItemParams = {
     size?: number;
 };
 
-const getItemType = (params: GetItemParams): Promise<AxiosResponse<ItemTypesResponse>> => {
+const getItemType = (params: GetItemParams, token: string): Promise<AxiosResponse<ItemTypesResponse>> => {
     const queryString = Object.entries(params)
         .map(([key, value]) => value ? `${key}=${value}` : '')
         .filter(Boolean)
         .join('&');
-    return instance.get(`itemType${queryString ? `?${queryString}` : ''}`);
+    return instance.get(`itemType${queryString ? `?${queryString}` : ''}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            crossDomain: true
+        }
+    });
 };
 
-const getItemTypeById = (id: number): Promise<AxiosResponse<ItemType>> => {
-    return instance.get(`itemType/${id}`);
+const getItemTypeById = (id: number, token: string): Promise<AxiosResponse<ItemType>> => {
+    return instance.get(`itemType/${id}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            crossDomain: true
+        }
+    });
 };
 
-const postItemType = (values: ItemType): Promise<AxiosResponse<ItemType>> => {
-    return instance.post("itemType", values);
+const postItemType = (values: ItemType, token: string): Promise<AxiosResponse<ItemType>> => {
+    return instance.post("itemType", values, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            crossDomain: true
+        }
+    });
 };
 
-const putItemtype = (id: number, values: ItemType): Promise<AxiosResponse<ItemType>> => {
-    return instance.put(`itemType/${id}`, values);
+const putItemtype = (id: number, values: ItemType, token: string): Promise<AxiosResponse<ItemType>> => {
+    return instance.put(`itemType/${id}`, values, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            crossDomain: true
+        }
+    });
 };
 
-const deleteItemType = (id: number): Promise<AxiosResponse<void>> => {
-    return instance.delete(`itemType/${id}`);
+const deleteItemType = (id: number, token: string): Promise<AxiosResponse<void>> => {
+    return instance.delete(`itemType/${id}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            crossDomain: true
+        }
+    });
 };
 
 export default {

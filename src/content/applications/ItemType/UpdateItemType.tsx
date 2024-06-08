@@ -18,8 +18,13 @@ import { AxiosResponse } from 'axios';
 import { Item } from '../../../models/Item.model';
 import { ItemType } from 'src/models/ItemType.model';
 import { toast } from 'react-toastify';
+import { useSelector } from 'react-redux';
 
 function UpdateItemType() {
+  let accessToken: string = useSelector((state: any) => state.auth.userToken) !== null ? 
+  useSelector((state: any) => state.auth.userToken) : localStorage.getItem("userToken")
+  console.log(accessToken)
+  
   let navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
@@ -38,7 +43,7 @@ function UpdateItemType() {
         }
 
         const response: AxiosResponse<ItemType> = await ItemTypeService.getItemTypeById(
-          parseInt(id)
+          parseInt(id), accessToken
         );
         const data = response.data;
         console.log(data);
@@ -74,7 +79,7 @@ function UpdateItemType() {
     setServerError(null);
 
     try {
-      const response = await ItemTypeService.putItemtype(parseInt(id), values);
+      const response = await ItemTypeService.putItemtype(parseInt(id), values, accessToken);
       console.log(response.data);
       toast.success('ItemType updated successfully', {
         autoClose: 3000,

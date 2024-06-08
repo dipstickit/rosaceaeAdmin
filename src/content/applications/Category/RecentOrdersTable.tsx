@@ -28,6 +28,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { CategoryResponse } from 'src/models/Category.model';
 import CatgoryService from '../../../api/Category.service';
+import { useSelector } from 'react-redux';
 
 interface RecentOrdersTableProps {
   className?: string;
@@ -61,8 +62,12 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
   const navigate = useNavigate();
   
   const deleteItem = (id: number) => {
+    let accessToken: string = useSelector((state: any) => state.auth.userToken) !== null ? 
+    useSelector((state: any) => state.auth.userToken) : localStorage.getItem("userToken")
+    console.log(accessToken)
+    
     setLoading(true);
-    CatgoryService.deleteCategory(id)
+    CatgoryService.deleteCategory(id, accessToken)
       .then(() => {
         toast.success('Item deleted successfully', {
           autoClose: 3000,

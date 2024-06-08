@@ -17,8 +17,13 @@ import {
 import CustomErrorMessage from '../../../components/CustomErrormessage';
 import { ItemType } from "src/models/ItemType.model";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 function CreateItemType() {
+  let accessToken: string = useSelector((state: any) => state.auth.userToken) !== null ? 
+  useSelector((state: any) => state.auth.userToken) : localStorage.getItem("userToken")
+  console.log(accessToken)
+  
   let navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
@@ -38,7 +43,7 @@ function CreateItemType() {
     setServerError(null);
   
     try {
-      const item = await ItemTypeService.postItemType({ ...formValue });
+      const item = await ItemTypeService.postItemType({ ...formValue }, accessToken);
       console.log(item);
       toast.success('Create ItemType successfully', {
         autoClose: 3000,
