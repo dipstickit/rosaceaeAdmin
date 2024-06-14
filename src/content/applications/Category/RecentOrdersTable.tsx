@@ -60,12 +60,12 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
   const [limit, setLimit] = useState<number>(5);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  
+
   const deleteItem = (id: number) => {
-    let accessToken: string = useSelector((state: any) => state.auth.userToken) !== null ? 
-    useSelector((state: any) => state.auth.userToken) : localStorage.getItem("userToken")
+    let accessToken: string = useSelector((state: any) => state.auth.userToken) !== null ?
+      useSelector((state: any) => state.auth.userToken) : localStorage.getItem("userToken")
     console.log(accessToken)
-    
+
     setLoading(true);
     CatgoryService.deleteCategory(id, accessToken)
       .then(() => {
@@ -85,9 +85,9 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
       .catch((error) => {
         console.error('Error deleting item:', error);
       })
-      setLoading(false);
+    setLoading(false);
   };
-  
+
   useEffect(() => {
     setSelectedItems([]);
   }, [items]);
@@ -132,18 +132,6 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
         <Box flex={1} p={2}>
           <BulkActions selectedItems={undefined} />
         </Box>
-      )}
-      {!selectedBulkActions && (
-        <CardHeader
-          action={
-            <Box width={150}>
-              <FormControl fullWidth variant="outlined">
-                <InputLabel>Status</InputLabel>
-              </FormControl>
-            </Box>
-          }
-          title="Recent Orders"
-        />
       )}
       <Divider />
       <TableContainer>
@@ -241,7 +229,7 @@ RecentOrdersTable.propTypes = {
 
 RecentOrdersTable.defaultProps = {
   items: [],
-  setItems: () => {}
+  setItems: () => { }
 };
 
 export default RecentOrdersTable;

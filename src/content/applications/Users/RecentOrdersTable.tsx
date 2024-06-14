@@ -21,40 +21,44 @@ import {
   CardHeader
 } from '@mui/material';
 
-import { ItemTypesResponse } from 'src/models/ItemType.model';
+import { User } from "src/types/user.type";
+import { UsersReponse } from 'src/models/UserType.model';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
+import { NotInterested } from '@mui/icons-material';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import BulkActions from './BulkActions';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import ItemTypeService from '../../../api/Itemtype.service';
+import UserServices from 'src/api/User.services';
 import { useSelector } from 'react-redux';
 
 interface RecentOrdersTableProps {
   className?: string;
-  items: ItemTypesResponse['content'];
-  setItems: React.Dispatch<React.SetStateAction<ItemTypesResponse['content']>>;
+  users: UsersReponse['content'];
+  setItems: React.Dispatch<React.SetStateAction<UsersReponse['content']>>;
 
 }
 
 const applyFilters = (
-  items: ItemTypesResponse['content'],
-): ItemTypesResponse['content'] => {
-  return items.filter((item) => {
+  users: UsersReponse['content'],
+): UsersReponse['content'] => {
+  return users.filter((item) => {
     let matches = true;
     return matches;
   });
 };
 
 const applyPagination = (
-  items: ItemTypesResponse['content'],
+  items: UsersReponse['content'],
   page: number,
   limit: number
-): ItemTypesResponse['content'] => {
+): UsersReponse['content'] => {
   return items.slice(page * limit, page * limit + limit);
 };
 
-const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
+const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ users: users }) => {
   let accessToken: string = useSelector((state: any) => state.auth.userToken) !== null ?
     useSelector((state: any) => state.auth.userToken) : localStorage.getItem("userToken")
   console.log(accessToken)
@@ -66,11 +70,11 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const deleteItemType = (id: number) => {
+  const banUser = (id: number) => {
     setLoading(true);
-    ItemTypeService.deleteItemType(id, accessToken)
+    UserServices.banUser(id, accessToken)
       .then(() => {
-        toast.success('Item deleted successfully', {
+        toast.success('Ban/Unban user successfully', {
           autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -79,13 +83,13 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
           progress: undefined,
           theme: 'dark'
         });
-        setItems(items.filter(item => item.itemTypeId !== id));
+        // setItems(users.filter(user => user.usersID !== id));
         setLoading(false);
-        navigate("/management/item");
+        window.location.href = "/management/user"
       })
       .catch((error) => {
-        console.error('Error deleting item:', error);
-        toast.error('Error deleting item', {
+        console.error('Error banning user:', error);
+        toast.error('Error banning item', {
           autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -100,7 +104,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
 
   useEffect(() => {
     setSelectedItems([]);
-  }, [items]);
+  }, [users]);
 
 
   const handleSelectAllItems = (
@@ -108,7 +112,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
   ): void => {
     setSelectedItems(
       event.target.checked
-        ? items.map((item) => item.itemTypeId.toString())
+        ? users.map((user) => user.usersID.toString())
         : []
     );
   };
@@ -137,13 +141,13 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
     setLimit(parseInt(event.target.value));
   };
 
-  const filteredItems = applyFilters(items);
+  const filteredItems = applyFilters(users);
   const paginatedItems = applyPagination(filteredItems, page, limit);
   const selectedSomeItems =
     selectedItems.length > 0 &&
-    selectedItems.length < items.length;
+    selectedItems.length < users.length;
   const selectedAllItems =
-    selectedItems.length === items.length;
+    selectedItems.length === users.length;
   const theme = useTheme();
 
   return (
@@ -166,18 +170,20 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
                   onChange={handleSelectAllItems}
                 />
               </TableCell>
-              <TableCell>ItemTypeName</TableCell>
+              <TableCell>Username</TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell>Role</TableCell>
               <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
 
           <TableBody>
-            {paginatedItems.map((item) => {
-              const isItemSelected = selectedItems.includes(item.itemTypeId.toString());
+            {paginatedItems.map((user) => {
+              const isItemSelected = selectedItems.includes(user.usersID.toString());
               return (
                 <TableRow
                   hover
-                  key={item.itemTypeId}
+                  key={user.usersID}
                   selected={isItemSelected}
                 >
                   <TableCell padding="checkbox">
@@ -185,14 +191,17 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
                       color="primary"
                       checked={isItemSelected}
                       onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                        handleSelectOneItem(event, item.itemTypeId.toString())
+                        handleSelectOneItem(event, user.usersID.toString())
                       }
                       value={isItemSelected}
                     />
                   </TableCell>
-                  <TableCell>{item.itemTypeName}</TableCell>
-                  <TableCell align="right">
-                    <Tooltip title="Edit Item" arrow>
+                  <TableCell>{user.accountName}</TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>{user.role}</TableCell>
+                  {
+                    user.userStatus === true ? <TableCell align="right">
+                      {/* <Tooltip title="Edit Item" arrow>
                       <IconButton
                         sx={{
                           '&:hover': {
@@ -203,26 +212,61 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
                         color="inherit"
                         size="small"
                       >
-                        <Link to={`/management/itemType/${item?.itemTypeId}/update`}>
+                        <Link to={`/management/itemType/${user?.usersID}/update`}>
                           {' '}
                           <EditTwoToneIcon fontSize="small" />
                         </Link>
                       </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Delete Item" arrow>
-                      <IconButton
-                        onClick={() => deleteItemType(item.itemTypeId)}
-                        sx={{
-                          '&:hover': { background: theme.colors.error.lighter },
-                          color: theme.palette.error.main
-                        }}
-                        color="inherit"
-                        size="small"
-                      >
-                        <DeleteTwoToneIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
-                  </TableCell>
+                    </Tooltip> */}
+                      <Tooltip title="Ban User" arrow>
+                        <IconButton
+                          onClick={() => banUser(user.usersID)}
+                          sx={{
+                            '&:hover': { background: theme.colors.error.lighter },
+                            color: theme.palette.error.main
+                          }}
+                          color="inherit"
+                          size="small"
+                        >
+                          <NotInterested fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    </TableCell>
+                      :
+                      <TableCell align="right">
+                        {/* <Tooltip title="Edit Item" arrow>
+  <IconButton
+    sx={{
+      '&:hover': {
+        background: theme.colors.primary.lighter
+      },
+      color: theme.palette.primary.main
+    }}
+    color="inherit"
+    size="small"
+  >
+    <Link to={`/management/itemType/${user?.usersID}/update`}>
+      {' '}
+      <EditTwoToneIcon fontSize="small" />
+    </Link>
+  </IconButton>
+</Tooltip> */}
+                        <Tooltip title="Unban User" arrow>
+                          <IconButton
+                            onClick={() => banUser(user.usersID)}
+                            sx={{
+                              '&:hover': { background: theme.colors.error.lighter },
+                              color: theme.palette.error.main
+                            }}
+                            color="inherit"
+                            size="small"
+                          >
+                            <CheckCircleOutlineIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                      </TableCell>
+
+                  }
                 </TableRow>
               );
             })}
@@ -245,17 +289,17 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
 };
 
 RecentOrdersTable.propTypes = {
-  items: PropTypes.array.isRequired,
+  users: PropTypes.array.isRequired,
   setItems: PropTypes.func.isRequired
 };
 
 RecentOrdersTable.defaultProps = {
-  items: [],
+  users: [],
   setItems: () => { }
 };
 
 export default RecentOrdersTable;
-function setItems(arg0: import("src/models/ItemType.model").ItemType[]) {
+function setItems(arg0: import("src/types/user.type").User[]) {
   throw new Error('Function not implemented.');
 }
 

@@ -15,11 +15,11 @@ import UpdateCategory from './content/applications/Category/UpdateCategory';
 import CreateCategory from './content/applications/Category/CreateCategory';
 
 const Loader = (Component) => (props) =>
-  (
-    <Suspense fallback={<SuspenseLoader />}>
-      <Component {...props} />
-    </Suspense>
-  );
+(
+  <Suspense fallback={<SuspenseLoader />}>
+    <Component {...props} />
+  </Suspense>
+);
 
 // Pages
 
@@ -47,6 +47,9 @@ const ItemType = Loader(
 const Category = Loader(
   lazy(() => import('src/content/applications/Category'))
 );
+const Users = Loader(
+  lazy(() => import('src/content/applications/Users'))
+)
 
 // Status
 
@@ -183,6 +186,10 @@ const routes: RouteObject[] = [
       {
         path: 'category/createCategory',
         element: <CreateCategory />
+      },
+      {
+        path: 'user',
+        element: <Users />
       },
 
 

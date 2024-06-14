@@ -26,7 +26,7 @@ import UserService from '../../../../api/User.services';
 import jwt_decode from "jwt-decode";
 import { useAppDispatch } from 'src/redux/store';
 import { setUser } from '../../../../redux/slices/auth.slice';
- 
+
 const MenuWrapper = styled(Box)(
   ({ theme }) => `
   .MuiList-root {
@@ -142,9 +142,9 @@ const SubMenuWrapper = styled(Box)(
                 background: ${theme.colors.alpha.trueWhite[100]};
                 opacity: 0;
                 transition: ${theme.transitions.create([
-                  'transform',
-                  'opacity'
-                ])};
+    'transform',
+    'opacity'
+  ])};
                 width: 6px;
                 height: 6px;
                 transform: scale(0);
@@ -179,16 +179,16 @@ function SidebarMenu() {
   console.log(accessToken)
 
   useEffect(() => {
-    if(user === null){
+    if (user === null) {
       getUserByEmail()
     }
   }, [])
 
-  const getUserByEmail = async()=>{
+  const getUserByEmail = async () => {
     var decoded = jwt_decode(accessToken);
     console.log(decoded)
     const response = await UserService.getUserByEmail(decoded["sub"], accessToken)
-    if(response.status === 403 || response.status === 401){
+    if (response.status === 403 || response.status === 401) {
       localStorage.removeItem('userToken');
       navigate('/login')
       return
@@ -201,8 +201,8 @@ function SidebarMenu() {
   return (
     <>
       <MenuWrapper>
-         
-          <List
+
+        <List
           component="div"
           subheader={
             <ListSubheader component="div" disableSticky>
@@ -237,7 +237,7 @@ function SidebarMenu() {
             </List>
           </SubMenuWrapper>
         </List>
- 
+
 
         <List
           component="div"
@@ -261,34 +261,45 @@ function SidebarMenu() {
                 </Button>
               </ListItem>
               {
-          user !== null && user.role == 'ADMIN' ?
-          <>
-                        <ListItem component="div">
-                <Button
-                  disableRipple
-                  component={RouterLink}
-                  onClick={closeSidebar}
-                  to="/management/itemType"
-                  startIcon={<TableChartTwoToneIcon />}
-                >
-                  ItemType
-                </Button>
-              </ListItem>
-              <ListItem component="div">
-                <Button
-                  disableRipple
-                  component={RouterLink}
-                  onClick={closeSidebar}
-                  to="/management/category"
-                  startIcon={<TableChartTwoToneIcon />}
-                >
-                  Category
-                </Button>
-              </ListItem>
-          </>
+                user !== null && user.role == 'ADMIN' ?
+                  <>
+                    <ListItem component="div">
+                      <Button
+                        disableRipple
+                        component={RouterLink}
+                        onClick={closeSidebar}
+                        to="/management/itemType"
+                        startIcon={<TableChartTwoToneIcon />}
+                      >
+                        ItemType
+                      </Button>
+                    </ListItem>
+                    <ListItem component="div">
+                      <Button
+                        disableRipple
+                        component={RouterLink}
+                        onClick={closeSidebar}
+                        to="/management/category"
+                        startIcon={<TableChartTwoToneIcon />}
+                      >
+                        Category
+                      </Button>
+                    </ListItem>
+                    <ListItem component="div">
+                      <Button
+                        disableRipple
+                        component={RouterLink}
+                        onClick={closeSidebar}
+                        to="/management/user"
+                        startIcon={<TableChartTwoToneIcon />}
+                      >
+                        User
+                      </Button>
+                    </ListItem>
+                  </>
 
-                        : ""
-                      }
+                  : ""
+              }
             </List>
           </SubMenuWrapper>
         </List>
@@ -329,66 +340,66 @@ function SidebarMenu() {
         </List>
         {
           user !== null && user.role == 'ADMIN' ?
-        <List
-          component="div"
-          subheader={
-            <ListSubheader component="div" disableSticky>
-              Extra Pages
-            </ListSubheader>
-          }
-        >
-          <SubMenuWrapper>
-            <List component="div">
-              <ListItem component="div">
-                <Button
-                  disableRipple
-                  component={RouterLink}
-                  onClick={closeSidebar}
-                  to="/status/404"
-                  startIcon={<CheckBoxTwoToneIcon />}
-                >
-                  Error 404
-                </Button>
-              </ListItem>
-              <ListItem component="div">
-                <Button
-                  disableRipple
-                  component={RouterLink}
-                  onClick={closeSidebar}
-                  to="/status/500"
-                  startIcon={<CameraFrontTwoToneIcon />}
-                >
-                  Error 500
-                </Button>
-              </ListItem>
-              <ListItem component="div">
-                <Button
-                  disableRipple
-                  component={RouterLink}
-                  onClick={closeSidebar}
-                  to="/status/coming-soon"
-                  startIcon={<ChromeReaderModeTwoToneIcon />}
-                >
-                  Coming Soon
-                </Button>
-              </ListItem>
-              <ListItem component="div">
-                <Button
-                  disableRipple
-                  component={RouterLink}
-                  onClick={closeSidebar}
-                  to="/status/maintenance"
-                  startIcon={<WorkspacePremiumTwoToneIcon />}
-                >
-                  Maintenance
-                </Button>
-              </ListItem>
+            <List
+              component="div"
+              subheader={
+                <ListSubheader component="div" disableSticky>
+                  Extra Pages
+                </ListSubheader>
+              }
+            >
+              <SubMenuWrapper>
+                <List component="div">
+                  <ListItem component="div">
+                    <Button
+                      disableRipple
+                      component={RouterLink}
+                      onClick={closeSidebar}
+                      to="/status/404"
+                      startIcon={<CheckBoxTwoToneIcon />}
+                    >
+                      Error 404
+                    </Button>
+                  </ListItem>
+                  <ListItem component="div">
+                    <Button
+                      disableRipple
+                      component={RouterLink}
+                      onClick={closeSidebar}
+                      to="/status/500"
+                      startIcon={<CameraFrontTwoToneIcon />}
+                    >
+                      Error 500
+                    </Button>
+                  </ListItem>
+                  <ListItem component="div">
+                    <Button
+                      disableRipple
+                      component={RouterLink}
+                      onClick={closeSidebar}
+                      to="/status/coming-soon"
+                      startIcon={<ChromeReaderModeTwoToneIcon />}
+                    >
+                      Coming Soon
+                    </Button>
+                  </ListItem>
+                  <ListItem component="div">
+                    <Button
+                      disableRipple
+                      component={RouterLink}
+                      onClick={closeSidebar}
+                      to="/status/maintenance"
+                      startIcon={<WorkspacePremiumTwoToneIcon />}
+                    >
+                      Maintenance
+                    </Button>
+                  </ListItem>
+                </List>
+              </SubMenuWrapper>
             </List>
-          </SubMenuWrapper>
-        </List>
-        
-        : ""
-      }
+
+            : ""
+        }
       </MenuWrapper>
     </>
   );
