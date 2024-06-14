@@ -4,12 +4,40 @@ import RecentOrdersTable from './RecentOrdersTable';
 import UserService from '../../../api/User.services';
 import { User } from 'src/types/user.type';
 import { UsersReponse } from 'src/models/UserType.model';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import jwt_decode from "jwt-decode";
+import { useAppDispatch } from 'src/redux/store';
+import { setUser } from '../../../redux/slices/auth.slice';
+import { useNavigate } from 'react-router-dom';
 
 const RecentOrders: React.FC = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   let accessToken: string = useSelector((state: any) => state.auth.userToken) !== null ?
     useSelector((state: any) => state.auth.userToken) : localStorage.getItem("userToken")
+  let user = useSelector((state: any) => state.auth.userInfo)
   console.log(accessToken)
+  console.log(user)
+
+  const getUserByEmail = async () => {
+    var decoded = jwt_decode(accessToken);
+    console.log(decoded)
+    const response = await UserService.getUserByEmail(decoded["sub"], accessToken)
+    if (response.status === 403 || response.status === 401) {
+      localStorage.removeItem('userToken');
+      navigate('/login')
+      return
+    }
+    user = response.data['userInfo']
+    console.log(user)
+    dispatch(setUser(user));
+  }
+
+  if (user === null) {
+    console.log("user is null")
+    getUserByEmail()
+  }
 
   const [listUser, setListUser] = useState<User[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -21,7 +49,8 @@ const RecentOrders: React.FC = () => {
       const response = await UserService.getUsers({}, accessToken);
       console.log('Response data:', response.data.content);
       if (response.data.content) {
-        setListUser(response.data.content);
+        console.log(user.usersID)
+        setListUser(response.data.content.filter(u => u.usersID != user.usersID && u.role === 'SHOP'));
       } else {
         throw new Error('No content in response data.');
       }
