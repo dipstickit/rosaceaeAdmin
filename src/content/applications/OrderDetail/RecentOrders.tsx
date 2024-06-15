@@ -49,7 +49,7 @@ const RecentOrders: React.FC = () => {
       const response = await OrderDetailService.getOrderDetailByShop({}, accessToken, user.usersID);
       console.log('Response data:', response.data.content);
       if (response.data.content) {
-        setListItem(response.data.content);
+        setListItem(response.data.content.slice().reverse());
       } else {
         setListItem([])
         console.log('No content in response data.');
