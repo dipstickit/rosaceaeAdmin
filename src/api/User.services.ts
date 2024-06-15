@@ -9,7 +9,7 @@ type GetUsersParams = {
 };
 
 const getUserByEmail = (email: string, token: string): Promise<AxiosResponse<User>> => {
-    return instance.get(`/user/get-user-by-email?email=${email}`, {
+    return instance.get(`user/get-user-by-email?email=${email}`, {
         headers: {
             'Authorization': `Bearer ${token}`,
             crossDomain: true

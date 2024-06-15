@@ -49,6 +49,9 @@ const Category = Loader(
 );
 const Users = Loader(
   lazy(() => import('src/content/applications/Users'))
+);
+const OrderDetailForShop = Loader(
+  lazy(() => import('src/content/applications/OrderDetail'))
 )
 
 // Status
@@ -190,6 +193,10 @@ const routes: RouteObject[] = [
       {
         path: 'user',
         element: <Users />
+      },
+      {
+        path: 'order-for-shop',
+        element: <OrderDetailForShop />
       },
 
 
