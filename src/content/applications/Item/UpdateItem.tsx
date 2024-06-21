@@ -11,25 +11,35 @@ import {
   TextField,
   Typography,
   CircularProgress,
-  Alert
+  Alert,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Select
 } from '@mui/material';
 import CustomErrorMessage from '../../../components/CustomErrormessage';
 import { AxiosResponse } from 'axios';
 import { Item } from '../../../models/Item.model';
 import { toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
+import { ItemTypesResponse } from 'src/models/ItemType.model';
+import { CategoryResponse } from 'src/models/Category.model';
+import ItemtypeService from 'src/api/Itemtype.service';
+import CategoryService from 'src/api/Category.service';
 
 function UpdateItem() {
-  let accessToken: string = useSelector((state: any) => state.auth.userToken) !== null ? 
-  useSelector((state: any) => state.auth.userToken) : localStorage.getItem("userToken")
+  let accessToken: string = useSelector((state: any) => state.auth.userToken) !== null ?
+    useSelector((state: any) => state.auth.userToken) : localStorage.getItem("userToken")
   console.log(accessToken)
-  
+
   let navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const [newItem, setNewItem] = useState<Item | null>(null);
   const [dataLoaded, setDataLoaded] = useState(false);
+  const [itemType, setItemType] = useState<ItemTypesResponse['content']>([])
+  const [category, setCategory] = useState<CategoryResponse['content']>([])
   const [initialValues, setInitialValues] = useState<any>({
     itemName: '',
     quantity: 0,
@@ -49,20 +59,23 @@ function UpdateItem() {
           console.error('No ID provided.');
           return;
         }
-
         const response: AxiosResponse<any> = await ItemService.getItemById(
           parseInt(id), accessToken
         );
+        const itemTypeResponse: AxiosResponse<ItemTypesResponse> = await ItemtypeService.getItemType({}, accessToken);
+        const categoryResponse: AxiosResponse<CategoryResponse> = await CategoryService.getCategory({}, accessToken);
         const data = response.data;
-        console.log(data);
+        console.log();
+        setItemType(itemTypeResponse.data.content);
+        setCategory(categoryResponse.data.content)
         setInitialValues({
           itemName: data.itemName || '',
           quantity: data.quantity || 0,
           itemPrice: data.itemPrice || 0,
           itemDescription: data.itemDescription || '',
           discount: data.discount || 0,
-          itemTypeId: data.itemType.itemTypeId,
-          categoryId: data.category.categoryId
+          itemTypeId: itemTypeResponse.data.content.find(x => x.itemTypeId === data.itemType.itemTypeId).itemTypeId,
+          categoryId: categoryResponse.data.content.find(x => x.categoryId === data.category.categoryId).categoryId
         })
         setNewItem(data.item);
         setDataLoaded(true);
@@ -74,45 +87,45 @@ function UpdateItem() {
     fetchData();
   }, [id]);
 
-  const validationSchema = initialValues !== null && initialValues.itemTypeId === 2 ? 
-  Yup.object({
-    itemName: Yup.string().required('Item name is required'),
-    quantity: Yup.number()
-      .required('Quantity is required')
-      .min(1, 'Quantity must be greater than 0'),
-    itemPrice: Yup.number()
-      .required('Price is required')
-      .min(1, 'Price must be greater than 0'),
-    itemDescription: Yup.string().required('Item Description is required'),
-    discount: Yup.number()
-      .required('Discount is required')
-      .min(1, 'Discount must be greater than or equal to 0'),
-    itemTypeId: Yup.number()
-      .required('Item Type ID is required')
-      .min(1, 'Item Type ID must be greater than 0'),
-    categoryId: Yup.number()
-      .required('Category ID is required')
-      .min(1, 'Category ID must be greater than 0')
-  }) :
-  Yup.object({
-    itemName: Yup.string().required('Item name is required'),
-    quantity: Yup.number()
-      .min(0, 'Quantity must be greater than 0'),
-    itemPrice: Yup.number()
-      .required('Price is required')
-      .min(1, 'Price must be greater than 0'),
-    itemDescription: Yup.string().required('Item Description is required'),
-    discount: Yup.number()
-      .required('Discount is required')
-      .min(1, 'Discount must be greater than or equal to 0'),
-    itemTypeId: Yup.number()
-      .required('Item Type ID is required')
-      .min(1, 'Item Type ID must be greater than 0'),
-    categoryId: Yup.number()
-      .required('Category ID is required')
-      .min(1, 'Category ID must be greater than 0')
-  })
-  ;
+  const validationSchema = initialValues !== null && initialValues.itemTypeId === 2 ?
+    Yup.object({
+      itemName: Yup.string().required('Item name is required'),
+      quantity: Yup.number()
+        .required('Quantity is required')
+        .min(1, 'Quantity must be greater than 0'),
+      itemPrice: Yup.number()
+        .required('Price is required')
+        .min(1, 'Price must be greater than 0'),
+      itemDescription: Yup.string().required('Item Description is required'),
+      discount: Yup.number()
+        .required('Discount is required')
+        .min(1, 'Discount must be greater than or equal to 0'),
+      itemTypeId: Yup.number()
+        .required('Item Type ID is required')
+        .min(1, 'Item Type ID must be greater than 0'),
+      categoryId: Yup.number()
+        .required('Category ID is required')
+        .min(1, 'Category ID must be greater than 0')
+    }) :
+    Yup.object({
+      itemName: Yup.string().required('Item name is required'),
+      quantity: Yup.number()
+        .min(0, 'Quantity must be greater than 0'),
+      itemPrice: Yup.number()
+        .required('Price is required')
+        .min(1, 'Price must be greater than 0'),
+      itemDescription: Yup.string().required('Item Description is required'),
+      discount: Yup.number()
+        .required('Discount is required')
+        .min(1, 'Discount must be greater than or equal to 0'),
+      itemTypeId: Yup.number()
+        .required('Item Type ID is required')
+        .min(1, 'Item Type ID must be greater than 0'),
+      categoryId: Yup.number()
+        .required('Category ID is required')
+        .min(1, 'Category ID must be greater than 0')
+    })
+    ;
 
   const handleSubmit = async (
     values: any,
@@ -146,8 +159,8 @@ function UpdateItem() {
       } else {
         setServerError(
           error.response?.data?.error ||
-            error.message ||
-            'An unexpected error occurred'
+          error.message ||
+          'An unexpected error occurred'
         );
       }
     } finally {
@@ -165,11 +178,23 @@ function UpdateItem() {
     );
   };
 
+  const renderListItemType = itemType.length > 0 ? itemType.map((item, index) => {
+    return (
+      <MenuItem key={item.itemTypeId} value={item.itemTypeId}>{item.itemTypeName}</MenuItem>
+    )
+  }) : null
+
+  const renderCategory = category.length > 0 ? category.map((item, index) => {
+    return (
+      <MenuItem key={item.categoryId} value={item.categoryId}>{item.categoryName}</MenuItem>
+    )
+  }) : null
+
   return (
-          <Formik
-          initialValues={initialValues}
+    <Formik
+      initialValues={initialValues}
       validationSchema={validationSchema}
-      enableReinitialize={true} 
+      enableReinitialize={true}
       onSubmit={handleSubmit}
     >
       {({ isSubmitting }) => (
@@ -250,29 +275,35 @@ function UpdateItem() {
                   )}
                 </Field>
                 <Field name="itemTypeId">
-                  {({ field }) => (
-                    <TextField
-                      label="Item Type ID"
-                      type="number" 
-                      fullWidth
-                      variant="outlined"
-                      {...field}
-                      error={Boolean(field.value && isNaN(field.value))}
-                      helperText={<CustomErrorMessage name="itemTypeId" />}
-                    />
+                  {({ field, form }) => (
+                    <FormControl fullWidth variant="filled" error={Boolean(form.errors.itemTypeId && form.touched.itemTypeId)}>
+                      <InputLabel id="itemTypeId-label">Item Type</InputLabel>
+                      <Select
+                        labelId="itemTypeId-label"
+                        id="itemTypeId"
+                        label="Item Type ID"
+                        {...field}
+                      >
+                        {renderListItemType}
+                      </Select>
+                    </FormControl>
+
                   )}
                 </Field>
                 <Field name="categoryId">
-                  {({ field }) => (
-                    <TextField
-                      label="Category ID"
-                      type="number" 
-                      fullWidth
-                      variant="outlined"
-                      {...field}
-                      error={Boolean(field.value && isNaN(field.value))}
-                      helperText={<CustomErrorMessage name="categoryId" />}
-                    />
+                  {({ field, form }) => (
+                    <FormControl fullWidth variant="filled" error={Boolean(form.errors.categoryId && form.touched.categoryId)}>
+                      <InputLabel id="categoryId-label">Category</InputLabel>
+                      <Select
+                        labelId="categoryId-label"
+                        id="categoryId"
+                        label="Category ID"
+                        {...field}
+                      >
+                        {renderCategory}
+                      </Select>
+                    </FormControl>
+
                   )}
                 </Field>
               </Box>
