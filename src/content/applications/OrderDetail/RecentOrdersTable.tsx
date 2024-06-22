@@ -177,7 +177,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items, selectedItemType
                     <TableCell>Price</TableCell>
                     <TableCell>Order By</TableCell>
                     {
-                      selectedItemType === 1 ? null : <TableCell align="right">Actions</TableCell>
+                      selectedItemType === 1 ? <TableCell align="right">Actions</TableCell> : null
                     }
 
                   </TableRow>
@@ -207,37 +207,37 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items, selectedItemType
                         <TableCell>{orderDetail.price}</TableCell>
                         <TableCell>{orderDetail.customerName}</TableCell>
                         {
-                          selectedItemType === 1 ? null :
-                            <TableCell align="right">
-                              <Tooltip title="Accept Order" arrow>
-                                <IconButton
-                                  onClick={() => console.log("approve")}
-                                  sx={{
-                                    '&:hover': {
-                                      background: theme.colors.primary.lighter
-                                    },
-                                    color: theme.palette.primary.main
-                                  }}
-                                  color="inherit"
-                                  size="small"
-                                >
-                                  ✔
-                                </IconButton>
-                              </Tooltip>
-                              <Tooltip title="Decline Order" arrow>
-                                <IconButton
-                                  onClick={() => console.log("decline")}
-                                  sx={{
-                                    '&:hover': { background: theme.colors.error.lighter },
-                                    color: theme.palette.error.main
-                                  }}
-                                  color="inherit"
-                                  size="small"
-                                >
-                                  ❌
-                                </IconButton>
-                              </Tooltip>
-                            </TableCell>
+                          selectedItemType === 1 ? <TableCell align="right">
+                            <Tooltip title="Accept Order" arrow>
+                              <IconButton
+                                onClick={() => console.log("approve")}
+                                sx={{
+                                  '&:hover': {
+                                    background: theme.colors.primary.lighter
+                                  },
+                                  color: theme.palette.primary.main
+                                }}
+                                color="inherit"
+                                size="small"
+                              >
+                                ✔
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Decline Order" arrow>
+                              <IconButton
+                                onClick={() => console.log("decline")}
+                                sx={{
+                                  '&:hover': { background: theme.colors.error.lighter },
+                                  color: theme.palette.error.main
+                                }}
+                                color="inherit"
+                                size="small"
+                              >
+                                ❌
+                              </IconButton>
+                            </Tooltip>
+                          </TableCell> :
+                            null
                         }
                       </TableRow>
                     );

@@ -23,8 +23,8 @@ function PageHeader({ selectedItemType, setSelectedItemType }) {
             value={selectedItemType}
             onChange={e => { setSelectedItemType(parseInt(e.target.value)) }}
           >
-            <MenuItem value={1}>Product</MenuItem>
-            <MenuItem value={2}>Service</MenuItem>
+            <MenuItem value={1}>Service</MenuItem>
+            <MenuItem value={2}>Product</MenuItem>
           </Select>
         </FormControl>
       </Grid>
