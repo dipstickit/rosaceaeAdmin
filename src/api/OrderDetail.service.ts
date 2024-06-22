@@ -12,7 +12,7 @@ const getOrderDetailByShop = (params: GetOrderDetailParams, token: string, shopI
         .map(([key, value]) => value ? `${key}=${value}` : '')
         .filter(Boolean)
         .join('&');
-    return instance.get(`/shop/${shopId}${queryString ? `?${queryString}` : ''}`, {
+    return instance.get(`/order/shop/${shopId}${queryString ? `?${queryString}` : ''}`, {
         headers: {
             'Authorization': `Bearer ${token}`,
             crossDomain: true

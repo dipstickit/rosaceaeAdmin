@@ -36,9 +36,22 @@ const banUser = (id: number, token: string): Promise<AxiosResponse<void>> => {
         }
     });
 };
+const getShopProfile = (params: GetUsersParams, token: string, shopId: number): Promise<AxiosResponse<UsersReponse>> => {
+    const queryString = Object.entries(params)
+        .map(([key, value]) => value ? `${key}=${value}` : '')
+        .filter(Boolean)
+        .join('&');
+    return instance.get(`shop/${shopId}${queryString ? `?${queryString}` : ''}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            crossDomain: true
+        }
+    });
+};
 
 export default {
     getUserByEmail,
     getUsers,
-    banUser
+    banUser,
+    getShopProfile
 };

@@ -15,6 +15,7 @@ import ArrowBackTwoToneIcon from '@mui/icons-material/ArrowBackTwoTone';
 import ArrowForwardTwoToneIcon from '@mui/icons-material/ArrowForwardTwoTone';
 import UploadTwoToneIcon from '@mui/icons-material/UploadTwoTone';
 import MoreHorizTwoToneIcon from '@mui/icons-material/MoreHorizTwoTone';
+import { Link } from 'react-router-dom';
 
 const Input = styled('input')({
   display: 'none'
@@ -89,7 +90,7 @@ const ProfileCover = ({ user }) => {
         </Tooltip>
         <Box>
           <Typography variant="h3" component="h3" gutterBottom>
-            Profile for {user.name}
+            Profile for {user.accountName}
           </Typography>
           <Typography variant="subtitle2">
             This is a profile page. Easy to modify, always blazing fast
@@ -97,7 +98,7 @@ const ProfileCover = ({ user }) => {
         </Box>
       </Box>
       <CardCover>
-        <CardMedia image={user.coverImg} />
+        <CardMedia image={user.coverImages} style={{ backgroundSize: 'contain', backgroundPosition: 'center' }} />
         <CardCoverAction>
           <Input accept="image/*" id="change-cover" multiple type="file" />
           <label htmlFor="change-cover">
@@ -111,7 +112,7 @@ const ProfileCover = ({ user }) => {
           </label>
         </CardCoverAction>
       </CardCover>
-      <AvatarWrapper>
+      {/* <AvatarWrapper>
         <Avatar variant="rounded" alt={user.name} src={user.avatar} />
         <ButtonUploadWrapper>
           <Input
@@ -126,30 +127,36 @@ const ProfileCover = ({ user }) => {
             </IconButton>
           </label>
         </ButtonUploadWrapper>
-      </AvatarWrapper>
+      </AvatarWrapper> */}
       <Box py={2} pl={2} mb={3}>
         <Typography gutterBottom variant="h4">
-          {user.name}
+          {user.accountName}
         </Typography>
-        <Typography variant="subtitle2">{user.description}</Typography>
-        <Typography sx={{ py: 2 }} variant="subtitle2" color="text.primary">
-          {user.jobtitle} | {user.location} | {user.followers} followers
+        {/* <Typography variant="subtitle2">{user.description}</Typography> */}
+        <Typography variant="subtitle2" color="text.primary">
+          Username: {user.accountName}
         </Typography>
+        <Typography variant="subtitle2" color="text.primary">
+          Email: {user.email}
+        </Typography>
+        <Typography variant="subtitle2" color="text.primary">
+          Address: {user.address}
+        </Typography>
+        {/* <Typography variant="subtitle2" color="text.primary">
+          Google Map Location: <a href={user.locationUrl}>{user.locationUrl}</a>
+        </Typography> */}
         <Box
           display={{ xs: 'block', md: 'flex' }}
           alignItems="center"
           justifyContent="space-between"
         >
           <Box>
-            <Button size="small" variant="contained">
+            {/* <Button size="small" variant="contained">
               Follow
+            </Button> */}
+            <Button size="small" variant="outlined">
+              <a href={user.locationUrl}>View Google Map Location</a>
             </Button>
-            <Button size="small" sx={{ mx: 1 }} variant="outlined">
-              View website
-            </Button>
-            <IconButton color="primary" sx={{ p: 0.5 }}>
-              <MoreHorizTwoToneIcon />
-            </IconButton>
           </Box>
           <Button
             sx={{ mt: { xs: 2, md: 0 } }}
@@ -157,7 +164,7 @@ const ProfileCover = ({ user }) => {
             variant="text"
             endIcon={<ArrowForwardTwoToneIcon />}
           >
-            See all {user.followers} connections
+            {/* See all {user.followers} connections */}
           </Button>
         </Box>
       </Box>

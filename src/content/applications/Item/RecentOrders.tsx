@@ -13,22 +13,21 @@ import { useNavigate } from 'react-router-dom';
 const RecentOrders: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  let accessToken: string = useSelector((state: any) => state.auth.userToken) !== null ? 
-  useSelector((state: any) => state.auth.userToken) : localStorage.getItem("userToken")
-  console.log(accessToken)
-  
-  const [listItem, setListItem] = useState<Item[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [items, setItems] = useState<ResponseData['content']>([]);
   let user = useSelector((state: any) => state.auth.userInfo)
+  let accessToken: string = useSelector((state: any) => state.auth.userToken) !== null ?
+    useSelector((state: any) => state.auth.userToken) : localStorage.getItem("userToken")
   console.log(user)
   console.log(accessToken)
 
-  const getUserByEmail = async()=>{
+  const [listItem, setListItem] = useState<Item[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [items, setItems] = useState<ResponseData['content']>([]);
+
+  const getUserByEmail = async () => {
     var decoded = jwt_decode(accessToken);
     console.log(decoded)
     const response = await UserService.getUserByEmail(decoded["sub"], accessToken)
-    if(response.status === 403 || response.status === 401){
+    if (response.status === 403 || response.status === 401) {
       localStorage.removeItem('userToken');
       navigate('/login')
       return
@@ -38,18 +37,18 @@ const RecentOrders: React.FC = () => {
     dispatch(setUser(user));
   }
 
-    if(user === null){
-      console.log("user is null")
-      getUserByEmail()
-    }
+  if (user === null) {
+    console.log("user is null")
+    getUserByEmail()
+  }
 
   const fetchItem = async () => {
     try {
       let response = null
-      if(user.role === 'ADMIN'){
+      if (user.role === 'ADMIN') {
         response = await ItemService.getItem({}, accessToken);
       }
-      else{
+      else {
         response = await ItemService.getItemByShopId({}, accessToken, user.usersID);
       }
       console.log('Response headers:', response.headers);

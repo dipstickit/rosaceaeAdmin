@@ -34,7 +34,7 @@ interface RecentOrdersTableProps {
   className?: string;
   items: OrderDetailResponse['content'];
   setItems: React.Dispatch<React.SetStateAction<OrderDetailResponse['content']>>;
-
+  selectedItemType: number
 }
 
 const applyFilters = (
@@ -54,7 +54,7 @@ const applyPagination = (
   return items.slice(page * limit, page * limit + limit);
 };
 
-const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
+const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items, selectedItemType }) => {
   let accessToken: string = useSelector((state: any) => state.auth.userToken) !== null ?
     useSelector((state: any) => state.auth.userToken) : localStorage.getItem("userToken")
   console.log(accessToken)
@@ -100,7 +100,10 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
 
   useEffect(() => {
     setSelectedItems([]);
-  }, [items]);
+    console.log("==================================================")
+    console.log(selectedItemType)
+    console.log("==================================================")
+  }, [items, selectedItemType]);
 
   const handleSelectAllItems = (
     event: ChangeEvent<HTMLInputElement>
@@ -154,7 +157,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
       )}
       <Divider />
       {
-        paginatedItems !== null && paginatedItems.length <= 0 ?
+        paginatedItems !== null && paginatedItems.filter(x => x.itemTypeId === selectedItemType).length <= 0 ?
           <div>There no order</div> :
           <>
             <TableContainer>
@@ -173,12 +176,15 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
                     <TableCell>Quantity</TableCell>
                     <TableCell>Price</TableCell>
                     <TableCell>Order By</TableCell>
-                    <TableCell align="right">Actions</TableCell>
+                    {
+                      selectedItemType === 1 ? null : <TableCell align="right">Actions</TableCell>
+                    }
+
                   </TableRow>
                 </TableHead>
 
                 <TableBody>
-                  {paginatedItems.map((orderDetail) => {
+                  {paginatedItems.filter(x => x.itemTypeId === selectedItemType).map((orderDetail) => {
                     const isItemSelected = selectedItems.includes(orderDetail.orderDetailId.toString());
                     return (
                       <TableRow
@@ -199,39 +205,40 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
                         <TableCell>{orderDetail.itemName}</TableCell>
                         <TableCell>{orderDetail.quantity}</TableCell>
                         <TableCell>{orderDetail.price}</TableCell>
-                        <TableCell>{orderDetail.CustomerName}</TableCell>
-                        <TableCell align="right">
-                          {/* <Tooltip title="Edit Item" arrow>
-                      <IconButton
-                        sx={{
-                          '&:hover': {
-                            background: theme.colors.primary.lighter
-                          },
-                          color: theme.palette.primary.main
-                        }}
-                        color="inherit"
-                        size="small"
-                      >
-                        <Link to={`/management/order-for-shop/${item?.orderDetailId}/update`}>
-                          {' '}
-                          <EditTwoToneIcon fontSize="small" />
-                        </Link>
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Delete Item" arrow>
-                      <IconButton
-                        onClick={() => deleteItemType(item.orderDetailId)}
-                        sx={{
-                          '&:hover': { background: theme.colors.error.lighter },
-                          color: theme.palette.error.main
-                        }}
-                        color="inherit"
-                        size="small"
-                      >
-                        <DeleteTwoToneIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip> */}
-                        </TableCell>
+                        <TableCell>{orderDetail.customerName}</TableCell>
+                        {
+                          selectedItemType === 1 ? null :
+                            <TableCell align="right">
+                              <Tooltip title="Accept Order" arrow>
+                                <IconButton
+                                  onClick={() => console.log("approve")}
+                                  sx={{
+                                    '&:hover': {
+                                      background: theme.colors.primary.lighter
+                                    },
+                                    color: theme.palette.primary.main
+                                  }}
+                                  color="inherit"
+                                  size="small"
+                                >
+                                  ✔
+                                </IconButton>
+                              </Tooltip>
+                              <Tooltip title="Decline Order" arrow>
+                                <IconButton
+                                  onClick={() => console.log("decline")}
+                                  sx={{
+                                    '&:hover': { background: theme.colors.error.lighter },
+                                    color: theme.palette.error.main
+                                  }}
+                                  color="inherit"
+                                  size="small"
+                                >
+                                  ❌
+                                </IconButton>
+                              </Tooltip>
+                            </TableCell>
+                        }
                       </TableRow>
                     );
                   })}

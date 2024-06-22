@@ -4,7 +4,8 @@ export interface OrderDetail {
     price: number;
     itemId: number;
     itemName: number;
-    CustomerName: string;
+    customerName: string;
+    itemTypeId: number;
 }
 
 export interface OrderDetailResponse {

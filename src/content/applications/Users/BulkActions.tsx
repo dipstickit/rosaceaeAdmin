@@ -72,6 +72,7 @@ function BulkActions({ selectedItems: selectedUsers }) {
       });
   };
   const handleDelete = (): void => {
+    console.log(selectedUsers)
     if (selectedUsers && Array.isArray(selectedUsers)) {
       selectedUsers.forEach((id) => deleteUser(id));
     }

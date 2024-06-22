@@ -146,7 +146,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
                   onChange={handleSelectAllItems}
                 />
               </TableCell>
-              <TableCell>Item Name</TableCell>
+              <TableCell>Category Name</TableCell>
               <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>

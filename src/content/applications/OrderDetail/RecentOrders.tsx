@@ -10,7 +10,11 @@ import { useAppDispatch } from 'src/redux/store';
 import { setUser } from '../../../redux/slices/auth.slice';
 import { useNavigate } from 'react-router-dom';
 
-const RecentOrders: React.FC = () => {
+interface RecentOrdersProps {
+  selectedItemType: number
+}
+
+const RecentOrders: React.FC<RecentOrdersProps> = ({ selectedItemType }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -47,7 +51,7 @@ const RecentOrders: React.FC = () => {
   const fetchItem = async () => {
     try {
       const response = await OrderDetailService.getOrderDetailByShop({}, accessToken, user.usersID);
-      console.log('Response data:', response.data.content);
+      console.log('Response data:', response.data);
       if (response.data.content) {
         setListItem(response.data.content.slice().reverse());
       } else {
@@ -69,7 +73,7 @@ const RecentOrders: React.FC = () => {
       {error ? (
         <div>Error: {error}</div>
       ) : (
-        <RecentOrdersTable items={listItem} setItems={setItems} />
+        <RecentOrdersTable selectedItemType={selectedItemType} items={listItem} setItems={setItems} />
       )}
     </Card>
   );
