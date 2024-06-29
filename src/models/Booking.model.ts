@@ -1,16 +1,14 @@
-export interface OrderDetail {
-    orderDetailId: number;
-    quantity: number;
-    price: number;
-    itemId: number;
-    itemName: number;
+export interface Booking {
+    bookingId: number;
     customerName: string;
-    itemTypeId: number;
+    serviceName: string;
+    bookingDate: string;
+    time: string;
     status: string;
 }
 
-export interface OrderDetailResponse {
-    content: OrderDetail[];
+export interface BookingResponse {
+    content: Booking[];
     pageable: {
         pageNumber: number;
         pageSize: number;

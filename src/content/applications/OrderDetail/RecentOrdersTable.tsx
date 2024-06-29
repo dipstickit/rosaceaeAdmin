@@ -176,6 +176,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items, selectedItemType
                     <TableCell>Quantity</TableCell>
                     <TableCell>Price</TableCell>
                     <TableCell>Order By</TableCell>
+                    <TableCell>Order Status</TableCell>
                     {
                       selectedItemType === 1 ? <TableCell align="right">Actions</TableCell> : null
                     }
@@ -206,6 +207,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items, selectedItemType
                         <TableCell>{orderDetail.quantity}</TableCell>
                         <TableCell>{orderDetail.price}</TableCell>
                         <TableCell>{orderDetail.customerName}</TableCell>
+                        <TableCell style={orderDetail.status.toLowerCase() === 'pending' ? { color: 'gray' } : orderDetail.status.toLowerCase() === 'canceled' ? { color: 'red' } : { color: 'green' }} >{orderDetail.status}</TableCell>
                         {
                           selectedItemType === 1 ? <TableCell align="right">
                             <Tooltip title="Accept Order" arrow>

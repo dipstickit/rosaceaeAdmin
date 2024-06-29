@@ -26,6 +26,7 @@ import UserService from '../../../../api/User.services';
 import jwt_decode from "jwt-decode";
 import { useAppDispatch } from 'src/redux/store';
 import { setUser } from '../../../../redux/slices/auth.slice';
+import { BookOnline, ListAltOutlined } from '@mui/icons-material';
 
 const MenuWrapper = styled(Box)(
   ({ theme }) => `
@@ -302,17 +303,31 @@ function SidebarMenu() {
               }
               {
                 user !== null && user.role == 'SHOP' ?
-                  <ListItem component="div">
-                    <Button
-                      disableRipple
-                      component={RouterLink}
-                      onClick={closeSidebar}
-                      to="/management/order-for-shop"
-                      startIcon={<TableChartTwoToneIcon />}
-                    >
-                      Order
-                    </Button>
-                  </ListItem> : ""
+                  <>
+                    <ListItem component="div">
+                      <Button
+                        disableRipple
+                        component={RouterLink}
+                        onClick={closeSidebar}
+                        to="/management/order-for-shop"
+                        startIcon={<TableChartTwoToneIcon />}
+                      >
+                        Order
+                      </Button>
+                    </ListItem>
+                    <ListItem component="div">
+                      <Button
+                        disableRipple
+                        component={RouterLink}
+                        onClick={closeSidebar}
+                        to="/management/booking"
+                        startIcon={<ListAltOutlined />}
+                      >
+                        Booking
+                      </Button>
+                    </ListItem>
+                  </>
+                  : ""
               }
             </List>
           </SubMenuWrapper>

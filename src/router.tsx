@@ -53,6 +53,9 @@ const Users = Loader(
 const OrderDetailForShop = Loader(
   lazy(() => import('src/content/applications/OrderDetail'))
 )
+const Booking = Loader(
+  lazy(() => import('src/content/applications/Booking'))
+)
 
 // Status
 
@@ -197,6 +200,10 @@ const routes: RouteObject[] = [
       {
         path: 'order-for-shop',
         element: <OrderDetailForShop />
+      },
+      {
+        path: 'booking',
+        element: <Booking />
       },
 
 
