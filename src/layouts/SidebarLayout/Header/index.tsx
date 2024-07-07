@@ -15,9 +15,9 @@ import MenuTwoToneIcon from '@mui/icons-material/MenuTwoTone';
 import { SidebarContext } from 'src/contexts/SidebarContext';
 import CloseTwoToneIcon from '@mui/icons-material/CloseTwoTone';
 
-import HeaderButtons from './Buttons';
+// import HeaderButtons from './Buttons';
 import HeaderUserbox from './Userbox';
-import HeaderMenu from './Menu';
+// import HeaderMenu from './Menu';
 import { useSelector } from 'react-redux';
 import UserService from '../../../api/User.services';
 import jwt_decode from "jwt-decode";
@@ -54,11 +54,11 @@ function Header() {
   console.log(user)
   console.log(accessToken)
 
-  const getUserByEmail = async()=>{
+  const getUserByEmail = async () => {
     var decoded = jwt_decode(accessToken);
     console.log(decoded)
     const response = await UserService.getUserByEmail(decoded["sub"], accessToken)
-    if(response.status === 403 || response.status === 401){
+    if (response.status === 403 || response.status === 401) {
       localStorage.removeItem('userToken');
       navigate('/login')
       return
@@ -68,10 +68,10 @@ function Header() {
     dispatch(setUser(user));
   }
 
-    if(user === null){
-      console.log("user is null")
-      getUserByEmail()
-    }
+  if (user === null) {
+    console.log("user is null")
+    getUserByEmail()
+  }
 
 
 
@@ -83,16 +83,16 @@ function Header() {
         boxShadow:
           theme.palette.mode === 'dark'
             ? `0 1px 0 ${alpha(
-                lighten(theme.colors.primary.main, 0.7),
-                0.15
-              )}, 0px 2px 8px -3px rgba(0, 0, 0, 0.2), 0px 5px 22px -4px rgba(0, 0, 0, .1)`
+              lighten(theme.colors.primary.main, 0.7),
+              0.15
+            )}, 0px 2px 8px -3px rgba(0, 0, 0, 0.2), 0px 5px 22px -4px rgba(0, 0, 0, .1)`
             : `0px 2px 8px -3px ${alpha(
-                theme.colors.alpha.black[100],
-                0.2
-              )}, 0px 5px 22px -4px ${alpha(
-                theme.colors.alpha.black[100],
-                0.1
-              )}`
+              theme.colors.alpha.black[100],
+              0.2
+            )}, 0px 5px 22px -4px ${alpha(
+              theme.colors.alpha.black[100],
+              0.1
+            )}`
       }}
     >
       <Stack
@@ -101,10 +101,10 @@ function Header() {
         alignItems="center"
         spacing={2}
       >
-        <HeaderMenu />
+        {/* <HeaderMenu /> */}
       </Stack>
       <Box display="flex" alignItems="center">
-        <HeaderButtons />
+        {/* <HeaderButtons /> */}
         <HeaderUserbox />
         <Box
           component="span"

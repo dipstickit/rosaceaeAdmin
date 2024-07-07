@@ -38,6 +38,15 @@ const updateBookingStatus = (token: string, data: any): Promise<AxiosResponse<st
     });
 }
 
+const getOrderStatusPercentage = (id: number, token: string): Promise<AxiosResponse<Map<string, number>>> => {
+    return instance.get(`booking/shop/${id}/status-percentages`, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            crossDomain: true
+        }
+    });
+}
+
 // const postCategory = (values: OrderDetail, token: string): Promise<AxiosResponse<OrderDetail>> => {
 //     return instance.post("category", values, {
 //         headers: {
@@ -68,5 +77,6 @@ const updateBookingStatus = (token: string, data: any): Promise<AxiosResponse<st
 export default {
     getBookingByShop,
     getBookingById,
-    updateBookingStatus
+    updateBookingStatus,
+    getOrderStatusPercentage
 };

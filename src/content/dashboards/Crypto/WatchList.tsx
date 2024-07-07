@@ -1,4 +1,4 @@
-import { MouseEvent, useState } from 'react';
+import { FC, MouseEvent, useEffect, useState } from 'react';
 import {
   Button,
   Box,
@@ -6,12 +6,18 @@ import {
   ToggleButtonGroup,
   Card,
   Typography,
-  styled
+  styled,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select
 } from '@mui/material';
 import ViewWeekTwoToneIcon from '@mui/icons-material/ViewWeekTwoTone';
 import TableRowsTwoToneIcon from '@mui/icons-material/TableRowsTwoTone';
 import WatchListColumn from './WatchListColumn';
 import WatchListRow from './WatchListRow';
+import { Send } from '@mui/icons-material';
+
 
 const EmptyResultsWrapper = styled('img')(
   ({ theme }) => `
@@ -21,15 +27,47 @@ const EmptyResultsWrapper = styled('img')(
 `
 );
 
-function WatchList() {
-  const [tabs, setTab] = useState<string | null>('watch_list_columns');
+interface WatchListProp {
+  monthArr: number[]
+  yearArr: number[]
+  accountBalance: number
+  month: any
+  year: any
+  dayList: string[]
+  revenueList: number[]
+  orderList: number[]
+  today: Date
+  totalOrder: number
+  setMonth: (data: number) => void
+  setYear: (data: number) => void
+  fetchAccountBalance: () => void
+  fetchChart: () => void
+}
 
+const WatchList: FC<WatchListProp> = ({
+  monthArr, yearArr, accountBalance, month, year, dayList, revenueList,
+  setMonth, setYear, fetchChart, today, totalOrder,
+  orderList
+}) => {
+  const [tabs, setTab] = useState<string | null>('watch_list_columns');
+  console.log(totalOrder)
   const handleViewOrientation = (
     _event: MouseEvent<HTMLElement>,
     newValue: string | null
   ) => {
     setTab(newValue);
   };
+
+  const renderAllMonth = monthArr.map(i => {
+    return (
+      <MenuItem key={i} value={i}>{i}</MenuItem>
+    )
+  })
+  const renderYears = yearArr.map(i => {
+    return (
+      <MenuItem key={i} value={i}>{i}</MenuItem>
+    )
+  })
 
   return (
     <>
@@ -41,7 +79,49 @@ function WatchList() {
           pb: 3
         }}
       >
-        <Typography variant="h3">Watch List</Typography>
+        <Typography variant="h3">
+          Revenue and Order
+          <Box sx={{ pb: 2 }} style={{ display: 'flex' }}>
+            <Typography
+              sx={{
+                mr: 2
+              }}
+              variant="h3"
+            >
+              <FormControl fullWidth variant="standard">
+                <InputLabel id="month">Month</InputLabel>
+                <Select label="month"
+                  value={month}
+                  onChange={e => { setMonth(parseInt(e.target.value)) }}
+                >
+                  {renderAllMonth}
+                </Select>
+              </FormControl>
+            </Typography>
+            <Typography
+              sx={{
+                mr: 3
+              }}
+              variant="h3"
+            >
+              <FormControl fullWidth variant="standard">
+                <InputLabel id="year">Year</InputLabel>
+                <Select label="year"
+                  value={year}
+                  onChange={e => { setYear(parseInt(e.target.value)) }}
+                >
+                  {renderYears}
+                </Select>
+              </FormControl>
+
+            </Typography>
+            <Typography sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <Button onClick={fetchChart} size='small' variant="contained" endIcon={<Send />}>
+                View
+              </Button>
+            </Typography>
+          </Box>
+        </Typography>
         <ToggleButtonGroup
           value={tabs}
           exclusive
@@ -56,7 +136,15 @@ function WatchList() {
         </ToggleButtonGroup>
       </Box>
 
-      {tabs === 'watch_list_columns' && <WatchListColumn />}
+      {tabs === 'watch_list_columns' && <WatchListColumn
+        dayList={dayList}
+        revenueList={revenueList}
+        month={today.getMonth() + 1}
+        year={today.getFullYear()}
+        revenueMonthly={accountBalance}
+        orderList={orderList}
+        totalOrder={totalOrder}
+      />}
 
       {tabs === 'watch_list_rows' && <WatchListRow />}
 

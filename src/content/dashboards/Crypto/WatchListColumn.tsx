@@ -12,6 +12,7 @@ import Label from 'src/components/Label';
 import Text from 'src/components/Text';
 import Chart from 'react-apexcharts';
 import type { ApexOptions } from 'apexcharts';
+import { FC } from 'react';
 
 const AvatarWrapper = styled(Avatar)(
   ({ theme }) => `
@@ -24,10 +25,9 @@ const AvatarWrapper = styled(Avatar)(
     border-radius: 60px;
     height: ${theme.spacing(5.5)};
     width: ${theme.spacing(5.5)};
-    background: ${
-      theme.palette.mode === 'dark'
-        ? theme.colors.alpha.trueWhite[30]
-        : alpha(theme.colors.alpha.black[100], 0.07)
+    background: ${theme.palette.mode === 'dark'
+      ? theme.colors.alpha.trueWhite[30]
+      : alpha(theme.colors.alpha.black[100], 0.07)
     };
   
     img {
@@ -41,8 +41,21 @@ const AvatarWrapper = styled(Avatar)(
 `
 );
 
-function WatchListColumn() {
+interface WatchListProp {
+  dayList: string[]
+  revenueList: number[]
+  orderList: number[]
+  month: number
+  year: number
+  revenueMonthly: number
+  totalOrder: number
+}
+
+const WatchListColumn: FC<WatchListProp> = ({ dayList, revenueList,
+  orderList, totalOrder,
+  month, revenueMonthly }) => {
   const theme = useTheme();
+  console.log(orderList)
 
   const chartOptions: ApexOptions = {
     chart: {
@@ -83,15 +96,7 @@ function WatchListColumn() {
     legend: {
       show: false
     },
-    labels: [
-      'Monday',
-      'Tueday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-      'Sunday'
-    ],
+    labels: dayList,
     xaxis: {
       labels: {
         show: false
@@ -114,7 +119,78 @@ function WatchListColumn() {
       y: {
         title: {
           formatter: function () {
-            return 'Price: $';
+            return 'Revenue: ₫';
+          }
+        }
+      },
+      marker: {
+        show: false
+      }
+    }
+  };
+  const chartOptions2: ApexOptions = {
+    chart: {
+      background: 'transparent',
+      toolbar: {
+        show: false
+      },
+      sparkline: {
+        enabled: true
+      },
+      zoom: {
+        enabled: false
+      }
+    },
+    fill: {
+      gradient: {
+        shade: 'light',
+        type: 'vertical',
+        shadeIntensity: 0.1,
+        inverseColors: false,
+        opacityFrom: 0.8,
+        opacityTo: 0,
+        stops: [0, 100]
+      }
+    },
+    colors: [theme.colors.primary.main],
+    dataLabels: {
+      enabled: false
+    },
+    theme: {
+      mode: theme.palette.mode
+    },
+    stroke: {
+      show: true,
+      colors: [theme.colors.primary.main],
+      width: 3
+    },
+    legend: {
+      show: false
+    },
+    labels: dayList,
+    xaxis: {
+      labels: {
+        show: false
+      },
+      axisBorder: {
+        show: false
+      },
+      axisTicks: {
+        show: false
+      }
+    },
+    yaxis: {
+      show: false,
+      tickAmount: 5
+    },
+    tooltip: {
+      x: {
+        show: true
+      },
+      y: {
+        title: {
+          formatter: function () {
+            return 'Number of order: ';
           }
         }
       },
@@ -125,14 +201,14 @@ function WatchListColumn() {
   };
   const chart1Data = [
     {
-      name: 'Bitcoin Price',
-      data: [55.701, 57.598, 48.607, 46.439, 58.755, 46.978, 58.16]
+      name: `Daily Revenue In Month: ${month}`,
+      data: revenueList
     }
   ];
   const chart2Data = [
     {
       name: 'Ethereum Price',
-      data: [13, 16, 14, 20, 8, 11, 20]
+      data: orderList
     }
   ];
   const chart3Data = [
@@ -162,18 +238,9 @@ function WatchListColumn() {
             }}
           >
             <Box display="flex" alignItems="center">
-              <AvatarWrapper>
-                <img
-                  alt="BTC"
-                  src="/static/images/placeholders/logo/bitcoin.png"
-                />
-              </AvatarWrapper>
               <Box>
                 <Typography variant="h4" noWrap>
-                  Bitcoin
-                </Typography>
-                <Typography variant="subtitle1" noWrap>
-                  BTC
+                  {`Daily Revenue In Month ${month}:`}
                 </Typography>
               </Box>
             </Box>
@@ -192,28 +259,7 @@ function WatchListColumn() {
                   mb: 1
                 }}
               >
-                $56,475.99
-              </Typography>
-              <Text color="success">
-                <b>+12.5%</b>
-              </Text>
-            </Box>
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-start'
-              }}
-            >
-              <Label color="success">+$500</Label>
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={{
-                  pl: 1
-                }}
-              >
-                last 24h
+                {revenueMonthly} ₫
               </Typography>
             </Box>
           </Box>
@@ -237,18 +283,9 @@ function WatchListColumn() {
             }}
           >
             <Box display="flex" alignItems="center">
-              <AvatarWrapper>
-                <img
-                  alt="ETH"
-                  src="/static/images/placeholders/logo/ethereum.png"
-                />
-              </AvatarWrapper>
               <Box>
                 <Typography variant="h4" noWrap>
-                  Ethereum
-                </Typography>
-                <Typography variant="subtitle1" noWrap>
-                  ETH
+                  {`Daily Number Of Order In Month ${month}:`}
                 </Typography>
               </Box>
             </Box>
@@ -267,40 +304,19 @@ function WatchListColumn() {
                   mb: 1
                 }}
               >
-                $1,968.00
-              </Typography>
-              <Text color="error">
-                <b>-3.24%</b>
-              </Text>
-            </Box>
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-start'
-              }}
-            >
-              <Label color="error">-$90</Label>
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={{
-                  pl: 1
-                }}
-              >
-                last 24h
+                {totalOrder}
               </Typography>
             </Box>
           </Box>
           <Chart
-            options={chartOptions}
+            options={chartOptions2}
             series={chart2Data}
             type="area"
             height={200}
           />
         </Card>
       </Grid>
-      <Grid item md={4} xs={12}>
+      {/* <Grid item md={4} xs={12}>
         <Card
           sx={{
             overflow: 'visible'
@@ -374,7 +390,7 @@ function WatchListColumn() {
             height={200}
           />
         </Card>
-      </Grid>
+      </Grid> */}
     </Grid>
   );
 }

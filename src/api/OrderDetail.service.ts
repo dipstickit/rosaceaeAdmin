@@ -7,6 +7,15 @@ type GetOrderDetailParams = {
     size?: number;
 };
 
+export interface DailyPriceForShopResponse {
+    day: number
+    totalPriceForShop: number
+}
+export interface DailyOrderCountResponse {
+    day: number
+    count: number
+}
+
 const getOrderDetailByShop = (params: GetOrderDetailParams, token: string, shopId: number): Promise<AxiosResponse<OrderDetailResponse>> => {
     const queryString = Object.entries(params)
         .map(([key, value]) => value ? `${key}=${value}` : '')
@@ -28,6 +37,34 @@ const getOrderDetailByOrderId = (id: number, token: string): Promise<AxiosRespon
         }
     });
 };
+
+const getTotalPrice = (id: number, month: number, year: number, token: string): Promise<AxiosResponse<any>> => {
+    return instance.get(`order/total-price-for-shop?userId=${id}&month=${month}&year=${year}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            crossDomain: true
+        }
+    });
+};
+
+const getRevenueEachDay = (id: number, month: number, year: number, token: string): Promise<AxiosResponse<DailyPriceForShopResponse[]>> => {
+    return instance.get(`order/daily-price-for-shop?userId=${id}&month=${month}&year=${year}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            crossDomain: true
+        }
+    });
+};
+
+const getOrderEachDay = (id: number, month: number, year: number, token: string): Promise<AxiosResponse<DailyOrderCountResponse[]>> => {
+    return instance.get(`order/order-count-by-day?userId=${id}&month=${month}&year=${year}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            crossDomain: true
+        }
+    });
+};
+
 
 // const postCategory = (values: OrderDetail, token: string): Promise<AxiosResponse<OrderDetail>> => {
 //     return instance.post("category", values, {
@@ -58,5 +95,8 @@ const getOrderDetailByOrderId = (id: number, token: string): Promise<AxiosRespon
 
 export default {
     getOrderDetailByShop,
-    getOrderDetailByOrderId
+    getOrderDetailByOrderId,
+    getTotalPrice,
+    getRevenueEachDay,
+    getOrderEachDay
 };

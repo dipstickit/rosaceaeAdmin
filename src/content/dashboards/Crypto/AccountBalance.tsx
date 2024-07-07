@@ -12,12 +12,17 @@ import {
   ListItem,
   ListItemText,
   List,
-  ListItemAvatar
+  ListItemAvatar,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select
 } from '@mui/material';
-import TrendingUp from '@mui/icons-material/TrendingUp';
-import Text from 'src/components/Text';
 import Chart from 'react-apexcharts';
 import type { ApexOptions } from 'apexcharts';
+import { FC, useState } from 'react';
+import { Send } from '@mui/icons-material';
+import { ChartSeries } from '.';
 
 const AvatarSuccess = styled(Avatar)(
   ({ theme }) => `
@@ -38,11 +43,10 @@ const ListItemAvatarWrapper = styled(ListItemAvatar)(
   margin-right: ${theme.spacing(1)};
   padding: ${theme.spacing(0.5)};
   border-radius: 60px;
-  background: ${
-    theme.palette.mode === 'dark'
+  background: ${theme.palette.mode === 'dark'
       ? theme.colors.alpha.trueWhite[30]
       : alpha(theme.colors.alpha.black[100], 0.07)
-  };
+    };
 
   img {
     background: ${theme.colors.alpha.trueWhite[100]};
@@ -55,7 +59,28 @@ const ListItemAvatarWrapper = styled(ListItemAvatar)(
 `
 );
 
-function AccountBalance() {
+interface AccountBalanceProp {
+  chartSeries: ChartSeries[]
+  percentage: number[]
+  statusLabel: string[]
+  monthArr: number[]
+  yearArr: number[]
+  colorArr: string[]
+  accountBalance: number
+  month: any
+  year: any
+  setMonth: (data: number) => void
+  setYear: (data: number) => void
+  fetchAccountBalance: () => void
+}
+
+const AccountBalance: FC<AccountBalanceProp> = ({
+  chartSeries, percentage, statusLabel,
+  monthArr, yearArr, colorArr,
+  accountBalance, month, year,
+  setMonth, setYear,
+  fetchAccountBalance
+}) => {
   const theme = useTheme();
 
   const chartOptions: ApexOptions = {
@@ -73,7 +98,7 @@ function AccountBalance() {
         }
       }
     },
-    colors: ['#ff9900', '#1c81c2', '#333', '#5c6ac0'],
+    colors: colorArr,
     dataLabels: {
       enabled: true,
       formatter: function (val) {
@@ -110,7 +135,7 @@ function AccountBalance() {
     fill: {
       opacity: 1
     },
-    labels: ['Bitcoin', 'Ripple', 'Cardano', 'Ethereum'],
+    labels: statusLabel.length > 0 && statusLabel !== null ? statusLabel.slice().reverse() : ['1', '2', '3', '4'],
     legend: {
       labels: {
         colors: theme.colors.alpha.trueWhite[100]
@@ -125,67 +150,79 @@ function AccountBalance() {
     }
   };
 
-  const chartSeries = [10, 20, 25, 45];
+  const renderAllMonth = monthArr.map(i => {
+    return (
+      <MenuItem key={i} value={i}>{i}</MenuItem>
+    )
+  })
+  const renderYears = yearArr.map(i => {
+    return (
+      <MenuItem key={i} value={i}>{i}</MenuItem>
+    )
+  })
+
 
   return (
     <Card>
       <Grid spacing={0} container>
-        <Grid item xs={12} md={6}>
-          <Box p={4}>
+        <Grid item xs={12} md={5}>
+          <Box p={2} py={4} pl={3}>
             <Typography
               sx={{
-                pb: 3
+                pb: 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between'
               }}
-              variant="h4"
+              variant="h3"
             >
               Account Balance
             </Typography>
-            <Box>
-              <Typography variant="h1" gutterBottom>
-                $54,584.23
+            <Box sx={{ pb: 2 }} style={{ display: 'flex' }}>
+              <Typography
+                sx={{
+                  mr: 2
+                }}
+                variant="h3"
+              >
+                <FormControl fullWidth variant="standard">
+                  <InputLabel id="month">Month</InputLabel>
+                  <Select label="month"
+                    value={month}
+                    onChange={e => { setMonth(parseInt(e.target.value)) }}
+                  >
+                    {renderAllMonth}
+                  </Select>
+                </FormControl>
               </Typography>
               <Typography
-                variant="h4"
-                fontWeight="normal"
-                color="text.secondary"
-              >
-                1.0045983485234 BTC
-              </Typography>
-              <Box
-                display="flex"
                 sx={{
-                  py: 4
+                  mr: 3
                 }}
-                alignItems="center"
+                variant="h3"
               >
-                <AvatarSuccess
-                  sx={{
-                    mr: 2
-                  }}
-                  variant="rounded"
-                >
-                  <TrendingUp fontSize="large" />
-                </AvatarSuccess>
-                <Box>
-                  <Typography variant="h4">+ $3,594.00</Typography>
-                  <Typography variant="subtitle2" noWrap>
-                    this month
-                  </Typography>
-                </Box>
-              </Box>
+                <FormControl fullWidth variant="standard">
+                  <InputLabel id="year">Year</InputLabel>
+                  <Select label="year"
+                    value={year}
+                    onChange={e => { setYear(parseInt(e.target.value)) }}
+                  >
+                    {renderYears}
+                  </Select>
+                </FormControl>
+
+              </Typography>
+              <Typography sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Button onClick={fetchAccountBalance} size='small' variant="contained" endIcon={<Send />}>
+                  View
+                </Button>
+              </Typography>
             </Box>
-            <Grid container spacing={3}>
-              <Grid sm item>
-                <Button fullWidth variant="outlined">
-                  Send
-                </Button>
-              </Grid>
-              <Grid sm item>
-                <Button fullWidth variant="contained">
-                  Receive
-                </Button>
-              </Grid>
-            </Grid>
+            <Box>
+              <Typography variant="h1" gutterBottom>
+                {accountBalance} ₫
+              </Typography>
+            </Box>
           </Box>
         </Grid>
         <Grid
@@ -204,9 +241,9 @@ function AccountBalance() {
               display: { xs: 'none', md: 'inline-block' }
             }}
           >
-            <Divider absolute orientation="vertical" />
+            {/* <Divider absolute orientation="vertical" /> */}
           </Box>
-          <Box py={4} pr={4} flex={1}>
+          <Box py={4} pr={0} flex={1}>
             <Grid container spacing={0}>
               <Grid
                 xs={12}
@@ -219,109 +256,62 @@ function AccountBalance() {
                 <Chart
                   height={250}
                   options={chartOptions}
-                  series={chartSeries}
+                  series={percentage.slice().reverse()}
                   type="donut"
                 />
               </Grid>
-              <Grid xs={12} sm={7} item display="flex" alignItems="center">
+              <Grid xs={12} sm={7} pl={2} item display="flex" alignItems="center">
                 <List
                   disablePadding
                   sx={{
-                    width: '100%'
+                    width: '100%',
+                    height: '100%'
                   }}
                 >
-                  <ListItem disableGutters>
-                    <ListItemAvatarWrapper>
-                      <img
-                        alt="BTC"
-                        src="/static/images/placeholders/logo/bitcoin.png"
-                      />
-                    </ListItemAvatarWrapper>
-                    <ListItemText
-                      primary="BTC"
-                      primaryTypographyProps={{ variant: 'h5', noWrap: true }}
-                      secondary="Bitcoin"
-                      secondaryTypographyProps={{
-                        variant: 'subtitle2',
-                        noWrap: true
-                      }}
-                    />
-                    <Box>
-                      <Typography align="right" variant="h4" noWrap>
-                        20%
+                  <ListItem sx={{
+                    paddingTop: '0',
+                    paddingLeft: '0'
+                  }}>
+                    <Box p={1} sx={{
+                      paddingTop: '0',
+                      paddingLeft: '0'
+                    }}>
+                      <Typography
+                        variant="h3"
+                      >
+                        Booking Status
                       </Typography>
-                      <Text color="success">+2.54%</Text>
                     </Box>
                   </ListItem>
-                  <ListItem disableGutters>
-                    <ListItemAvatarWrapper>
-                      <img
-                        alt="XRP"
-                        src="/static/images/placeholders/logo/ripple.png"
-                      />
-                    </ListItemAvatarWrapper>
-                    <ListItemText
-                      primary="XRP"
-                      primaryTypographyProps={{ variant: 'h5', noWrap: true }}
-                      secondary="Ripple"
-                      secondaryTypographyProps={{
-                        variant: 'subtitle2',
-                        noWrap: true
-                      }}
-                    />
-                    <Box>
-                      <Typography align="right" variant="h4" noWrap>
-                        10%
-                      </Typography>
-                      <Text color="error">-1.22%</Text>
-                    </Box>
-                  </ListItem>
-                  <ListItem disableGutters>
-                    <ListItemAvatarWrapper>
-                      <img
-                        alt="ADA"
-                        src="/static/images/placeholders/logo/cardano.png"
-                      />
-                    </ListItemAvatarWrapper>
-                    <ListItemText
-                      primary="ADA"
-                      primaryTypographyProps={{ variant: 'h5', noWrap: true }}
-                      secondary="Cardano"
-                      secondaryTypographyProps={{
-                        variant: 'subtitle2',
-                        noWrap: true
-                      }}
-                    />
-                    <Box>
-                      <Typography align="right" variant="h4" noWrap>
-                        40%
-                      </Typography>
-                      <Text color="success">+10.50%</Text>
-                    </Box>
-                  </ListItem>
-                  <ListItem disableGutters>
-                    <ListItemAvatarWrapper>
-                      <img
-                        alt="ETH"
-                        src="/static/images/placeholders/logo/ethereum.png"
-                      />
-                    </ListItemAvatarWrapper>
-                    <ListItemText
-                      primary="ETH"
-                      primaryTypographyProps={{ variant: 'h5', noWrap: true }}
-                      secondary="Ethereum"
-                      secondaryTypographyProps={{
-                        variant: 'subtitle2',
-                        noWrap: true
-                      }}
-                    />
-                    <Box>
-                      <Typography align="right" variant="h4" noWrap>
-                        30%
-                      </Typography>
-                      <Text color="error">-12.38%</Text>
-                    </Box>
-                  </ListItem>
+                  {
+                    chartSeries.length > 0 && chartSeries !== null ? chartSeries.map((i, index) => {
+                      return (
+                        <ListItem key={i.name} disableGutters
+                          style={{
+                            background: colorArr.slice().reverse()[index],
+                            paddingLeft: '10px',
+                            paddingRight: '10px',
+                            borderTopRightRadius: index == 0 ? '10px' : '0',
+                            borderTopLeftRadius: index == 0 ? '10px' : '0',
+                            borderBottomRightRadius: index == chartSeries.length - 1 ? '10px' : '0',
+                            borderBottomLeftRadius: index == chartSeries.length - 1 ? '10px' : '0'
+                          }}>
+                          <ListItemText
+                            primary={i.name}
+                            primaryTypographyProps={{ variant: 'h5', noWrap: true }}
+                            secondaryTypographyProps={{
+                              variant: 'subtitle2',
+                              noWrap: true
+                            }}
+                          />
+                          <Box>
+                            <Typography align="right" variant="h4" noWrap>
+                              {i.value}%
+                            </Typography>
+                          </Box>
+                        </ListItem>)
+                    }) : null
+                  }
                 </List>
               </Grid>
             </Grid>

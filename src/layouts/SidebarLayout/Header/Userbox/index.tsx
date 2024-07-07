@@ -73,11 +73,11 @@ function HeaderUserbox() {
   console.log(user)
   console.log(accessToken)
 
-  const getUserByEmail = async()=>{
+  const getUserByEmail = async () => {
     var decoded = jwt_decode(accessToken);
     console.log(decoded)
     const response = await UserService.getUserByEmail(decoded["sub"], accessToken)
-    if(response.status === 403 || response.status === 401){
+    if (response.status === 403 || response.status === 401) {
       localStorage.removeItem('userToken');
       navigate('/login')
       return
@@ -87,10 +87,10 @@ function HeaderUserbox() {
     dispatch(setUser(user));
   }
 
-    if(user === null){
-      console.log("user is null")
-      getUserByEmail()
-    }
+  if (user === null) {
+    console.log("user is null")
+    getUserByEmail()
+  }
 
   const ref = useRef<any>(null);
   const [isOpen, setOpen] = useState<boolean>(false);
@@ -103,7 +103,7 @@ function HeaderUserbox() {
     setOpen(false);
   };
 
-  const handleLogout = async()=>{
+  const handleLogout = async () => {
     localStorage.removeItem('userInfo');
     localStorage.removeItem('userToken');
     navigate('/login')
@@ -112,7 +112,8 @@ function HeaderUserbox() {
   return (
     <>
       <UserBoxButton color="secondary" ref={ref} onClick={handleOpen}>
-        <Avatar variant="rounded" alt={user !== null ? user.accountName : 'nigga'} src={'https://i.ytimg.com/vi/dMDyVBM1Sms/maxresdefault.jpg'} />
+        <Avatar variant="rounded" alt={user !== null ? user.accountName : 'nigga'}
+          src={user !== null ? user.coverImages : 'https://i.ytimg.com/vi/dMDyVBM1Sms/maxresdefault.jpg'} />
         <Hidden mdDown>
           <UserBoxText>
             <UserBoxLabel variant="body1">{user !== null ? user.accountName : 'nigga'}</UserBoxLabel>
@@ -139,21 +140,22 @@ function HeaderUserbox() {
         }}
       >
         <MenuUserBox sx={{ minWidth: 210 }} display="flex">
-          <Avatar variant="rounded" alt={user !== null ? user.accountName : 'nigga'} src={'https://i.ytimg.com/vi/dMDyVBM1Sms/maxresdefault.jpg'} />
+          <Avatar variant="rounded" alt={user !== null ? user.accountName : 'nigga'}
+            src={user !== null ? user.coverImages : 'https://i.ytimg.com/vi/dMDyVBM1Sms/maxresdefault.jpg'} />
           <UserBoxText>
             <UserBoxLabel variant="body1">{user !== null ? user.accountName : 'nigga'}</UserBoxLabel>
             <UserBoxDescription variant="body2">
-            {user !== null ? user.role : 'lmao'}
+              {user !== null ? user.role : 'lmao'}
             </UserBoxDescription>
           </UserBoxText>
         </MenuUserBox>
         <Divider sx={{ mb: 0 }} />
         <List sx={{ p: 1 }} component="nav">
-          <ListItem  to="/management/profile/details" component={NavLink}>
+          <ListItem to="/management/profile/details" component={NavLink}>
             <AccountBoxTwoToneIcon fontSize="small" />
             <ListItemText primary="My Profile" />
           </ListItem>
-          <ListItem  to="/dashboards/messenger" component={NavLink}>
+          <ListItem to="/dashboards/messenger" component={NavLink}>
             <InboxTwoToneIcon fontSize="small" />
             <ListItemText primary="Messenger" />
           </ListItem>
@@ -169,7 +171,8 @@ function HeaderUserbox() {
         <Box sx={{ m: 1 }}>
           <Button color="primary" fullWidth onClick={() => {
             handleLogout()
-            console.log("logout")}}>
+            console.log("logout")
+          }}>
             <LockOpenTwoToneIcon sx={{ mr: 1 }} />
             Sign out
           </Button>
