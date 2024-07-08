@@ -130,6 +130,7 @@ function DashboardCrypto() {
       setDayList(dayList)
       setRevenue(revenueList)
       setTotalOrder(totalOrder)
+      setOrderList(orderList)
     } catch (error) {
       console.error('Error fetching items:', (error as Error).message);
     }
