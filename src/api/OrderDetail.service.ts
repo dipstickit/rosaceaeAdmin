@@ -11,6 +11,10 @@ export interface DailyPriceForShopResponse {
     day: number
     totalPriceForShop: number
 }
+export interface DailyPriceForAdminResponse {
+    day: number
+    totalPriceForAdmin: number
+}
 export interface DailyOrderCountResponse {
     day: number
     count: number
@@ -65,6 +69,33 @@ const getOrderEachDay = (id: number, month: number, year: number, token: string)
     });
 };
 
+const getTotalPriceAdmin = (month: number, year: number, token: string): Promise<AxiosResponse<any>> => {
+    return instance.get(`order/total-price-for-admin?month=${month}&year=${year}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            crossDomain: true
+        }
+    });
+}
+
+const getRevenueEachDayAdmin = (month: number, year: number, token: string): Promise<AxiosResponse<DailyPriceForShopResponse[]>> => {
+    return instance.get(`order/daily-price-for-admin?month=${month}&year=${year}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            crossDomain: true
+        }
+    });
+};
+
+const getOrderEachDayAdmin = (month: number, year: number, token: string): Promise<AxiosResponse<DailyOrderCountResponse[]>> => {
+    return instance.get(`order/order-count-by-day-for-Admin?month=${month}&year=${year}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            crossDomain: true
+        }
+    });
+};
+
 
 // const postCategory = (values: OrderDetail, token: string): Promise<AxiosResponse<OrderDetail>> => {
 //     return instance.post("category", values, {
@@ -98,5 +129,8 @@ export default {
     getOrderDetailByOrderId,
     getTotalPrice,
     getRevenueEachDay,
-    getOrderEachDay
+    getOrderEachDay,
+    getTotalPriceAdmin,
+    getRevenueEachDayAdmin,
+    getOrderEachDayAdmin
 };
