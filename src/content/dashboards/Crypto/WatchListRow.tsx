@@ -18,6 +18,8 @@ import type { ApexOptions } from 'apexcharts';
 import TrendingDownTwoToneIcon from '@mui/icons-material/TrendingDownTwoTone';
 import TrendingUpTwoToneIcon from '@mui/icons-material/TrendingUpTwoTone';
 import TrendingFlatTwoToneIcon from '@mui/icons-material/TrendingFlatTwoTone';
+import { FC } from 'react';
+import { WatchListRowProp } from './WatchList';
 
 const AvatarWrapper = styled(Avatar)(
   ({ theme }) => `
@@ -46,7 +48,9 @@ const AvatarWrapper = styled(Avatar)(
 `
 );
 
-function WatchListRow() {
+const WatchListRow: FC<WatchListRowProp> = ({ dayList, revenueList,
+  orderList, totalOrder,
+  month, revenueMonthly }) => {
   const theme = useTheme();
 
   const Box1Options: ApexOptions = {
@@ -65,15 +69,7 @@ function WatchListRow() {
         enabled: false
       }
     },
-    labels: [
-      'Monday',
-      'Tueday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-      'Sunday'
-    ],
+    labels: dayList,
     stroke: {
       curve: 'smooth',
       colors: [theme.colors.primary.main],
@@ -102,11 +98,63 @@ function WatchListRow() {
         show: true
       },
       y: {
-        title: {
-          formatter: function () {
-            return 'Price: $';
-          }
-        }
+        formatter(value, { dataPointIndex, w }) {
+          return w.config.series[0].data[dataPointIndex] + ' ₫'
+        },
+      },
+      marker: {
+        show: false
+      }
+    }
+  };
+  const Box2Options: ApexOptions = {
+    chart: {
+      animations: {
+        enabled: false
+      },
+      background: 'transparent',
+      toolbar: {
+        show: false
+      },
+      sparkline: {
+        enabled: true
+      },
+      zoom: {
+        enabled: false
+      }
+    },
+    labels: dayList,
+    stroke: {
+      curve: 'smooth',
+      colors: [theme.colors.primary.main],
+      width: 2
+    },
+    yaxis: {
+      show: false
+    },
+    colors: [theme.colors.primary.main],
+    grid: {
+      padding: {
+        top: 10,
+        right: 5,
+        bottom: 10,
+        left: 5
+      }
+    },
+    theme: {
+      mode: theme.palette.mode
+    },
+    tooltip: {
+      fixed: {
+        enabled: true
+      },
+      x: {
+        show: true
+      },
+      y: {
+        formatter(value, { dataPointIndex, w }) {
+          return w.config.series[0].data[dataPointIndex]
+        },
       },
       marker: {
         show: false
@@ -116,24 +164,24 @@ function WatchListRow() {
 
   const Box1Data = [
     {
-      name: 'Bitcoin',
-      data: [55.701, 57.598, 48.607, 46.439, 58.755, 46.978, 58.16]
+      name: `Revenue`,
+      data: revenueList
     }
   ];
 
   const Box2Data = [
     {
-      name: 'Ethereum',
-      data: [1.854, 1.873, 1.992, 2.009, 1.909, 1.942, 1.884]
+      name: `Number of order: `,
+      data: orderList
     }
   ];
 
-  const Box3Data = [
-    {
-      name: 'Cardano',
-      data: [13, 16, 14, 18, 8, 11, 20]
-    }
-  ];
+  // const Box3Data = [
+  //   {
+  //     name: 'Cardano',
+  //     data: [13, 16, 14, 18, 8, 11, 20]
+  //   }
+  // ];
 
   return (
     <Card>
@@ -156,22 +204,12 @@ function WatchListRow() {
             justifyContent="space-between"
           >
             <Box display="flex" alignItems="center">
-              <AvatarWrapper>
-                <img
-                  alt="BTC"
-                  src="/static/images/placeholders/logo/bitcoin.png"
-                />
-              </AvatarWrapper>
               <Box>
                 <Typography variant="h4" noWrap>
-                  Bitcoin
-                </Typography>
-                <Typography variant="subtitle1" noWrap>
-                  BTC
+                  {`Daily Revenue In Month ${month}:`}
                 </Typography>
               </Box>
             </Box>
-            <Label color="secondary">24h</Label>
           </Box>
           <Box
             mt={3}
@@ -192,17 +230,9 @@ function WatchListRow() {
                   pr: 1
                 }}
               >
-                $56,475.99
+                {revenueMonthly} ₫
               </Typography>
-              <Text color="success">
-                <b>+12.5%</b>
-              </Text>
             </Box>
-            <TrendingUpTwoToneIcon
-              sx={{
-                color: `${theme.colors.success.main}`
-              }}
-            />
           </Box>
           <Box pt={2}>
             <Chart
@@ -225,22 +255,12 @@ function WatchListRow() {
             justifyContent="space-between"
           >
             <Box display="flex" alignItems="center">
-              <AvatarWrapper>
-                <img
-                  alt="ETH"
-                  src="/static/images/placeholders/logo/ethereum.png"
-                />
-              </AvatarWrapper>
               <Box>
                 <Typography variant="h4" noWrap>
-                  Ethereum
-                </Typography>
-                <Typography variant="subtitle1" noWrap>
-                  ETH
+                  {`Daily Number Of Order In Month ${month}:`}
                 </Typography>
               </Box>
             </Box>
-            <Label color="secondary">24h</Label>
           </Box>
           <Box
             mt={3}
@@ -261,17 +281,9 @@ function WatchListRow() {
                   pr: 1
                 }}
               >
-                $1,968.00
+                {totalOrder}
               </Typography>
-              <Text color="error">
-                <b>-3.24%</b>
-              </Text>
             </Box>
-            <TrendingDownTwoToneIcon
-              sx={{
-                color: `${theme.colors.error.main}`
-              }}
-            />
           </Box>
           <Box pt={2}>
             <Chart
@@ -282,7 +294,7 @@ function WatchListRow() {
             />
           </Box>
         </Box>
-        <Box
+        {/*<Box
           sx={{
             width: '100%',
             p: 3
@@ -350,19 +362,9 @@ function WatchListRow() {
               height={100}
             />
           </Box>
-        </Box>
+            </Box>*/}
       </Stack>
       <Divider />
-      <CardActions
-        disableSpacing
-        sx={{
-          p: 3,
-          display: 'flex',
-          justifyContent: 'center'
-        }}
-      >
-        <Button variant="outlined">View more assets</Button>
-      </CardActions>
     </Card>
   );
 }

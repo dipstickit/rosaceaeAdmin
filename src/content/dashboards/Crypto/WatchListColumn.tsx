@@ -13,6 +13,7 @@ import Text from 'src/components/Text';
 import Chart from 'react-apexcharts';
 import type { ApexOptions } from 'apexcharts';
 import { FC } from 'react';
+import { WatchListColumnProp } from './WatchList';
 
 const AvatarWrapper = styled(Avatar)(
   ({ theme }) => `
@@ -41,21 +42,13 @@ const AvatarWrapper = styled(Avatar)(
 `
 );
 
-interface WatchListProp {
-  dayList: string[]
-  revenueList: number[]
-  orderList: number[]
-  month: number
-  year: number
-  revenueMonthly: number
-  totalOrder: number
-}
-
-const WatchListColumn: FC<WatchListProp> = ({ dayList, revenueList,
+const WatchListColumn: FC<WatchListColumnProp> = ({ dayList, revenueList,
   orderList, totalOrder,
   month, revenueMonthly }) => {
   const theme = useTheme();
   console.log(orderList)
+  const maxNumberOfOrder = orderList !== undefined ? Math.max(...orderList) : 0
+  console.log(maxNumberOfOrder)
 
   const chartOptions: ApexOptions = {
     chart: {
@@ -117,11 +110,14 @@ const WatchListColumn: FC<WatchListProp> = ({ dayList, revenueList,
         show: true
       },
       y: {
-        title: {
-          formatter: function () {
-            return 'Revenue: ₫';
-          }
-        }
+        formatter(value, { dataPointIndex, w }) {
+          return w.config.series[0].data[dataPointIndex] + ' ₫'
+        },
+        // title: {
+        //   formatter: function (value) {
+        //     return `Revenue: ${value} ₫`;
+        //   }
+        // }
       },
       marker: {
         show: false
@@ -180,19 +176,27 @@ const WatchListColumn: FC<WatchListProp> = ({ dayList, revenueList,
       }
     },
     yaxis: {
+      min: 0,
+      max: maxNumberOfOrder + 0.07,
       show: false,
-      tickAmount: 5
+      tickAmount: 2,
+      labels: {
+        formatter: (value: number) => value.toFixed(0)  // Formatting to handle small numbers
+      }
     },
     tooltip: {
       x: {
         show: true
       },
       y: {
-        title: {
-          formatter: function () {
-            return 'Number of order: ';
-          }
-        }
+        formatter(value, { dataPointIndex, w }) {
+          return w.config.series[0].data[dataPointIndex]
+        },
+        // title: {
+        //   formatter: function () {
+        //     return 'Number of order: ';
+        //   }
+        // }
       },
       marker: {
         show: false
@@ -201,13 +205,13 @@ const WatchListColumn: FC<WatchListProp> = ({ dayList, revenueList,
   };
   const chart1Data = [
     {
-      name: `Daily Revenue In Month: ${month}`,
-      data: revenueList
+      name: `Revenue`,
+      data: revenueList,
     }
   ];
   const chart2Data = [
     {
-      name: 'Ethereum Price',
+      name: `Number of order: `,
       data: orderList
     }
   ];

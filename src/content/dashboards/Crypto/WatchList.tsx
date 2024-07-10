@@ -44,6 +44,26 @@ interface WatchListProp {
   fetchChart: () => void
 }
 
+export interface WatchListColumnProp {
+  dayList: string[]
+  revenueList: number[]
+  orderList: number[]
+  month: number
+  year: number
+  revenueMonthly: number
+  totalOrder: number
+}
+
+export interface WatchListRowProp {
+  dayList: string[]
+  revenueList: number[]
+  orderList: number[]
+  month: number
+  year: number
+  revenueMonthly: number
+  totalOrder: number
+}
+
 const WatchList: FC<WatchListProp> = ({
   monthArr, yearArr, accountBalance, month, year, dayList, revenueList,
   setMonth, setYear, fetchChart, today, totalOrder,
@@ -146,7 +166,15 @@ const WatchList: FC<WatchListProp> = ({
         totalOrder={totalOrder}
       />}
 
-      {tabs === 'watch_list_rows' && <WatchListRow />}
+      {tabs === 'watch_list_rows' && <WatchListRow
+        dayList={dayList}
+        revenueList={revenueList}
+        month={today.getMonth() + 1}
+        year={today.getFullYear()}
+        revenueMonthly={accountBalance}
+        orderList={orderList}
+        totalOrder={totalOrder}
+      />}
 
       {!tabs && (
         <Card
