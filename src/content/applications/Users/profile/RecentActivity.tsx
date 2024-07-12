@@ -88,7 +88,7 @@ function RecentActivity() {
 
   useEffect(() => {
     fetchItem();
-  }, []);
+  }, [user]);
 
   return (
     <Card>

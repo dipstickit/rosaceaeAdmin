@@ -24,11 +24,13 @@ import {
   TableContainer,
   useTheme,
   styled,
+  Input,
 } from '@mui/material';
 
 import DoneTwoToneIcon from '@mui/icons-material/DoneTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import { format, subHours, subWeeks, subDays } from 'date-fns';
+import UserServices from 'src/api/User.services';
 
 const ButtonError = styled(Button)(
   ({ theme }) => `
@@ -56,11 +58,12 @@ const AvatarWrapper = styled(Avatar)(
 `
 );
 
-function SecurityTab() {
+function SecurityTab({ user, accessToken }) {
   const theme = useTheme();
-
+  console.log(user)
   const [page, setPage] = useState(2);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [newPassword, setNewPassword] = useState<string>("")
 
   const handleChangePage = (
     event: MouseEvent<HTMLButtonElement> | null,
@@ -114,9 +117,27 @@ function SecurityTab() {
     }
   ];
 
+
+  const changePassword = async () => {
+    console.log(newPassword)
+    const data = {
+      newPassword: newPassword
+    }
+    const res = await UserServices.changePassword(user.usersID, data, accessToken)
+      .then(res => {
+        console.log(res.data)
+        alert(res.data.status)
+        setNewPassword("")
+      })
+      .catch(e => {
+        alert(e.response.data.status)
+      }
+      )
+
+  }
   return (
     <Grid container spacing={3}>
-      <Grid item xs={12}>
+      {/* <Grid item xs={12}>
         <Box pb={2}>
           <Typography variant="h3">Social Accounts</Typography>
           <Typography variant="subtitle2">
@@ -144,8 +165,8 @@ function SecurityTab() {
             </ListItem>
           </List>
         </Card>
-      </Grid>
-      <Grid item xs={12}>
+      </Grid> */}
+      {/* <Grid item xs={12}>
         <Card>
           <List>
             <ListItem sx={{ p: 3 }}>
@@ -189,7 +210,7 @@ function SecurityTab() {
             </ListItem>
           </List>
         </Card>
-      </Grid>
+      </Grid> */}
       <Grid item xs={12}>
         <Box pb={2}>
           <Typography variant="h3">Security</Typography>
@@ -207,13 +228,18 @@ function SecurityTab() {
                   lineHeight: 1
                 }}
                 primary="Change Password"
-                secondary="You can change your password here"
+                secondary={
+                  <div>
+                    Please enter your new password:&nbsp;&nbsp;&nbsp;
+                    <Input type='password' value={newPassword} onChange={e => setNewPassword(e.target.value)} />
+                  </div>
+                }
               />
-              <Button size="large" variant="outlined">
+              <Button size="large" variant="outlined" onClick={changePassword}>
                 Change password
               </Button>
             </ListItem>
-            <Divider component="li" />
+            {/* <Divider component="li" />
             <ListItem sx={{ p: 3 }}>
               <ListItemText
                 primaryTypographyProps={{ variant: 'h5', gutterBottom: true }}
@@ -225,11 +251,11 @@ function SecurityTab() {
                 secondary="Enable PIN verification for all sign in attempts"
               />
               <Switch color="primary" />
-            </ListItem>
+            </ListItem> */}
           </List>
         </Card>
       </Grid>
-      <Grid item xs={12}>
+      {/* <Grid item xs={12}>
         <Card>
           <CardHeader
             subheaderTypographyProps={{}}
@@ -290,7 +316,7 @@ function SecurityTab() {
             />
           </Box>
         </Card>
-      </Grid>
+      </Grid> */}
     </Grid>
   );
 }

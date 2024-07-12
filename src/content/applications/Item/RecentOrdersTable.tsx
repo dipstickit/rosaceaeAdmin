@@ -33,6 +33,7 @@ import { useSelector } from 'react-redux';
 interface RecentOrdersTableProps {
   className?: string;
   items: ResponseData['content'];
+  role: any;
   setItems: React.Dispatch<React.SetStateAction<ResponseData['content']>>;
 }
 
@@ -54,7 +55,7 @@ const applyPagination = (
   return items.slice(page * limit, page * limit + limit);
 };
 
-const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
+const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items, role }) => {
   let accessToken: string = useSelector((state: any) => state.auth.userToken) !== null ?
     useSelector((state: any) => state.auth.userToken) : localStorage.getItem("userToken")
   console.log(accessToken)
@@ -149,8 +150,9 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
               </TableCell>
               <TableCell>Item Name</TableCell>
               <TableCell>Item Description</TableCell>
-              <TableCell align="right">Item Price</TableCell>
-              <TableCell align="right">Actions</TableCell>
+              <TableCell align="right" sx={{ textWrap: 'nowrap' }}>Item Price</TableCell>
+              {role !== 'ADMIN' ? <TableCell align="right">Actions</TableCell> : null}
+
             </TableRow>
           </TableHead>
 
@@ -173,41 +175,42 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
                   </TableCell>
                   <TableCell>{item.itemName}</TableCell>
                   <TableCell>{item.itemDescription}</TableCell>
-                  <TableCell align="right">
-                    {numeral(item.itemPrice).format('$0,0.00')}
+                  <TableCell align="right" sx={{ textWrap: 'nowrap' }}>
+                    {numeral(item.itemPrice).format('0,0')} ₫
                   </TableCell>
-                  <TableCell align="right">
-                    <Tooltip title="Edit Item" arrow>
-                      <IconButton
-                        sx={{
-                          '&:hover': {
-                            background: theme.colors.primary.lighter
-                          },
-                          color: theme.palette.primary.main
-                        }}
-                        color="inherit"
-                        size="small"
-                      >
-                        <Link to={`/management/item/${item?.itemId}/update`}>
-                          {' '}
-                          <EditTwoToneIcon fontSize="small" />
-                        </Link>
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Delete Item" arrow>
-                      <IconButton
-                        onClick={() => deleteItem(item.itemId)}
-                        sx={{
-                          '&:hover': { background: theme.colors.error.lighter },
-                          color: theme.palette.error.main
-                        }}
-                        color="inherit"
-                        size="small"
-                      >
-                        <DeleteTwoToneIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
-                  </TableCell>
+                  {role !== 'ADMIN' ?
+                    <TableCell align="right">
+                      <Tooltip title="Edit Item" arrow>
+                        <IconButton
+                          sx={{
+                            '&:hover': {
+                              background: theme.colors.primary.lighter
+                            },
+                            color: theme.palette.primary.main
+                          }}
+                          color="inherit"
+                          size="small"
+                        >
+                          <Link to={`/management/item/${item?.itemId}/update`}>
+                            {' '}
+                            <EditTwoToneIcon fontSize="small" />
+                          </Link>
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Delete Item" arrow>
+                        <IconButton
+                          onClick={() => deleteItem(item.itemId)}
+                          sx={{
+                            '&:hover': { background: theme.colors.error.lighter },
+                            color: theme.palette.error.main
+                          }}
+                          color="inherit"
+                          size="small"
+                        >
+                          <DeleteTwoToneIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    </TableCell> : null}
                 </TableRow>
               );
             })}

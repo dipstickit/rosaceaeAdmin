@@ -56,37 +56,20 @@ const getOrderStatusPercentageAdmin = (token: string): Promise<AxiosResponse<Map
     });
 }
 
-// const postCategory = (values: OrderDetail, token: string): Promise<AxiosResponse<OrderDetail>> => {
-//     return instance.post("category", values, {
-//         headers: {
-//             'Authorization': `Bearer ${token}`,
-//             crossDomain: true
-//         }
-//     });
-// };
-
-// const putCategory = (id: number, values: OrderDetail, token: string): Promise<AxiosResponse<OrderDetail>> => {
-//     return instance.put(`category/${id}`, values, {
-//         headers: {
-//             'Authorization': `Bearer ${token}`,
-//             crossDomain: true
-//         }
-//     });
-// };
-
-// const deleteCategory = (id: number, token: string): Promise<AxiosResponse<void>> => {
-//     return instance.delete(`category/${id}`, {
-//         headers: {
-//             'Authorization': `Bearer ${token}`,
-//             crossDomain: true
-//         }
-//     });
-// };
+const completeBooking = (token: string, id: number): Promise<AxiosResponse<string>> => {
+    return instance.put(`booking/complete/${id}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            crossDomain: true
+        }
+    });
+}
 
 export default {
     getBookingByShop,
     getBookingById,
     updateBookingStatus,
     getOrderStatusPercentage,
-    getOrderStatusPercentageAdmin
+    getOrderStatusPercentageAdmin,
+    completeBooking
 };

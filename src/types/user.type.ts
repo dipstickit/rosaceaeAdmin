@@ -13,6 +13,7 @@ export interface User {
     userWallet: number;
     userStatus: boolean;
     role: Role;
+    coverImages: string | null;
     verificationCode: string | null;
     enabled: boolean;
     cart: any[]; // Chưa có thông tin chi tiết về cấu trúc của cart

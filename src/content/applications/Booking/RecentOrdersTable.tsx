@@ -29,7 +29,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import BookingService from '../../../api/Booking.service';
 import { toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
-import { CancelOutlined, CheckBoxRounded, CheckCircleOutline, HorizontalRuleOutlined, RadioButtonUncheckedRounded } from '@mui/icons-material';
+import { CancelOutlined, CheckBoxRounded, CheckCircleOutline, CheckCircleTwoTone, HorizontalRuleOutlined, RadioButtonUncheckedRounded } from '@mui/icons-material';
 
 interface RecentOrdersTableProps {
   className?: string;
@@ -93,6 +93,20 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
     setLoading(false);
   };
 
+  const completeBooking = async (id: number) => {
+    setLoading(true);
+    const res = await BookingService.completeBooking(accessToken, id).then(() => {
+      setLoading(false);
+      console.log(res)
+      window.location.href = '/management/booking'
+    })
+      .catch((error) => {
+        console.error('Error deleting item:', error);
+      })
+    setLoading(false);
+
+  }
+
   useEffect(() => {
     setSelectedItems([]);
   }, [items]);
@@ -153,6 +167,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
               </TableCell>
               <TableCell>Service Name</TableCell>
               <TableCell>Customer Name</TableCell>
+              <TableCell>Price</TableCell>
               <TableCell>Booking Date</TableCell>
               <TableCell>Booking Time</TableCell>
               <TableCell>Status</TableCell>
@@ -179,6 +194,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
                   </TableCell>
                   <TableCell>{item.serviceName}</TableCell>
                   <TableCell>{item.customerName}</TableCell>
+                  <TableCell>{numeral(item.itemPrice).format('0,0')} ₫</TableCell>
                   <TableCell>{item.bookingDate}</TableCell>
                   <TableCell>{item.time}</TableCell>
                   <TableCell>{item.status}</TableCell>
@@ -213,18 +229,33 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
                         </Tooltip>
                       </>
                       :
-                      <Tooltip title="No action" arrow>
-                        <IconButton
-                          sx={{
-                            '&:hover': { background: theme.colors.primary.lighter },
-                            color: theme.palette.primary.main
-                          }}
-                          color="inherit"
-                          size="small"
-                        >
-                          <HorizontalRuleOutlined fontSize="small" />
-                        </IconButton>
-                      </Tooltip>
+                      item.status == 'CONFIRMED' ?
+                        <Tooltip title="Complete" arrow>
+                          <IconButton
+                            onClick={() => completeBooking(item.bookingId)}
+                            sx={{
+                              '&:hover': { background: theme.colors.primary.lighter },
+                              color: theme.palette.primary.main
+                            }}
+                            color="inherit"
+                            size="small"
+                          >
+                            <CheckCircleTwoTone fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                        :
+                        <Tooltip title="No action" arrow>
+                          <IconButton
+                            sx={{
+                              '&:hover': { background: theme.colors.primary.lighter },
+                              color: theme.palette.primary.main
+                            }}
+                            color="inherit"
+                            size="small"
+                          >
+                            <HorizontalRuleOutlined fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
                     }
 
                   </TableCell>

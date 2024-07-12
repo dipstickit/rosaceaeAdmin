@@ -66,7 +66,7 @@ const RecentOrders: React.FC<RecentOrdersProps> = ({ selectedItemType }) => {
 
   useEffect(() => {
     fetchItem();
-  }, []);
+  }, [user]);
 
   return (
     <Card>

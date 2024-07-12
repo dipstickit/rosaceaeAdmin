@@ -16,6 +16,9 @@ import ArrowForwardTwoToneIcon from '@mui/icons-material/ArrowForwardTwoTone';
 import UploadTwoToneIcon from '@mui/icons-material/UploadTwoTone';
 import MoreHorizTwoToneIcon from '@mui/icons-material/MoreHorizTwoTone';
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import UserServices from 'src/api/User.services';
+import { User } from 'src/types/user.type';
 
 const Input = styled('input')({
   display: 'none'
@@ -79,7 +82,32 @@ const CardCoverAction = styled(Box)(
 `
 );
 
-const ProfileCover = ({ user }) => {
+const ProfileCover = ({ user, accessToken }) => {
+  const [userInfo, setUserInfo] = useState<User>(user)
+  const [data, setData] = useState<any>({
+    shopId: user.usersID,
+    coverImage: null
+  })
+  useEffect(() => {
+    const changeImage = async () => {
+      console.log(data)
+      const formData = new FormData();
+      formData.append('shopId', data.shopId)
+      formData.append('coverImage', data.coverImage)
+
+      const res = await UserServices.changeCoverImage(formData, accessToken)
+      console.log(res.data)
+      setUserInfo({
+        ...userInfo,
+        coverImages: res.data.userInfo.coverImages
+      })
+      window.location.href = "/management/profile/details"
+    }
+    if (data.coverImage !== null) {
+      changeImage()
+    }
+
+  }, [data])
   return (
     <>
       <Box display="flex" mb={3}>
@@ -90,7 +118,7 @@ const ProfileCover = ({ user }) => {
         </Tooltip>
         <Box>
           <Typography variant="h3" component="h3" gutterBottom>
-            Profile for {user.accountName}
+            Profile for {userInfo.accountName}
           </Typography>
           <Typography variant="subtitle2">
             This is a profile page. Easy to modify, always blazing fast
@@ -98,9 +126,12 @@ const ProfileCover = ({ user }) => {
         </Box>
       </Box>
       <CardCover>
-        <CardMedia image={user.coverImages} style={{ backgroundSize: 'contain', backgroundPosition: 'center' }} />
+        <CardMedia image={userInfo.coverImages} style={{ backgroundSize: 'contain', backgroundPosition: 'center' }} />
         <CardCoverAction>
-          <Input accept="image/*" id="change-cover" multiple type="file" />
+          <Input accept="image/*" id="change-cover" multiple type="file" onChange={e => setData({
+            ...data,
+            coverImage: e.target.files[0]
+          })} />
           <label htmlFor="change-cover">
             <Button
               startIcon={<UploadTwoToneIcon />}

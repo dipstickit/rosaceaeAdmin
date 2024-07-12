@@ -22,6 +22,7 @@ const RecentOrders: React.FC = () => {
   const [listItem, setListItem] = useState<Item[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [items, setItems] = useState<ResponseData['content']>([]);
+  const [userRole, setUserRole] = useState<string>('');
 
   const getUserByEmail = async () => {
     var decoded = jwt_decode(accessToken);
@@ -66,15 +67,18 @@ const RecentOrders: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchItem();
-  }, []);
+    if (user !== null) {
+      setUserRole(user.role)
+      fetchItem();
+    }
+  }, [user]);
 
   return (
     <Card>
       {error ? (
         <div>Error: {error}</div>
       ) : (
-        <RecentOrdersTable items={listItem} setItems={setItems} />
+        <RecentOrdersTable items={listItem} setItems={setItems} role={userRole} />
       )}
     </Card>
   );

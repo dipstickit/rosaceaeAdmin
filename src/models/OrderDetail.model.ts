@@ -7,6 +7,7 @@ export interface OrderDetail {
     customerName: string;
     itemTypeId: number;
     status: string;
+    orderDate: string
 }
 
 export interface OrderDetailResponse {

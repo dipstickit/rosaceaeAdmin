@@ -58,12 +58,16 @@ function ManagementUserProfile() {
           spacing={3}
         >
           <Grid item xs={12} md={8}>
-            <ProfileCover user={user} />
+            {user !== null ?
+              <ProfileCover user={user} accessToken={accessToken} />
+              :
+              null
+            }
           </Grid>
           <Grid item xs={12} md={4}>
             <RecentActivity />
           </Grid>
-          <Grid item xs={12} md={8}>
+          {/* <Grid item xs={12} md={8}>
             <Feed />
           </Grid>
           <Grid item xs={12} md={4}>
@@ -74,7 +78,7 @@ function ManagementUserProfile() {
           </Grid>
           <Grid item xs={12} md={5}>
             <Addresses />
-          </Grid>
+          </Grid> */}
         </Grid>
       </Container>
       <Footer />

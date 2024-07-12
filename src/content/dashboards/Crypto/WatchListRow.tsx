@@ -287,7 +287,7 @@ const WatchListRow: FC<WatchListRowProp> = ({ dayList, revenueList,
           </Box>
           <Box pt={2}>
             <Chart
-              options={Box1Options}
+              options={Box2Options}
               series={Box2Data}
               type="line"
               height={100}

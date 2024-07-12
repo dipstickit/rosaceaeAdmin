@@ -176,10 +176,11 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items, selectedItemType
                     <TableCell>Quantity</TableCell>
                     <TableCell>Price</TableCell>
                     <TableCell>Order By</TableCell>
+                    <TableCell>Order Date</TableCell>
                     <TableCell>Order Status</TableCell>
-                    {
+                    {/* {
                       selectedItemType === 1 ? <TableCell align="right">Actions</TableCell> : null
-                    }
+                    } */}
 
                   </TableRow>
                 </TableHead>
@@ -205,11 +206,20 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items, selectedItemType
                         </TableCell>
                         <TableCell>{orderDetail.itemName}</TableCell>
                         <TableCell>{orderDetail.quantity}</TableCell>
-                        <TableCell>{orderDetail.price}</TableCell>
+                        <TableCell>{numeral(orderDetail.price).format('0,0')} ₫</TableCell>
                         <TableCell>{orderDetail.customerName}</TableCell>
-                        <TableCell style={orderDetail.status.toLowerCase() === 'pending' ? { color: 'gray' } : orderDetail.status.toLowerCase() === 'canceled' ? { color: 'red' } : { color: 'green' }} >{orderDetail.status}</TableCell>
+                        <TableCell>{orderDetail.orderDate}</TableCell>
                         {
-                          selectedItemType === 1 ? <TableCell align="right">
+                          orderDetail.itemTypeId === 2 ?
+                            <TableCell style={orderDetail.status.toLowerCase() === 'pending' ?
+                              { color: 'gray' } : orderDetail.status.toLowerCase() === 'canceled' ? { color: 'red' } : { color: 'green' }} >{orderDetail.status}</TableCell>
+                            :
+                            <TableCell>{orderDetail.status.split("_")[1]}</TableCell>
+
+                        }
+                        {/* {
+                          selectedItemType === 1 ? 
+                          <TableCell align="right">
                             <Tooltip title="Accept Order" arrow>
                               <IconButton
                                 onClick={() => console.log("approve")}
@@ -240,7 +250,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items, selectedItemType
                             </Tooltip>
                           </TableCell> :
                             null
-                        }
+                        } */}
                       </TableRow>
                     );
                   })}

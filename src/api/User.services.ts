@@ -48,10 +48,28 @@ const getShopProfile = (params: GetUsersParams, token: string, shopId: number): 
         }
     });
 };
-
+const changeCoverImage = (data: any, token: string): Promise<AxiosResponse<any>> => {
+    return instance.put(`user/changeCoverImage`, data, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+            crossDomain: true
+        }
+    });
+};
+const changePassword = (userId: number, data: any, token: string): Promise<AxiosResponse<any>> => {
+    return instance.put(`user/change-password/${userId}`, data, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            crossDomain: true
+        }
+    });
+}
 export default {
     getUserByEmail,
     getUsers,
     banUser,
-    getShopProfile
+    getShopProfile,
+    changeCoverImage,
+    changePassword
 };

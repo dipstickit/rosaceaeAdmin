@@ -177,7 +177,7 @@ const WatchListColumn: FC<WatchListColumnProp> = ({ dayList, revenueList,
     },
     yaxis: {
       min: 0,
-      max: maxNumberOfOrder + 0.07,
+      max: maxNumberOfOrder + 0.0785,
       show: false,
       tickAmount: 2,
       labels: {

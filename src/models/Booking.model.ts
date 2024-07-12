@@ -1,5 +1,6 @@
 export interface Booking {
     bookingId: number;
+    itemPrice: number;
     customerName: string;
     serviceName: string;
     bookingDate: string;
