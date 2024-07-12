@@ -65,11 +65,20 @@ const changePassword = (userId: number, data: any, token: string): Promise<Axios
         }
     });
 }
+const createNewShop = (data: any, token: string): Promise<AxiosResponse<any>> => {
+    return instance.post(`user/create-shop`, data, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            crossDomain: true
+        }
+    });
+}
 export default {
     getUserByEmail,
     getUsers,
     banUser,
     getShopProfile,
     changeCoverImage,
-    changePassword
+    changePassword,
+    createNewShop
 };

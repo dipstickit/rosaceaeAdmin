@@ -50,7 +50,7 @@ const RecentOrders: React.FC = () => {
       console.log('Response data:', response.data.content);
       if (response.data.content) {
         console.log(user.usersID)
-        setListUser(response.data.content.filter(u => u.usersID != user.usersID && u.role === 'SHOP'));
+        setListUser(response.data.content.filter(u => u.usersID != user.usersID).slice().reverse());
       } else {
         throw new Error('No content in response data.');
       }

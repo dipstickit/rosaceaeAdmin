@@ -15,6 +15,17 @@ function PageHeader() {
           Management User
         </Typography>
       </Grid>
+      <Grid item>
+        <Link to={`/management/user/createNewShop`} >
+          <Button
+            sx={{ mt: { xs: 2, md: 0 } }}
+            variant="contained"
+            startIcon={<AddTwoToneIcon fontSize="small" />}
+          >
+            Create New Shop
+          </Button>
+        </Link>
+      </Grid>
     </Grid>
   );
 }

@@ -13,6 +13,7 @@ import UpdateItemType from './content/applications/ItemType/UpdateItemType';
 import CreateItemType from './content/applications/ItemType/CreateItemType';
 import UpdateCategory from './content/applications/Category/UpdateCategory';
 import CreateCategory from './content/applications/Category/CreateCategory';
+import CreateNewShop from './content/applications/Users/CreateNewShop';
 
 const Loader = (Component) => (props) =>
 (
@@ -204,6 +205,10 @@ const routes: RouteObject[] = [
       {
         path: 'booking',
         element: <Booking />
+      },
+      {
+        path: 'user/createNewShop',
+        element: <CreateNewShop />
       },
 
 

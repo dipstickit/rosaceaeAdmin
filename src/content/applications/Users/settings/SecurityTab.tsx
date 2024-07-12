@@ -230,7 +230,7 @@ function SecurityTab({ user, accessToken }) {
                 primary="Change Password"
                 secondary={
                   <div>
-                    Please enter your new password:&nbsp;&nbsp;&nbsp;
+                    Please enter your new password:&nbsp;&nbsp;
                     <Input type='password' value={newPassword} onChange={e => setNewPassword(e.target.value)} />
                   </div>
                 }

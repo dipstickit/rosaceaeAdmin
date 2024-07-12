@@ -18,34 +18,40 @@ import CustomErrorMessage from '../../../components/CustomErrormessage';
 import { ItemType } from "src/models/ItemType.model";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
+import UserServices from "src/api/User.services";
 
-function CreateItemType() {
-  let accessToken: string = useSelector((state: any) => state.auth.userToken) !== null ? 
-  useSelector((state: any) => state.auth.userToken) : localStorage.getItem("userToken")
+function CreateNewShop() {
+  let accessToken: string = useSelector((state: any) => state.auth.userToken) !== null ?
+    useSelector((state: any) => state.auth.userToken) : localStorage.getItem("userToken")
   console.log(accessToken)
-  
+
   let navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
 
   const initialValues = {
-    itemTypeName: "",
+    name: "",
   };
 
   const validationSchema = Yup.object({
-    itemTypeName: Yup.string().required("Name is required"),
+    name: Yup.string().required("Name is required"),
+    email: Yup.string().email("Please enter a valid email").required("This field is required"),
+    phone: Yup.string()
+      .required('This field is required')
+      .matches(/^[0-9]{10,11}$/, 'Invalid phone number'),
+    address: Yup.string().required("This field is required")
   });
 
   const handleSubmit = async (formValue) => {
     console.log(formValue);
     setLoading(true);
     setServerError(null);
-  
+
     try {
-      const item = await ItemTypeService.postItemType({ ...formValue }, accessToken);
-      console.log(item);
-      toast.success('Create ItemType successfully', {
+      const res = await UserServices.createNewShop({ ...formValue }, accessToken);
+      console.log(res);
+      toast.success('Create New Shop Successfully', {
         autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -54,7 +60,7 @@ function CreateItemType() {
         progress: undefined,
         theme: 'dark'
       });
-      navigate("/management/itemType");
+      navigate("/management/user");
     } catch (error: any) {
       if (error.response && error.response.data && error.response.data.status === "User Not Found") {
         setServerError("User not found. Please check your credentials.");
@@ -82,7 +88,7 @@ function CreateItemType() {
           <Card>
             <CardContent>
               <Typography variant="h5" component="div" mb={2}>
-                Create Item
+                Create New Shop
               </Typography>
               {serverError && (
                 <Box mb={2}>
@@ -90,7 +96,7 @@ function CreateItemType() {
                 </Box>
               )}
               <Box display="grid" gap={2} gridTemplateColumns="repeat(2, 1fr)">
-                <Field name="itemTypeName">
+                <Field name="name">
                   {({ field }) => (
                     <TextField
                       label="Name"
@@ -98,7 +104,43 @@ function CreateItemType() {
                       variant="outlined"
                       {...field}
                       error={isFieldError(field)}
-                      helperText={<CustomErrorMessage name="itemTypeName" />}
+                      helperText={<CustomErrorMessage name="name" />}
+                    />
+                  )}
+                </Field>
+                <Field name="email">
+                  {({ field }) => (
+                    <TextField
+                      label="Email"
+                      fullWidth
+                      variant="outlined"
+                      {...field}
+                      error={isFieldError(field)}
+                      helperText={<CustomErrorMessage name="email" />}
+                    />
+                  )}
+                </Field>
+                <Field name="phone">
+                  {({ field }) => (
+                    <TextField
+                      label="Phone"
+                      fullWidth
+                      variant="outlined"
+                      {...field}
+                      error={isFieldError(field)}
+                      helperText={<CustomErrorMessage name="phone" />}
+                    />
+                  )}
+                </Field>
+                <Field name="address">
+                  {({ field }) => (
+                    <TextField
+                      label="Address"
+                      fullWidth
+                      variant="outlined"
+                      {...field}
+                      error={isFieldError(field)}
+                      helperText={<CustomErrorMessage name="address" />}
                     />
                   )}
                 </Field>
@@ -122,4 +164,4 @@ function CreateItemType() {
   );
 }
 
-export default CreateItemType;
+export default CreateNewShop;
