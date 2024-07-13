@@ -410,7 +410,7 @@ const WatchListColumn: FC<WatchListColumnProp> = ({ dayList, revenueList,
               <Box display="flex" alignItems="center">
                 <Box>
                   <Typography variant="h4" noWrap>
-                    {`Daily Revenue In Month ${month}:`}
+                    {`Daily Revenue:`}
                   </Typography>
                 </Box>
               </Box>
@@ -455,7 +455,7 @@ const WatchListColumn: FC<WatchListColumnProp> = ({ dayList, revenueList,
               <Box display="flex" alignItems="center">
                 <Box>
                   <Typography variant="h4" noWrap>
-                    {`Daily Number Of Order In Month ${month}:`}
+                    {`Daily Number Of Order:`}
                   </Typography>
                 </Box>
               </Box>
@@ -510,7 +510,7 @@ const WatchListColumn: FC<WatchListColumnProp> = ({ dayList, revenueList,
               <Box display="flex" alignItems="center">
                 <Box>
                   <Typography variant="h4" noWrap>
-                    {`Completed Booking In Month ${month}:`}
+                    {`Completed Booking:`}
                   </Typography>
                 </Box>
               </Box>
@@ -529,7 +529,7 @@ const WatchListColumn: FC<WatchListColumnProp> = ({ dayList, revenueList,
                     mb: 1
                   }}
                 >
-                  {revenueMonthly} ₫
+                  -1000 ₫
                 </Typography>
               </Box>
             </Box>
@@ -555,7 +555,7 @@ const WatchListColumn: FC<WatchListColumnProp> = ({ dayList, revenueList,
               <Box display="flex" alignItems="center">
                 <Box>
                   <Typography variant="h4" noWrap>
-                    {`Daily Number Of Completed Booking In Month ${month}:`}
+                    {`Number Of Completed Booking:`}
                   </Typography>
                 </Box>
               </Box>

@@ -64,10 +64,14 @@ export interface WatchListRowProp {
   dayList: string[]
   revenueList: number[]
   orderList: number[]
+  completedBookingList: number[]
+  completedBookingRevenueList: number[]
   month: number
   year: number
   revenueMonthly: number
   totalOrder: number
+  totalCompletedBooking: number
+
 }
 
 const WatchList: FC<WatchListProp> = ({
@@ -106,7 +110,7 @@ const WatchList: FC<WatchListProp> = ({
         }}
       >
         <Typography variant="h3">
-          Revenue and Order
+          Revenue From Order And Booking In Month {month}, Year {year}
           <Box sx={{ pb: 2 }} style={{ display: 'flex' }}>
             <Typography
               sx={{
@@ -183,6 +187,9 @@ const WatchList: FC<WatchListProp> = ({
         revenueMonthly={accountBalance}
         orderList={orderList}
         totalOrder={totalOrder}
+        completedBookingList={completedBookingList}
+        completedBookingRevenueList={completedBookingRevenueList}
+        totalCompletedBooking={totalCompletedBooking}
       />}
 
       {!tabs && (

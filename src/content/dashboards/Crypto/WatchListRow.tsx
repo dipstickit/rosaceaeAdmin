@@ -49,8 +49,9 @@ const AvatarWrapper = styled(Avatar)(
 );
 
 const WatchListRow: FC<WatchListRowProp> = ({ dayList, revenueList,
-  orderList, totalOrder,
-  month, revenueMonthly }) => {
+  orderList, totalOrder, totalCompletedBooking,
+  month, revenueMonthly, completedBookingList, completedBookingRevenueList
+}) => {
   const theme = useTheme();
 
   const Box1Options: ApexOptions = {
@@ -161,6 +162,114 @@ const WatchListRow: FC<WatchListRowProp> = ({ dayList, revenueList,
       }
     }
   };
+  const Box3Options: ApexOptions = {
+    chart: {
+      animations: {
+        enabled: false
+      },
+      background: 'transparent',
+      toolbar: {
+        show: false
+      },
+      sparkline: {
+        enabled: true
+      },
+      zoom: {
+        enabled: false
+      }
+    },
+    labels: dayList,
+    stroke: {
+      curve: 'smooth',
+      colors: [theme.colors.primary.main],
+      width: 2
+    },
+    yaxis: {
+      show: false
+    },
+    colors: [theme.colors.primary.main],
+    grid: {
+      padding: {
+        top: 10,
+        right: 5,
+        bottom: 10,
+        left: 5
+      }
+    },
+    theme: {
+      mode: theme.palette.mode
+    },
+    tooltip: {
+      fixed: {
+        enabled: true
+      },
+      x: {
+        show: true
+      },
+      y: {
+        formatter(value, { dataPointIndex, w }) {
+          return w.config.series[0].data[dataPointIndex] + ' ₫'
+        },
+      },
+      marker: {
+        show: false
+      }
+    }
+  };
+  const Box4Options: ApexOptions = {
+    chart: {
+      animations: {
+        enabled: false
+      },
+      background: 'transparent',
+      toolbar: {
+        show: false
+      },
+      sparkline: {
+        enabled: true
+      },
+      zoom: {
+        enabled: false
+      }
+    },
+    labels: dayList,
+    stroke: {
+      curve: 'smooth',
+      colors: [theme.colors.primary.main],
+      width: 2
+    },
+    yaxis: {
+      show: false
+    },
+    colors: [theme.colors.primary.main],
+    grid: {
+      padding: {
+        top: 10,
+        right: 5,
+        bottom: 10,
+        left: 5
+      }
+    },
+    theme: {
+      mode: theme.palette.mode
+    },
+    tooltip: {
+      fixed: {
+        enabled: true
+      },
+      x: {
+        show: true
+      },
+      y: {
+        formatter(value, { dataPointIndex, w }) {
+          return w.config.series[0].data[dataPointIndex]
+        },
+      },
+      marker: {
+        show: false
+      }
+    }
+  };
 
   const Box1Data = [
     {
@@ -176,196 +285,250 @@ const WatchListRow: FC<WatchListRowProp> = ({ dayList, revenueList,
     }
   ];
 
-  // const Box3Data = [
-  //   {
-  //     name: 'Cardano',
-  //     data: [13, 16, 14, 18, 8, 11, 20]
-  //   }
-  // ];
+  const Box3Data = [
+    {
+      name: 'Booking Revenue',
+      data: completedBookingRevenueList
+    }
+  ];
+
+  const Box4Data = [
+    {
+      name: 'Number Of Completed Booking',
+      data: completedBookingList
+    }
+  ];
 
   return (
-    <Card>
-      <Stack
-        direction="row"
-        justifyContent="space-evenly"
-        alignItems="stretch"
-        divider={<Divider orientation="vertical" flexItem />}
-        spacing={0}
-      >
-        <Box
-          sx={{
-            width: '100%',
-            p: 3
-          }}
+    <>
+
+      <Card>
+        <Stack
+          direction="row"
+          justifyContent="space-evenly"
+          alignItems="stretch"
+          divider={<Divider orientation="vertical" flexItem />}
+          spacing={0}
         >
           <Box
-            display="flex"
-            alignItems="flex-start"
-            justifyContent="space-between"
+            sx={{
+              width: '100%',
+              p: 3
+            }}
           >
-            <Box display="flex" alignItems="center">
-              <Box>
-                <Typography variant="h4" noWrap>
-                  {`Daily Revenue In Month ${month}:`}
+            <Box
+              display="flex"
+              alignItems="flex-start"
+              justifyContent="space-between"
+            >
+              <Box display="flex" alignItems="center">
+                <Box>
+                  <Typography variant="h4" noWrap>
+                    {`Daily Revenue:`}
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
+            <Box
+              mt={3}
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-start'
+                }}
+              >
+                <Typography
+                  variant="h2"
+                  sx={{
+                    pr: 1
+                  }}
+                >
+                  {revenueMonthly} ₫
                 </Typography>
               </Box>
             </Box>
-          </Box>
-          <Box
-            mt={3}
-            display="flex"
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-start'
-              }}
-            >
-              <Typography
-                variant="h2"
-                sx={{
-                  pr: 1
-                }}
-              >
-                {revenueMonthly} ₫
-              </Typography>
+            <Box pt={2}>
+              <Chart
+                options={Box1Options}
+                series={Box1Data}
+                type="line"
+                height={100}
+              />
             </Box>
           </Box>
-          <Box pt={2}>
-            <Chart
-              options={Box1Options}
-              series={Box1Data}
-              type="line"
-              height={100}
-            />
-          </Box>
-        </Box>
-        <Box
-          sx={{
-            width: '100%',
-            p: 3
-          }}
-        >
           <Box
-            display="flex"
-            alignItems="flex-start"
-            justifyContent="space-between"
+            sx={{
+              width: '100%',
+              p: 3
+            }}
           >
-            <Box display="flex" alignItems="center">
-              <Box>
-                <Typography variant="h4" noWrap>
-                  {`Daily Number Of Order In Month ${month}:`}
+            <Box
+              display="flex"
+              alignItems="flex-start"
+              justifyContent="space-between"
+            >
+              <Box display="flex" alignItems="center">
+                <Box>
+                  <Typography variant="h4" noWrap>
+                    {`Daily Number Of Order:`}
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
+            <Box
+              mt={3}
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-start'
+                }}
+              >
+                <Typography
+                  variant="h2"
+                  sx={{
+                    pr: 1
+                  }}
+                >
+                  {totalOrder}
                 </Typography>
               </Box>
             </Box>
-          </Box>
-          <Box
-            mt={3}
-            display="flex"
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-start'
-              }}
-            >
-              <Typography
-                variant="h2"
-                sx={{
-                  pr: 1
-                }}
-              >
-                {totalOrder}
-              </Typography>
+            <Box pt={2}>
+              <Chart
+                options={Box2Options}
+                series={Box2Data}
+                type="line"
+                height={100}
+              />
             </Box>
           </Box>
-          <Box pt={2}>
-            <Chart
-              options={Box2Options}
-              series={Box2Data}
-              type="line"
-              height={100}
-            />
-          </Box>
-        </Box>
-        {/*<Box
-          sx={{
-            width: '100%',
-            p: 3
-          }}
+        </Stack>
+        <Divider />
+      </Card>
+      <Card>
+        <Stack
+          direction="row"
+          justifyContent="space-evenly"
+          alignItems="stretch"
+          divider={<Divider orientation="vertical" flexItem />}
+          spacing={0}
         >
           <Box
-            display="flex"
-            alignItems="flex-start"
-            justifyContent="space-between"
+            sx={{
+              width: '100%',
+              p: 3
+            }}
           >
-            <Box display="flex" alignItems="center">
-              <AvatarWrapper>
-                <img
-                  alt="ADA"
-                  src="/static/images/placeholders/logo/cardano.png"
-                />
-              </AvatarWrapper>
-              <Box>
-                <Typography variant="h4" noWrap>
-                  Cardano
-                </Typography>
-                <Typography variant="subtitle1" noWrap>
-                  ADA
+            <Box
+              display="flex"
+              alignItems="flex-start"
+              justifyContent="space-between"
+            >
+              <Box display="flex" alignItems="center">
+                <Box>
+                  <Typography variant="h4" noWrap>
+                    {`Completed Booking:`}
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
+            <Box
+              mt={3}
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-start'
+                }}
+              >
+                <Typography
+                  variant="h2"
+                  sx={{
+                    pr: 1
+                  }}
+                >
+                  -1000 ₫
                 </Typography>
               </Box>
             </Box>
-            <Label color="secondary">24h</Label>
+            <Box pt={2}>
+              <Chart
+                options={Box3Options}
+                series={Box3Data}
+                type="line"
+                height={100}
+              />
+            </Box>
           </Box>
           <Box
-            mt={3}
-            display="flex"
-            alignItems="center"
-            justifyContent="space-between"
+            sx={{
+              width: '100%',
+              p: 3
+            }}
           >
             <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-start'
-              }}
+              display="flex"
+              alignItems="flex-start"
+              justifyContent="space-between"
             >
-              <Typography
-                variant="h2"
+              <Box display="flex" alignItems="center">
+                <Box>
+                  <Typography variant="h4" noWrap>
+                    {`Number Of Completed Booking:`}
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
+            <Box
+              mt={3}
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <Box
                 sx={{
-                  pr: 1
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-start'
                 }}
               >
-                $23.00
-              </Typography>
-              <Text color="error">
-                <b>-0.33%</b>
-              </Text>
+                <Typography
+                  variant="h2"
+                  sx={{
+                    pr: 1
+                  }}
+                >
+                  {totalCompletedBooking}
+                </Typography>
+              </Box>
             </Box>
-            <TrendingFlatTwoToneIcon
-              sx={{
-                color: `${theme.colors.warning.main}`
-              }}
-            />
+            <Box pt={2}>
+              <Chart
+                options={Box4Options}
+                series={Box4Data}
+                type="line"
+                height={100}
+              />
+            </Box>
           </Box>
-          <Box pt={2}>
-            <Chart
-              options={Box1Options}
-              series={Box3Data}
-              type="line"
-              height={100}
-            />
-          </Box>
-            </Box>*/}
-      </Stack>
-      <Divider />
-    </Card>
+        </Stack>
+        <Divider />
+      </Card>
+    </>
   );
 }
 

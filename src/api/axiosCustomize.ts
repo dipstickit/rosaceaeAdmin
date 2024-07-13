@@ -1,15 +1,21 @@
-import axios, { AxiosInstance, AxiosResponse, AxiosError, InternalAxiosRequestConfig, AxiosRequestConfig } from "axios";
-import { AuthData } from "../types/authData.type";
-import { ResponseSuccessful } from "../types/response.type";
+import axios, {
+  AxiosInstance,
+  AxiosResponse,
+  AxiosError,
+  InternalAxiosRequestConfig,
+  AxiosRequestConfig
+} from 'axios';
+import { AuthData } from '../types/authData.type';
+import { ResponseSuccessful } from '../types/response.type';
 
 const instance: AxiosInstance = axios.create({
-    // baseURL: "https://0d4e-2405-4800-5724-89e3-b0a3-16e4-bfe9-ac40.ngrok-free.app/api/v1/",
-    baseURL: "http://localhost:8080/api/v1/",
-    withCredentials: false,
-    headers: {
-        "Access-Control-Allow-Origin": "*",
-        'ngrok-skip-browser-warning': 'true',
-    },
+  // baseURL: 'https://joint-socially-pipefish.ngrok-free.app/api/v1/',
+  baseURL: 'http://localhost:8080/api/v1/',
+  withCredentials: false,
+  headers: {
+    'Access-Control-Allow-Origin': '*',
+    'ngrok-skip-browser-warning': 'true'
+  }
 });
 
 // instance.interceptors.request.use(
@@ -23,7 +29,7 @@ const instance: AxiosInstance = axios.create({
 
 //                 if (token) {
 //                     config.headers.Authorization = `Bearer ${token}`;
-//                     console.log("Token:", token); 
+//                     console.log("Token:", token);
 //                 } else {
 //                     console.error("No token found");
 //                 }
