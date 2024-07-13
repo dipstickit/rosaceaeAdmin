@@ -36,8 +36,11 @@ interface WatchListProp {
   dayList: string[]
   revenueList: number[]
   orderList: number[]
+  completedBookingList: number[]
+  completedBookingRevenueList: number[]
   today: Date
   totalOrder: number
+  totalCompletedBooking: number
   setMonth: (data: number) => void
   setYear: (data: number) => void
   fetchAccountBalance: () => void
@@ -48,10 +51,13 @@ export interface WatchListColumnProp {
   dayList: string[]
   revenueList: number[]
   orderList: number[]
+  completedBookingList: number[]
+  completedBookingRevenueList: number[]
   month: number
   year: number
   revenueMonthly: number
   totalOrder: number
+  totalCompletedBooking: number
 }
 
 export interface WatchListRowProp {
@@ -67,7 +73,7 @@ export interface WatchListRowProp {
 const WatchList: FC<WatchListProp> = ({
   monthArr, yearArr, accountBalance, month, year, dayList, revenueList,
   setMonth, setYear, fetchChart, today, totalOrder,
-  orderList
+  orderList, completedBookingList, completedBookingRevenueList, totalCompletedBooking
 }) => {
   const [tabs, setTab] = useState<string | null>('watch_list_columns');
   console.log(totalOrder)
@@ -163,7 +169,10 @@ const WatchList: FC<WatchListProp> = ({
         year={today.getFullYear()}
         revenueMonthly={accountBalance}
         orderList={orderList}
+        completedBookingList={completedBookingList}
+        completedBookingRevenueList={completedBookingRevenueList}
         totalOrder={totalOrder}
+        totalCompletedBooking={totalCompletedBooking}
       />}
 
       {tabs === 'watch_list_rows' && <WatchListRow

@@ -1,6 +1,7 @@
 import { AxiosResponse } from 'axios';
 import instance from './axiosCustomize';
 import { Booking, BookingResponse } from 'src/models/Booking.model';
+import { DailyOrderCountResponse } from './OrderDetail.service';
 
 type GetBookingParams = {
     page?: number;

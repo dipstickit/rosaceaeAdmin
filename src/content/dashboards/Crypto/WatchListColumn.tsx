@@ -43,11 +43,13 @@ const AvatarWrapper = styled(Avatar)(
 );
 
 const WatchListColumn: FC<WatchListColumnProp> = ({ dayList, revenueList,
-  orderList, totalOrder,
-  month, revenueMonthly }) => {
+  orderList, totalOrder, totalCompletedBooking,
+  month, revenueMonthly, completedBookingList, completedBookingRevenueList
+}) => {
   const theme = useTheme();
   console.log(orderList)
   const maxNumberOfOrder = orderList !== undefined ? Math.max(...orderList) : 0
+  const maxNumberOfCompletedBooking = completedBookingList !== undefined ? Math.max(...completedBookingList) : 0
   console.log(maxNumberOfOrder)
 
   const chartOptions: ApexOptions = {
@@ -203,6 +205,162 @@ const WatchListColumn: FC<WatchListColumnProp> = ({ dayList, revenueList,
       }
     }
   };
+  const chartOptions3: ApexOptions = {
+    chart: {
+      background: 'transparent',
+      toolbar: {
+        show: false
+      },
+      sparkline: {
+        enabled: true
+      },
+      zoom: {
+        enabled: false
+      }
+    },
+    fill: {
+      gradient: {
+        shade: 'light',
+        type: 'vertical',
+        shadeIntensity: 0.1,
+        inverseColors: false,
+        opacityFrom: 0.8,
+        opacityTo: 0,
+        stops: [0, 100]
+      }
+    },
+    colors: [theme.colors.primary.main],
+    dataLabels: {
+      enabled: false
+    },
+    theme: {
+      mode: theme.palette.mode
+    },
+    stroke: {
+      show: true,
+      colors: [theme.colors.primary.main],
+      width: 3
+    },
+    legend: {
+      show: false
+    },
+    labels: dayList,
+    xaxis: {
+      labels: {
+        show: false
+      },
+      axisBorder: {
+        show: false
+      },
+      axisTicks: {
+        show: false
+      }
+    },
+    yaxis: {
+      show: false,
+      tickAmount: 2,
+      labels: {
+        formatter: (value: number) => value.toFixed(0)  // Formatting to handle small numbers
+      }
+    },
+    tooltip: {
+      x: {
+        show: true
+      },
+      y: {
+        formatter(value, { dataPointIndex, w }) {
+          return w.config.series[0].data[dataPointIndex] + ' ₫'
+        },
+        // title: {
+        //   formatter: function () {
+        //     return 'Number of order: ';
+        //   }
+        // }
+      },
+      marker: {
+        show: false
+      }
+    }
+  };
+  const chartOptions4: ApexOptions = {
+    chart: {
+      background: 'transparent',
+      toolbar: {
+        show: false
+      },
+      sparkline: {
+        enabled: true
+      },
+      zoom: {
+        enabled: false
+      }
+    },
+    fill: {
+      gradient: {
+        shade: 'light',
+        type: 'vertical',
+        shadeIntensity: 0.1,
+        inverseColors: false,
+        opacityFrom: 0.8,
+        opacityTo: 0,
+        stops: [0, 100]
+      }
+    },
+    colors: [theme.colors.primary.main],
+    dataLabels: {
+      enabled: false
+    },
+    theme: {
+      mode: theme.palette.mode
+    },
+    stroke: {
+      show: true,
+      colors: [theme.colors.primary.main],
+      width: 3
+    },
+    legend: {
+      show: false
+    },
+    labels: dayList,
+    xaxis: {
+      labels: {
+        show: false
+      },
+      axisBorder: {
+        show: false
+      },
+      axisTicks: {
+        show: false
+      }
+    },
+    yaxis: {
+      min: 0,
+      max: maxNumberOfCompletedBooking + 0.0785,
+      show: false,
+      tickAmount: 2,
+      labels: {
+        formatter: (value: number) => value.toFixed(0)  // Formatting to handle small numbers
+      }
+    },
+    tooltip: {
+      x: {
+        show: true
+      },
+      y: {
+        formatter(value, { dataPointIndex, w }) {
+          return w.config.series[0].data[dataPointIndex]
+        },
+        // title: {
+        //   formatter: function () {
+        //     return 'Number of order: ';
+        //   }
+        // }
+      },
+      marker: {
+        show: false
+      }
+    }
+  };
   const chart1Data = [
     {
       name: `Revenue`,
@@ -217,185 +375,219 @@ const WatchListColumn: FC<WatchListColumnProp> = ({ dayList, revenueList,
   ];
   const chart3Data = [
     {
-      name: 'Cardano Price',
-      data: [51.85, 41.77, 22.09, 42.0, 71.9, 51.84, 31.84]
+      name: 'Booking Revenue',
+      data: completedBookingRevenueList
+    }
+  ];
+  const chart4Data = [
+    {
+      name: 'Number Of Completed Booking',
+      data: completedBookingList
     }
   ];
 
   return (
-    <Grid
-      container
-      direction="row"
-      justifyContent="center"
-      alignItems="stretch"
-      spacing={3}
-    >
-      <Grid item md={4} xs={12}>
-        <Card
-          sx={{
-            overflow: 'visible'
-          }}
-        >
-          <Box
+    <>
+      <Grid
+        container
+        direction="row"
+        justifyContent="center"
+        alignItems="stretch"
+        spacing={3}
+        marginBottom={3}
+      >
+        <Grid item md={4} xs={12}>
+          <Card
             sx={{
-              p: 3
+              overflow: 'visible'
             }}
           >
-            <Box display="flex" alignItems="center">
-              <Box>
-                <Typography variant="h4" noWrap>
-                  {`Daily Revenue In Month ${month}:`}
+            <Box
+              sx={{
+                p: 3
+              }}
+            >
+              <Box display="flex" alignItems="center">
+                <Box>
+                  <Typography variant="h4" noWrap>
+                    {`Daily Revenue In Month ${month}:`}
+                  </Typography>
+                </Box>
+              </Box>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-start',
+                  pt: 3
+                }}
+              >
+                <Typography
+                  variant="h2"
+                  sx={{
+                    pr: 1,
+                    mb: 1
+                  }}
+                >
+                  {revenueMonthly} ₫
                 </Typography>
               </Box>
             </Box>
+            <Chart
+              options={chartOptions}
+              series={chart1Data}
+              type="area"
+              height={200}
+            />
+          </Card>
+        </Grid>
+        <Grid item md={4} xs={12}>
+          <Card
+            sx={{
+              overflow: 'visible'
+            }}
+          >
             <Box
               sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-start',
-                pt: 3
+                p: 3
               }}
             >
-              <Typography
-                variant="h2"
+              <Box display="flex" alignItems="center">
+                <Box>
+                  <Typography variant="h4" noWrap>
+                    {`Daily Number Of Order In Month ${month}:`}
+                  </Typography>
+                </Box>
+              </Box>
+              <Box
                 sx={{
-                  pr: 1,
-                  mb: 1
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-start',
+                  pt: 3
                 }}
               >
-                {revenueMonthly} ₫
-              </Typography>
+                <Typography
+                  variant="h2"
+                  sx={{
+                    pr: 1,
+                    mb: 1
+                  }}
+                >
+                  {totalOrder}
+                </Typography>
+              </Box>
             </Box>
-          </Box>
-          <Chart
-            options={chartOptions}
-            series={chart1Data}
-            type="area"
-            height={200}
-          />
-        </Card>
+            <Chart
+              options={chartOptions2}
+              series={chart2Data}
+              type="area"
+              height={200}
+            />
+          </Card>
+        </Grid>
       </Grid>
-      <Grid item md={4} xs={12}>
-        <Card
-          sx={{
-            overflow: 'visible'
-          }}
-        >
-          <Box
+
+      <Grid
+        container
+        direction="row"
+        justifyContent="center"
+        alignContent='space-between'
+        alignItems="stretch"
+        spacing={3}
+      >
+        <Grid item md={4} xs={12}>
+          <Card
             sx={{
-              p: 3
+              overflow: 'visible'
             }}
           >
-            <Box display="flex" alignItems="center">
-              <Box>
-                <Typography variant="h4" noWrap>
-                  {`Daily Number Of Order In Month ${month}:`}
+            <Box
+              sx={{
+                p: 3
+              }}
+            >
+              <Box display="flex" alignItems="center">
+                <Box>
+                  <Typography variant="h4" noWrap>
+                    {`Completed Booking In Month ${month}:`}
+                  </Typography>
+                </Box>
+              </Box>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-start',
+                  pt: 3
+                }}
+              >
+                <Typography
+                  variant="h2"
+                  sx={{
+                    pr: 1,
+                    mb: 1
+                  }}
+                >
+                  {revenueMonthly} ₫
                 </Typography>
               </Box>
             </Box>
+            <Chart
+              options={chartOptions3}
+              series={chart3Data}
+              type="area"
+              height={200}
+            />
+          </Card>
+        </Grid>
+        <Grid item md={4} xs={12}>
+          <Card
+            sx={{
+              overflow: 'visible'
+            }}
+          >
             <Box
               sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-start',
-                pt: 3
+                p: 3
               }}
             >
-              <Typography
-                variant="h2"
+              <Box display="flex" alignItems="center">
+                <Box>
+                  <Typography variant="h4" noWrap>
+                    {`Daily Number Of Completed Booking In Month ${month}:`}
+                  </Typography>
+                </Box>
+              </Box>
+              <Box
                 sx={{
-                  pr: 1,
-                  mb: 1
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-start',
+                  pt: 3
                 }}
               >
-                {totalOrder}
-              </Typography>
+                <Typography
+                  variant="h2"
+                  sx={{
+                    pr: 1,
+                    mb: 1
+                  }}
+                >
+                  {totalCompletedBooking}
+                </Typography>
+              </Box>
             </Box>
-          </Box>
-          <Chart
-            options={chartOptions2}
-            series={chart2Data}
-            type="area"
-            height={200}
-          />
-        </Card>
+            <Chart
+              options={chartOptions4}
+              series={chart4Data}
+              type="area"
+              height={200}
+            />
+          </Card>
+        </Grid>
       </Grid>
-      {/* <Grid item md={4} xs={12}>
-        <Card
-          sx={{
-            overflow: 'visible'
-          }}
-        >
-          <Box
-            sx={{
-              p: 3
-            }}
-          >
-            <Box display="flex" alignItems="center">
-              <AvatarWrapper>
-                <img
-                  alt="ADA"
-                  src="/static/images/placeholders/logo/cardano.png"
-                />
-              </AvatarWrapper>
-              <Box>
-                <Typography variant="h4" noWrap>
-                  Cardano
-                </Typography>
-                <Typography variant="subtitle1" noWrap>
-                  ADA
-                </Typography>
-              </Box>
-            </Box>
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-start',
-                pt: 3
-              }}
-            >
-              <Typography
-                variant="h2"
-                sx={{
-                  pr: 1,
-                  mb: 1
-                }}
-              >
-                $23.00
-              </Typography>
-              <Text color="error">
-                <b>-0.33%</b>
-              </Text>
-            </Box>
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-start'
-              }}
-            >
-              <Label color="error">-$5</Label>
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={{
-                  pl: 1
-                }}
-              >
-                last 24h
-              </Typography>
-            </Box>
-          </Box>
-          <Chart
-            options={chartOptions}
-            series={chart3Data}
-            type="area"
-            height={200}
-          />
-        </Card>
-      </Grid> */}
-    </Grid>
+    </>
   );
 }
 

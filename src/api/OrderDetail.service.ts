@@ -96,34 +96,38 @@ const getOrderEachDayAdmin = (month: number, year: number, token: string): Promi
     });
 };
 
-
-// const postCategory = (values: OrderDetail, token: string): Promise<AxiosResponse<OrderDetail>> => {
-//     return instance.post("category", values, {
-//         headers: {
-//             'Authorization': `Bearer ${token}`,
-//             crossDomain: true
-//         }
-//     });
-// };
-
-// const putCategory = (id: number, values: OrderDetail, token: string): Promise<AxiosResponse<OrderDetail>> => {
-//     return instance.put(`category/${id}`, values, {
-//         headers: {
-//             'Authorization': `Bearer ${token}`,
-//             crossDomain: true
-//         }
-//     });
-// };
-
-// const deleteCategory = (id: number, token: string): Promise<AxiosResponse<void>> => {
-//     return instance.delete(`category/${id}`, {
-//         headers: {
-//             'Authorization': `Bearer ${token}`,
-//             crossDomain: true
-//         }
-//     });
-// };
-
+const getCompletedBookings = (id: number, month: number, year: number, token: string): Promise<AxiosResponse<DailyOrderCountResponse>> => {
+    return instance.get(`order/completed-order-count-by-day-forShop?userId=${id}&month=${month}&year=${year}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            crossDomain: true
+        }
+    });
+}
+const getRevenueCompletedBookings = (id: number, month: number, year: number, token: string): Promise<AxiosResponse<DailyPriceForShopResponse>> => {
+    return instance.get(`order/total-price-by-day-onlyService-forShop?userId=${id}&month=${month}&year=${year}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            crossDomain: true
+        }
+    });
+}
+const getCompletedBookingsAdmin = (month: number, year: number, token: string): Promise<AxiosResponse<DailyOrderCountResponse>> => {
+    return instance.get(`order/completed-order-count-by-day-forAdmin?month=${month}&year=${year}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            crossDomain: true
+        }
+    });
+}
+const getRevenueCompletedBookingsAdmin = (month: number, year: number, token: string): Promise<AxiosResponse<DailyPriceForShopResponse>> => {
+    return instance.get(`order/total-price-by-day-onlyService-forAdmin?month=${month}&year=${year}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            crossDomain: true
+        }
+    });
+}
 export default {
     getOrderDetailByShop,
     getOrderDetailByOrderId,
@@ -132,5 +136,9 @@ export default {
     getOrderEachDay,
     getTotalPriceAdmin,
     getRevenueEachDayAdmin,
-    getOrderEachDayAdmin
+    getOrderEachDayAdmin,
+    getCompletedBookings,
+    getRevenueCompletedBookings,
+    getCompletedBookingsAdmin,
+    getRevenueCompletedBookingsAdmin
 };
