@@ -226,21 +226,26 @@ const AccountBalance: FC<AccountBalanceProp> = ({
                 {accountBalance} ₫
               </Typography>
             </Box>
-            <ListItemText
-              sx={{ pb: 1, mt: 3 }}
-              primaryTypographyProps={{ variant: 'h3', gutterBottom: true }}
-              secondaryTypographyProps={{
-                variant: 'subtitle2',
-                lineHeight: 1
-              }}
-              primary={user.role === 'ADMIN' ? 'Revenue' : null}
-              secondary='Revenue = Total revenue from order of all shop x 3%'
-            />
-            <Box>
-              <Typography variant="h1" gutterBottom>
-                {accountBalance - (accountBalance * 3 / 100)} ₫
-              </Typography>
-            </Box>
+            {user.role === 'ADMIN' ?
+              <>
+                <ListItemText
+                  sx={{ pb: 1, mt: 3 }}
+                  primaryTypographyProps={{ variant: 'h3', gutterBottom: true }}
+                  secondaryTypographyProps={{
+                    variant: 'subtitle2',
+                    lineHeight: 1
+                  }}
+                  primary={user.role === 'ADMIN' ? 'Revenue' : null}
+                  secondary='Revenue = Total revenue from order of all shop x 3%'
+                />
+                <Box>
+                  <Typography variant="h1" gutterBottom>
+                    {accountBalance - (accountBalance * 3 / 100)} ₫
+                  </Typography>
+                </Box>
+              </>
+              : null
+            }
           </Box>
         </Grid>
         <Grid
