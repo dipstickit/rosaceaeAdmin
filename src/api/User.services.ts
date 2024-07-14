@@ -73,6 +73,14 @@ const createNewShop = (data: any, token: string): Promise<AxiosResponse<any>> =>
         }
     });
 }
+const updateProfile = (data: any, token: string): Promise<AxiosResponse<any>> => {
+    return instance.put(`user/update`, data, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            crossDomain: true
+        }
+    });
+}
 export default {
     getUserByEmail,
     getUsers,
@@ -80,5 +88,6 @@ export default {
     getShopProfile,
     changeCoverImage,
     changePassword,
-    createNewShop
+    createNewShop,
+    updateProfile
 };

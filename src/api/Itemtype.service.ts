@@ -38,7 +38,7 @@ const postItemType = (values: ItemType, token: string): Promise<AxiosResponse<It
     });
 };
 
-const putItemtype = (id: number, values: ItemType, token: string): Promise<AxiosResponse<ItemType>> => {
+const putItemtype = (id: number, values: any, token: string): Promise<AxiosResponse<ItemType>> => {
     return instance.put(`itemType/${id}`, values, {
         headers: {
             'Authorization': `Bearer ${token}`,

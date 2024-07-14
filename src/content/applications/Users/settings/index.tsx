@@ -99,7 +99,7 @@ function ManagementUserSettings() {
               </Grid>
               <Grid item xs={12}>
                 {/* {currentTab === 'activity' && <ActivityTab />} */}
-                {currentTab === 'edit_profile' && <EditProfileTab />}
+                {currentTab === 'edit_profile' && <EditProfileTab user={user} accessToken={accessToken} />}
                 {/* {currentTab === 'notifications' && <NotificationsTab />} */}
                 {currentTab === 'security' && <SecurityTab user={user} accessToken={accessToken} />}
               </Grid>

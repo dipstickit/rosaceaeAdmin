@@ -21,10 +21,10 @@ import { toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
 
 function UpdateItemType() {
-  let accessToken: string = useSelector((state: any) => state.auth.userToken) !== null ? 
-  useSelector((state: any) => state.auth.userToken) : localStorage.getItem("userToken")
+  let accessToken: string = useSelector((state: any) => state.auth.userToken) !== null ?
+    useSelector((state: any) => state.auth.userToken) : localStorage.getItem("userToken")
   console.log(accessToken)
-  
+
   let navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
@@ -62,7 +62,7 @@ function UpdateItemType() {
   });
 
   const initialValues: any = {
-    itemTypeName: '',
+    itemTypeName: newItem !== null ? newItem.itemTypeName : '',
   };
 
   useEffect(() => {
@@ -77,9 +77,12 @@ function UpdateItemType() {
   ) => {
     setLoading(true);
     setServerError(null);
-
+    console.log(values)
+    const data = {
+      name: values.itemTypeName
+    }
     try {
-      const response = await ItemTypeService.putItemtype(parseInt(id), values, accessToken);
+      const response = await ItemTypeService.putItemtype(parseInt(id), data, accessToken);
       console.log(response.data);
       toast.success('ItemType updated successfully', {
         autoClose: 3000,
@@ -101,8 +104,8 @@ function UpdateItemType() {
       } else {
         setServerError(
           error.response?.data?.error ||
-            error.message ||
-            'An unexpected error occurred'
+          error.message ||
+          'An unexpected error occurred'
         );
       }
     } finally {
@@ -125,6 +128,7 @@ function UpdateItemType() {
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
+      enableReinitialize
     >
       {({ isSubmitting }) => (
         <Form>
