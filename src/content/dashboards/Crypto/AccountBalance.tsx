@@ -23,6 +23,7 @@ import type { ApexOptions } from 'apexcharts';
 import { FC, useState } from 'react';
 import { Send } from '@mui/icons-material';
 import { ChartSeries } from '.';
+import { User } from 'src/types/user.type';
 
 const AvatarSuccess = styled(Avatar)(
   ({ theme }) => `
@@ -69,6 +70,7 @@ interface AccountBalanceProp {
   accountBalance: number
   month: any
   year: any
+  user: User
   setMonth: (data: number) => void
   setYear: (data: number) => void
   fetchAccountBalance: () => void
@@ -79,7 +81,8 @@ const AccountBalance: FC<AccountBalanceProp> = ({
   monthArr, yearArr, colorArr,
   accountBalance, month, year,
   setMonth, setYear,
-  fetchAccountBalance
+  fetchAccountBalance,
+  user
 }) => {
   const theme = useTheme();
 
@@ -176,7 +179,7 @@ const AccountBalance: FC<AccountBalanceProp> = ({
               }}
               variant="h3"
             >
-              Account Balance
+              {user.role === 'ADMIN' ? 'Price Order all Shop' : 'Account Balance'}
             </Typography>
             <Box sx={{ pb: 2 }} style={{ display: 'flex' }}>
               <Typography
@@ -221,6 +224,21 @@ const AccountBalance: FC<AccountBalanceProp> = ({
             <Box>
               <Typography variant="h1" gutterBottom>
                 {accountBalance} ₫
+              </Typography>
+            </Box>
+            <ListItemText
+              sx={{ pb: 1, mt: 3 }}
+              primaryTypographyProps={{ variant: 'h3', gutterBottom: true }}
+              secondaryTypographyProps={{
+                variant: 'subtitle2',
+                lineHeight: 1
+              }}
+              primary={user.role === 'ADMIN' ? 'Revenue' : null}
+              secondary='Revenue = Total revenue from order of all shop x 3%'
+            />
+            <Box>
+              <Typography variant="h1" gutterBottom>
+                {accountBalance - (accountBalance * 3 / 100)} ₫
               </Typography>
             </Box>
           </Box>

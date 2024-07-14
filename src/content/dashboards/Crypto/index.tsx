@@ -340,43 +340,47 @@ function DashboardCrypto() {
           alignItems="stretch"
           spacing={4}
         >
-          <Grid item xs={12}>
-            <AccountBalance
-              chartSeries={chartSeries}
-              percentage={percentage}
-              statusLabel={statusLabel}
-              monthArr={monthArr}
-              yearArr={yearArr}
-              colorArr={colorArr}
-              accountBalance={accountBalance}
-              month={month}
-              year={year}
-              setMonth={setMonth}
-              setYear={setYear}
-              fetchAccountBalance={fetchAccountBalance}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <WatchList
-              monthArr={monthArr}
-              yearArr={yearArr}
-              accountBalance={accountBalance}
-              month={month}
-              year={year}
-              setMonth={setMonth}
-              setYear={setYear}
-              dayList={dayList}
-              revenueList={revenue}
-              today={today}
-              fetchAccountBalance={fetchAccountBalance}
-              fetchChart={fetchChart}
-              orderList={orderList}
-              completedBookingList={completedBookingList}
-              completedBookingRevenueList={completedBookingRevenueList}
-              totalOrder={totalOrder}
-              totalCompletedBooking={totalCompletedBookings}
-            />
-          </Grid>
+          {userInfo !== null ? <>
+            <Grid item xs={12}>
+              <AccountBalance
+                chartSeries={chartSeries}
+                percentage={percentage}
+                statusLabel={statusLabel}
+                monthArr={monthArr}
+                yearArr={yearArr}
+                colorArr={colorArr}
+                accountBalance={accountBalance}
+                month={month}
+                year={year}
+                user={userInfo}
+                setMonth={setMonth}
+                setYear={setYear}
+                fetchAccountBalance={fetchAccountBalance}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <WatchList
+                monthArr={monthArr}
+                yearArr={yearArr}
+                accountBalance={accountBalance}
+                month={month}
+                year={year}
+                setMonth={setMonth}
+                setYear={setYear}
+                dayList={dayList}
+                revenueList={revenue}
+                today={today}
+                fetchAccountBalance={fetchAccountBalance}
+                fetchChart={fetchChart}
+                orderList={orderList}
+                completedBookingList={completedBookingList}
+                completedBookingRevenueList={completedBookingRevenueList}
+                totalOrder={totalOrder}
+                totalCompletedBooking={totalCompletedBookings}
+              />
+            </Grid>
+          </> : null
+          }
         </Grid>
       </Container>
       <Footer />
