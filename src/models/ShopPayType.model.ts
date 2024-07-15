@@ -1,5 +1,6 @@
 export interface ShopPayType {
   userId: number;
+  shopPayId: number;
   email: string;
   accountName: string;
   bankName: string;

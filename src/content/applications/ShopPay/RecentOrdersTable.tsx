@@ -103,8 +103,8 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({
     setLimit(parseInt(event.target.value));
   };
 
-  const handleOpenDialog = (userId: number) => {
-    setSelectedUserId(userId);
+  const handleOpenDialog = (shopPayId: number) => {
+    setSelectedUserId(shopPayId);
     setDialogOpen(true);
   };
 
@@ -121,7 +121,9 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({
           await ShopPayService.confirmPayment(selectedUserId, accessToken);
           setItems((prevItems) =>
             prevItems.map((item) =>
-              item.userId === selectedUserId ? { ...item, status: true } : item
+              item.shopPayId === selectedUserId
+                ? { ...item, status: true }
+                : item
             )
           );
           toast.success('Payment confirmation successful');
@@ -213,7 +215,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({
                       <Button
                         variant="contained"
                         color="primary"
-                        onClick={() => handleOpenDialog(user.userId)}
+                        onClick={() => handleOpenDialog(user.shopPayId)}
                       >
                         Confirm Payment
                       </Button>
