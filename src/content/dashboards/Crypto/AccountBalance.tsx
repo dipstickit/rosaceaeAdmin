@@ -240,7 +240,7 @@ const AccountBalance: FC<AccountBalanceProp> = ({
                 />
                 <Box>
                   <Typography variant="h1" gutterBottom>
-                    {accountBalance - (accountBalance * 3 / 100)} ₫
+                    {accountBalance * 3 / 100} ₫
                   </Typography>
                 </Box>
               </>

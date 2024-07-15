@@ -51,6 +51,15 @@ const getTotalPrice = (id: number, month: number, year: number, token: string): 
     });
 };
 
+const getTotalPriceBooking = (id: number, month: number, year: number, token: string): Promise<AxiosResponse<any>> => {
+    return instance.get(`order/total-price-for-shop2?userId=${id}&month=${month}&year=${year}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            crossDomain: true
+        }
+    });
+};
+
 const getRevenueEachDay = (id: number, month: number, year: number, token: string): Promise<AxiosResponse<DailyPriceForShopResponse[]>> => {
     return instance.get(`order/daily-price-for-shop?userId=${id}&month=${month}&year=${year}`, {
         headers: {
@@ -140,5 +149,6 @@ export default {
     getCompletedBookings,
     getRevenueCompletedBookings,
     getCompletedBookingsAdmin,
-    getRevenueCompletedBookingsAdmin
+    getRevenueCompletedBookingsAdmin,
+    getTotalPriceBooking
 };

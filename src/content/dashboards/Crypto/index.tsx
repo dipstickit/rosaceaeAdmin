@@ -41,6 +41,7 @@ function DashboardCrypto() {
   const [completedBookingList, setCompletedBookingList] = useState<number[]>()
   const [completedBookingRevenueList, setCompletedBookingRevenueList] = useState<number[]>()
   const [accountBalance, setAccountBalance] = useState<number>(0);
+  const [revenueBooking, setRevenueBooking] = useState<number>(0)
   const [monthArr, setMonthArr] = useState<number[]>([
     1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12
   ]);
@@ -93,6 +94,7 @@ function DashboardCrypto() {
       let response_3 = null;
       let response_4 = null
       let response_5 = null
+      let response_6 = null
       response =
         userInfo.role === 'ADMIN'
           ? await OrderDetailService.getRevenueEachDayAdmin(
@@ -147,13 +149,14 @@ function DashboardCrypto() {
         await OrderDetailService.getRevenueCompletedBookingsAdmin(today.getMonth() + 1, today.getFullYear(), accessToken)
         :
         await OrderDetailService.getRevenueCompletedBookings(userInfo.usersID, today.getMonth() + 1, today.getFullYear(), accessToken)
-
+      response_6 = await OrderDetailService.getTotalPriceBooking(userInfo.usersID, today.getMonth() + 1, today.getFullYear(), accessToken)
       console.log('Response data:', response.data);
       console.log('Response_1 data:', response_1.data);
       console.log('Response_2 data:', response_2.data);
       console.log('Response_3 data:', response_3.data);
       console.log("Response_4 data:", response_4.data)
       console.log("Response_5 data:", response_5.data)
+      console.log("Response_6 data:", response_6.data)
       const transformedData: any = Object.entries(response_2.data).map(
         ([name, value]) => ({
           name,
@@ -197,6 +200,7 @@ function DashboardCrypto() {
       );
       setTotalOrder(totalOrder);
       setTotalCompletedBookings(totalCompletedBookings)
+      setRevenueBooking(response_6.data['totalPriceForShop'])
     } catch (error) {
       console.error('Error fetching items:', (error as Error).message);
     }
@@ -363,11 +367,13 @@ function DashboardCrypto() {
                 monthArr={monthArr}
                 yearArr={yearArr}
                 accountBalance={accountBalance}
+                revenueBooking={revenueBooking}
                 month={month}
                 year={year}
                 setMonth={setMonth}
                 setYear={setYear}
                 dayList={dayList}
+                user={userInfo}
                 revenueList={revenue}
                 today={today}
                 fetchAccountBalance={fetchAccountBalance}

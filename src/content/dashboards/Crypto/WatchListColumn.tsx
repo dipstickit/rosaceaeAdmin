@@ -43,7 +43,7 @@ const AvatarWrapper = styled(Avatar)(
 );
 
 const WatchListColumn: FC<WatchListColumnProp> = ({ dayList, revenueList,
-  orderList, totalOrder, totalCompletedBooking,
+  orderList, totalOrder, totalCompletedBooking, revenueBooking, user,
   month, revenueMonthly, completedBookingList, completedBookingRevenueList
 }) => {
   const theme = useTheme();
@@ -429,7 +429,7 @@ const WatchListColumn: FC<WatchListColumnProp> = ({ dayList, revenueList,
                     mb: 1
                   }}
                 >
-                  {revenueMonthly} ₫
+                  {user.role === 'ADMIN' ? revenueMonthly * 3 / 100 : revenueMonthly} ₫
                 </Typography>
               </Box>
             </Box>
@@ -529,7 +529,7 @@ const WatchListColumn: FC<WatchListColumnProp> = ({ dayList, revenueList,
                     mb: 1
                   }}
                 >
-                  -1000 ₫
+                  {revenueBooking} ₫
                 </Typography>
               </Box>
             </Box>

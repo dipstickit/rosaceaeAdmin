@@ -17,6 +17,7 @@ import TableRowsTwoToneIcon from '@mui/icons-material/TableRowsTwoTone';
 import WatchListColumn from './WatchListColumn';
 import WatchListRow from './WatchListRow';
 import { Send } from '@mui/icons-material';
+import { User } from 'src/types/user.type';
 
 
 const EmptyResultsWrapper = styled('img')(
@@ -31,6 +32,7 @@ interface WatchListProp {
   monthArr: number[]
   yearArr: number[]
   accountBalance: number
+  revenueBooking: number
   month: any
   year: any
   dayList: string[]
@@ -41,6 +43,7 @@ interface WatchListProp {
   today: Date
   totalOrder: number
   totalCompletedBooking: number
+  user: User
   setMonth: (data: number) => void
   setYear: (data: number) => void
   fetchAccountBalance: () => void
@@ -55,7 +58,9 @@ export interface WatchListColumnProp {
   completedBookingRevenueList: number[]
   month: number
   year: number
+  user: User
   revenueMonthly: number
+  revenueBooking: number
   totalOrder: number
   totalCompletedBooking: number
 }
@@ -76,7 +81,7 @@ export interface WatchListRowProp {
 
 const WatchList: FC<WatchListProp> = ({
   monthArr, yearArr, accountBalance, month, year, dayList, revenueList,
-  setMonth, setYear, fetchChart, today, totalOrder,
+  setMonth, setYear, fetchChart, today, totalOrder, revenueBooking, user,
   orderList, completedBookingList, completedBookingRevenueList, totalCompletedBooking
 }) => {
   const [tabs, setTab] = useState<string | null>('watch_list_columns');
@@ -172,7 +177,9 @@ const WatchList: FC<WatchListProp> = ({
         month={today.getMonth() + 1}
         year={today.getFullYear()}
         revenueMonthly={accountBalance}
+        revenueBooking={revenueBooking}
         orderList={orderList}
+        user={user}
         completedBookingList={completedBookingList}
         completedBookingRevenueList={completedBookingRevenueList}
         totalOrder={totalOrder}
