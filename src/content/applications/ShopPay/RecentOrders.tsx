@@ -59,13 +59,18 @@ const RecentOrders: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [items, setItems] = useState<ShopPayType[]>([]);
   const [month, setMonth] = useState<number>(7);
+  const [year, setYear] = useState<number>(2024);
 
   const handleMonthChange = (event: SelectChangeEvent<number>) => {
     setMonth(event.target.value as number);
   };
 
+  const handleYearChange = (event: SelectChangeEvent<number>) => {
+    setYear(event.target.value as number);
+  };
+
   const fetchItem = async () => {
-    const defaultParams = { month: month, year: 2024, page: 0, int: 10 };
+    const defaultParams = { month: month, year: year, page: 0, int: 10 };
     try {
       const response = await ShopPayService.getShopPay(
         defaultParams,
@@ -91,12 +96,17 @@ const RecentOrders: React.FC = () => {
 
   useEffect(() => {
     fetchItem();
-  }, [month]);
+  }, [month, year]);
 
   return (
     <Card>
       <Box
-        sx={{ display: 'flex', justifyContent: 'flex-end', padding: '16px' }}
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          padding: '16px',
+          gap: '16px'
+        }}
       >
         <FormControl size="small" sx={{ minWidth: 120 }}>
           <InputLabel id="month-select-label">Month</InputLabel>
@@ -114,6 +124,22 @@ const RecentOrders: React.FC = () => {
             ))}
           </Select>
         </FormControl>
+        <FormControl size="small" sx={{ minWidth: 120 }}>
+          <InputLabel id="year-select-label">Year</InputLabel>
+          <Select
+            labelId="year-select-label"
+            id="year-select"
+            value={year}
+            label="Year"
+            onChange={handleYearChange}
+          >
+            {Array.from({ length: 5 }, (_, i) => (
+              <MenuItem key={2017 + i} value={2020 + i}>
+                {2020 + i}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </Box>
       {error ? (
         <Typography variant="h6" align="center" color="error">
@@ -123,7 +149,7 @@ const RecentOrders: React.FC = () => {
         <Container sx={{ textAlign: 'center', py: 5 }}>
           <SentimentDissatisfiedIcon sx={{ fontSize: 40, color: 'grey.500' }} />
           <Typography variant="h6" color="textSecondary">
-            Không có dữ liệu
+            No data available
           </Typography>
         </Container>
       ) : (
