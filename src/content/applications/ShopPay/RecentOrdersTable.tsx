@@ -27,6 +27,7 @@ import { ShopPayType } from 'src/models/ShopPayType.model';
 import { useSelector } from 'react-redux';
 import numeral from 'numeral';
 import ShopPayService from '../../../api/ShopPay.service';
+import { toast } from 'react-toastify';
 
 interface RecentOrdersTableProps {
   className?: string;
@@ -123,18 +124,20 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({
               item.userId === selectedUserId ? { ...item, status: true } : item
             )
           );
-          setSnackbarMessage('Payment confirmation successful');
+          toast.success('Payment confirmation successful');
           setSnackbarSeverity('success');
         } catch (error) {
           console.error('Error confirming payment:', error);
-          setSnackbarMessage('You can only confirm at the end of the month');
+          const errorMessage =
+            error.response?.data?.message || 'An error occurred';
+          toast.error(errorMessage);
           setSnackbarSeverity('error');
         } finally {
           setSnackbarOpen(true);
           handleCloseDialog();
           setLoading(false);
         }
-      }, 3000);
+      }, 1000);
     }
   };
 
