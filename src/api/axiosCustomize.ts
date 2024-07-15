@@ -9,8 +9,8 @@ import { AuthData } from '../types/authData.type';
 import { ResponseSuccessful } from '../types/response.type';
 
 const instance: AxiosInstance = axios.create({
-  // baseURL: 'https://joint-socially-pipefish.ngrok-free.app/api/v1/',
-  baseURL: 'http://localhost:8080/api/v1/',
+  baseURL: 'https://joint-socially-pipefish.ngrok-free.app/api/v1/',
+  // baseURL: 'http://localhost:8080/api/v1/',
   withCredentials: false,
   headers: {
     'Access-Control-Allow-Origin': '*',
