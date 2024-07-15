@@ -24,11 +24,10 @@ import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
 import AccountTreeTwoToneIcon from '@mui/icons-material/AccountTreeTwoTone';
 import { useAppDispatch } from 'src/redux/store';
 import { useSelector } from 'react-redux';
-import jwt_decode from "jwt-decode";
+import jwt_decode from 'jwt-decode';
 import { setUser } from '../../../../redux/slices/auth.slice';
 import UserService from '../../../../api/User.services';
 import { logoutAPI } from 'src/redux/actions/auth.actions';
-
 
 const UserBoxButton = styled(Button)(
   ({ theme }) => `
@@ -68,28 +67,34 @@ const UserBoxDescription = styled(Typography)(
 function HeaderUserbox() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const accessToken = useSelector((state: any) => state.auth.userToken) || localStorage.getItem("userToken");
-  let user = useSelector((state: any) => state.auth.userInfo)
-  console.log(user)
-  console.log(accessToken)
+  const accessToken =
+    useSelector((state: any) => state.auth.userToken) ||
+    localStorage.getItem('userToken');
+  let user = useSelector((state: any) => state.auth.userInfo);
+  console.log(user);
+  console.log(accessToken);
 
   const getUserByEmail = async () => {
     var decoded = jwt_decode(accessToken);
-    console.log(decoded)
-    const response = await UserService.getUserByEmail(decoded["sub"], accessToken)
+    console.log(decoded);
+    const response = await UserService.getUserByEmail(
+      decoded['sub'],
+      accessToken
+    );
     if (response.status === 403 || response.status === 401) {
       localStorage.removeItem('userToken');
-      navigate('/login')
-      return
+
+      navigate('/login');
+      return;
     }
-    user = response.data['userInfo']
-    console.log(user)
+    user = response.data['userInfo'];
+    console.log(user);
     dispatch(setUser(user));
-  }
+  };
 
   if (user === null) {
-    console.log("user is null")
-    getUserByEmail()
+    console.log('user is null');
+    getUserByEmail();
   }
 
   const ref = useRef<any>(null);
@@ -106,17 +111,28 @@ function HeaderUserbox() {
   const handleLogout = async () => {
     localStorage.removeItem('userInfo');
     localStorage.removeItem('userToken');
-    navigate('/login')
-  }
+    localStorage.removeItem('usersID');
+    localStorage.removeItem('user');
+    navigate('/login');
+  };
 
   return (
     <>
       <UserBoxButton color="secondary" ref={ref} onClick={handleOpen}>
-        <Avatar variant="rounded" alt={user !== null ? user.accountName : 'nigga'}
-          src={user !== null ? user.coverImages : 'https://i.ytimg.com/vi/dMDyVBM1Sms/maxresdefault.jpg'} />
+        <Avatar
+          variant="rounded"
+          alt={user !== null ? user.accountName : 'nigga'}
+          src={
+            user !== null
+              ? user.coverImages
+              : 'https://i.ytimg.com/vi/dMDyVBM1Sms/maxresdefault.jpg'
+          }
+        />
         <Hidden mdDown>
           <UserBoxText>
-            <UserBoxLabel variant="body1">{user !== null ? user.accountName : 'nigga'}</UserBoxLabel>
+            <UserBoxLabel variant="body1">
+              {user !== null ? user.accountName : 'nigga'}
+            </UserBoxLabel>
             <UserBoxDescription variant="body2">
               {user !== null ? user.role : 'lmao'}
             </UserBoxDescription>
@@ -140,10 +156,19 @@ function HeaderUserbox() {
         }}
       >
         <MenuUserBox sx={{ minWidth: 210 }} display="flex">
-          <Avatar variant="rounded" alt={user !== null ? user.accountName : 'nigga'}
-            src={user !== null ? user.coverImages : 'https://i.ytimg.com/vi/dMDyVBM1Sms/maxresdefault.jpg'} />
+          <Avatar
+            variant="rounded"
+            alt={user !== null ? user.accountName : 'nigga'}
+            src={
+              user !== null
+                ? user.coverImages
+                : 'https://i.ytimg.com/vi/dMDyVBM1Sms/maxresdefault.jpg'
+            }
+          />
           <UserBoxText>
-            <UserBoxLabel variant="body1">{user !== null ? user.accountName : 'nigga'}</UserBoxLabel>
+            <UserBoxLabel variant="body1">
+              {user !== null ? user.accountName : 'nigga'}
+            </UserBoxLabel>
             <UserBoxDescription variant="body2">
               {user !== null ? user.role : 'lmao'}
             </UserBoxDescription>
@@ -159,20 +184,21 @@ function HeaderUserbox() {
             <InboxTwoToneIcon fontSize="small" />
             <ListItemText primary="Messenger" />
           </ListItem>
-          <ListItem
-            to="/management/profile/settings"
-            component={NavLink}
-          >
+          <ListItem to="/management/profile/settings" component={NavLink}>
             <AccountTreeTwoToneIcon fontSize="small" />
             <ListItemText primary="Account Settings" />
           </ListItem>
         </List>
         <Divider />
         <Box sx={{ m: 1 }}>
-          <Button color="primary" fullWidth onClick={() => {
-            handleLogout()
-            console.log("logout")
-          }}>
+          <Button
+            color="primary"
+            fullWidth
+            onClick={() => {
+              handleLogout();
+              console.log('logout');
+            }}
+          >
             <LockOpenTwoToneIcon sx={{ mr: 1 }} />
             Sign out
           </Button>

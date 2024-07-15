@@ -14,13 +14,15 @@ import CreateItemType from './content/applications/ItemType/CreateItemType';
 import UpdateCategory from './content/applications/Category/UpdateCategory';
 import CreateCategory from './content/applications/Category/CreateCategory';
 import CreateNewShop from './content/applications/Users/CreateNewShop';
+import BankAccountsList from './content/applications/Users/settings/BankAccountsList';
+import EditBankAccount from './content/applications/Users/settings/EditBankAccount';
 
 const Loader = (Component) => (props) =>
-(
-  <Suspense fallback={<SuspenseLoader />}>
-    <Component {...props} />
-  </Suspense>
-);
+  (
+    <Suspense fallback={<SuspenseLoader />}>
+      <Component {...props} />
+    </Suspense>
+  );
 
 // Pages
 
@@ -48,15 +50,12 @@ const ItemType = Loader(
 const Category = Loader(
   lazy(() => import('src/content/applications/Category'))
 );
-const Users = Loader(
-  lazy(() => import('src/content/applications/Users'))
-);
+const Users = Loader(lazy(() => import('src/content/applications/Users')));
 const OrderDetailForShop = Loader(
   lazy(() => import('src/content/applications/OrderDetail'))
-)
-const Booking = Loader(
-  lazy(() => import('src/content/applications/Booking'))
-)
+);
+const Booking = Loader(lazy(() => import('src/content/applications/Booking')));
+const ShopPay = Loader(lazy(() => import('src/content/applications/ShopPay')));
 
 // Status
 
@@ -207,10 +206,13 @@ const routes: RouteObject[] = [
         element: <Booking />
       },
       {
+        path: 'shopPay',
+        element: <ShopPay />
+      },
+      {
         path: 'user/createNewShop',
         element: <CreateNewShop />
       },
-
 
       {
         path: 'profile',
@@ -226,6 +228,14 @@ const routes: RouteObject[] = [
           {
             path: 'settings',
             element: <UserSettings />
+          },
+          {
+            path: 'bank-accounts',
+            element: <BankAccountsList />
+          },
+          {
+            path: 'bank-accounts/edit/:bankId',
+            element: <EditBankAccount />
           }
         ]
       }
