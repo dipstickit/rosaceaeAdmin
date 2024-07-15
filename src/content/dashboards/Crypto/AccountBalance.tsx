@@ -68,6 +68,7 @@ interface AccountBalanceProp {
   yearArr: number[]
   colorArr: string[]
   accountBalance: number
+  revenueBooking: number
   month: any
   year: any
   user: User
@@ -78,7 +79,7 @@ interface AccountBalanceProp {
 
 const AccountBalance: FC<AccountBalanceProp> = ({
   chartSeries, percentage, statusLabel,
-  monthArr, yearArr, colorArr,
+  monthArr, yearArr, colorArr, revenueBooking,
   accountBalance, month, year,
   setMonth, setYear,
   fetchAccountBalance,
@@ -226,26 +227,21 @@ const AccountBalance: FC<AccountBalanceProp> = ({
                 {accountBalance} ₫
               </Typography>
             </Box>
-            {user.role === 'ADMIN' ?
-              <>
-                <ListItemText
-                  sx={{ pb: 1, mt: 3 }}
-                  primaryTypographyProps={{ variant: 'h3', gutterBottom: true }}
-                  secondaryTypographyProps={{
-                    variant: 'subtitle2',
-                    lineHeight: 1
-                  }}
-                  primary={user.role === 'ADMIN' ? 'Revenue' : null}
-                  secondary='Revenue = Total revenue from order of all shop x 3%'
-                />
-                <Box>
-                  <Typography variant="h1" gutterBottom>
-                    {accountBalance * 3 / 100} ₫
-                  </Typography>
-                </Box>
-              </>
-              : null
-            }
+            <ListItemText
+              sx={{ pb: 1, mt: 3 }}
+              primaryTypographyProps={{ variant: 'h3', gutterBottom: true }}
+              secondaryTypographyProps={{
+                variant: 'subtitle2',
+                lineHeight: 1
+              }}
+              primary={user.role === 'ADMIN' ? 'Revenue' : 'Booking Revenue'}
+              secondary={user.role === 'ADMIN' ? 'Revenue = Total revenue from order of all shop x 3%' : null}
+            />
+            <Box>
+              <Typography variant="h1" gutterBottom>
+                {user.role === 'ADMIN' ? accountBalance * 3 / 100 : revenueBooking} ₫
+              </Typography>
+            </Box>
           </Box>
         </Grid>
         <Grid

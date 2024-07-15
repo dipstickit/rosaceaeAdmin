@@ -49,7 +49,7 @@ const AvatarWrapper = styled(Avatar)(
 );
 
 const WatchListRow: FC<WatchListRowProp> = ({ dayList, revenueList,
-  orderList, totalOrder, totalCompletedBooking,
+  orderList, totalOrder, totalCompletedBooking, revenueBooking,
   month, revenueMonthly, completedBookingList, completedBookingRevenueList
 }) => {
   const theme = useTheme();
@@ -461,7 +461,7 @@ const WatchListRow: FC<WatchListRowProp> = ({ dayList, revenueList,
                     pr: 1
                   }}
                 >
-                  -1000 ₫
+                  {revenueBooking} ₫
                 </Typography>
               </Box>
             </Box>

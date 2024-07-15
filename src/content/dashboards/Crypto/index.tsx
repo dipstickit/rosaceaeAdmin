@@ -184,6 +184,10 @@ function DashboardCrypto() {
         response_5.data.map((item: DailyPriceForAdminResponse) => item.totalPriceForAdmin)
         :
         response_5.data.map((item: DailyPriceForShopResponse) => item.totalPriceForShop)
+      const revenueBooking = userInfo.role === 'ADMIN' ?
+        completedBookingRevenueList.reduce((acc, num) => acc + num, 0)
+        :
+        response_6.data['totalPriceForShop']
       setChartSeries(transformedData);
       setPercentage(Object.values(response_2.data));
       setStatusLabel(Object.keys(response_2.data));
@@ -200,7 +204,7 @@ function DashboardCrypto() {
       );
       setTotalOrder(totalOrder);
       setTotalCompletedBookings(totalCompletedBookings)
-      setRevenueBooking(response_6.data['totalPriceForShop'])
+      setRevenueBooking(revenueBooking)
     } catch (error) {
       console.error('Error fetching items:', (error as Error).message);
     }
@@ -354,6 +358,7 @@ function DashboardCrypto() {
                 yearArr={yearArr}
                 colorArr={colorArr}
                 accountBalance={accountBalance}
+                revenueBooking={revenueBooking}
                 month={month}
                 year={year}
                 user={userInfo}

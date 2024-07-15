@@ -95,7 +95,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items }) => {
 
   const completeBooking = async (id: number) => {
     setLoading(true);
-    const res = await BookingService.completeBooking(accessToken, id).then(() => {
+    const res = await BookingService.completeBooking(accessToken, id).then(res => {
       setLoading(false);
       console.log(res)
       window.location.href = '/management/booking'
