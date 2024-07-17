@@ -176,6 +176,8 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items, selectedItemType
                     <TableCell>Quantity</TableCell>
                     <TableCell>Price</TableCell>
                     <TableCell>Order By</TableCell>
+                    <TableCell>Customer Address</TableCell>
+                    <TableCell>Phone Number</TableCell>
                     <TableCell>Order Date</TableCell>
                     <TableCell>Order Status</TableCell>
                     {/* {
@@ -208,6 +210,8 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ items, selectedItemType
                         <TableCell>{orderDetail.quantity}</TableCell>
                         <TableCell>{numeral(orderDetail.price).format('0,0')} ₫</TableCell>
                         <TableCell>{orderDetail.customerName}</TableCell>
+                        <TableCell>{orderDetail.customerAddress == null ? 'N/A' : orderDetail.customerAddress}</TableCell>
+                        <TableCell>{orderDetail.customerPhone}</TableCell>
                         <TableCell>{orderDetail.orderDate}</TableCell>
                         {
                           orderDetail.itemTypeId === 2 ?

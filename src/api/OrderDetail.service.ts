@@ -33,6 +33,19 @@ const getOrderDetailByShop = (params: GetOrderDetailParams, token: string, shopI
     });
 };
 
+const getOrderDetailAdmin = (params: GetOrderDetailParams, token: string): Promise<AxiosResponse<OrderDetailResponse>> => {
+    const queryString = Object.entries(params)
+        .map(([key, value]) => value ? `${key}=${value}` : '')
+        .filter(Boolean)
+        .join('&');
+    return instance.get(`/order/details${queryString ? `?${queryString}` : ''}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            crossDomain: true
+        }
+    });
+};
+
 const getOrderDetailByOrderId = (id: number, token: string): Promise<AxiosResponse<OrderDetail>> => {
     return instance.get(`category/${id}`, {
         headers: {
@@ -150,5 +163,6 @@ export default {
     getRevenueCompletedBookings,
     getCompletedBookingsAdmin,
     getRevenueCompletedBookingsAdmin,
-    getTotalPriceBooking
+    getTotalPriceBooking,
+    getOrderDetailAdmin
 };

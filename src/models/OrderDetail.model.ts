@@ -5,6 +5,8 @@ export interface OrderDetail {
     itemId: number;
     itemName: number;
     customerName: string;
+    customerAddress: string;
+    customerPhone: string;
     itemTypeId: number;
     status: string;
     orderDate: string

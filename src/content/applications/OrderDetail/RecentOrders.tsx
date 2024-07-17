@@ -50,7 +50,7 @@ const RecentOrders: React.FC<RecentOrdersProps> = ({ selectedItemType }) => {
 
   const fetchItem = async () => {
     try {
-      const response = await OrderDetailService.getOrderDetailByShop({}, accessToken, user.usersID);
+      const response = user.role === 'ADMIN' ? await OrderDetailService.getOrderDetailAdmin({}, accessToken) : await OrderDetailService.getOrderDetailByShop({}, accessToken, user.usersID);
       console.log('Response data:', response.data);
       if (response.data.content) {
         setListItem(response.data.content.slice().reverse());

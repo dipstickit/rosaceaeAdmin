@@ -302,7 +302,7 @@ function SidebarMenu() {
                   : ""
               }
               {
-                user !== null && user.role == 'SHOP' ?
+                user !== null ?
                   <>
                     <ListItem component="div">
                       <Button
