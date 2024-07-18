@@ -302,19 +302,8 @@ function SidebarMenu() {
                   : ""
               }
               {
-                user !== null ?
+                user !== null && user.role === 'SHOP' ?
                   <>
-                    <ListItem component="div">
-                      <Button
-                        disableRipple
-                        component={RouterLink}
-                        onClick={closeSidebar}
-                        to="/management/order-for-shop"
-                        startIcon={<TableChartTwoToneIcon />}
-                      >
-                        Order
-                      </Button>
-                    </ListItem>
                     <ListItem component="div">
                       <Button
                         disableRipple
@@ -329,6 +318,17 @@ function SidebarMenu() {
                   </>
                   : ""
               }
+              <ListItem component="div">
+                <Button
+                  disableRipple
+                  component={RouterLink}
+                  onClick={closeSidebar}
+                  to="/management/order-for-shop"
+                  startIcon={<TableChartTwoToneIcon />}
+                >
+                  Order
+                </Button>
+              </ListItem>
             </List>
           </SubMenuWrapper>
         </List>
