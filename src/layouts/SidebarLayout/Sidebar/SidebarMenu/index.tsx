@@ -23,7 +23,7 @@ import CameraFrontTwoToneIcon from '@mui/icons-material/CameraFrontTwoTone';
 import DisplaySettingsTwoToneIcon from '@mui/icons-material/DisplaySettingsTwoTone';
 import { useSelector } from 'react-redux';
 import UserService from '../../../../api/User.services';
-import jwt_decode from "jwt-decode";
+import jwt_decode from 'jwt-decode';
 import { useAppDispatch } from 'src/redux/store';
 import { setUser } from '../../../../redux/slices/auth.slice';
 import { BookOnline, ListAltOutlined } from '@mui/icons-material';
@@ -174,35 +174,39 @@ function SidebarMenu() {
   const { closeSidebar } = useContext(SidebarContext);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const accessToken = useSelector((state: any) => state.auth.userToken) || localStorage.getItem("userToken");
-  let user = useSelector((state: any) => state.auth.userInfo)
-  console.log(user)
-  console.log(accessToken)
+  const accessToken =
+    useSelector((state: any) => state.auth.userToken) ||
+    localStorage.getItem('userToken');
+  let user = useSelector((state: any) => state.auth.userInfo);
+  console.log(user);
+  console.log(accessToken);
 
   useEffect(() => {
     if (user === null) {
-      getUserByEmail()
+      getUserByEmail();
     }
-  }, [])
+  }, []);
 
   const getUserByEmail = async () => {
     var decoded = jwt_decode(accessToken);
-    console.log(decoded)
-    const response = await UserService.getUserByEmail(decoded["sub"], accessToken)
+    console.log(decoded);
+    const response = await UserService.getUserByEmail(
+      decoded['sub'],
+      accessToken
+    );
     if (response.status === 403 || response.status === 401) {
       localStorage.removeItem('userToken');
-      navigate('/login')
-      return
+      navigate('/login');
+      return;
     }
-    user = response.data['userInfo']
-    console.log(user)
+    user = response.data['userInfo'];
+    console.log(user);
     dispatch(setUser(user));
-  }
+  };
 
   return (
     <>
       <MenuWrapper>
-
         <List
           component="div"
           subheader={
@@ -238,7 +242,6 @@ function SidebarMenu() {
             </List>
           </SubMenuWrapper>
         </List>
-
 
         <List
           component="div"
@@ -297,12 +300,23 @@ function SidebarMenu() {
                         User
                       </Button>
                     </ListItem>
+                    <ListItem component="div">
+                      <Button
+                        disableRipple
+                        component={RouterLink}
+                        onClick={closeSidebar}
+                        to="/management/shopPay"
+                        startIcon={<TableChartTwoToneIcon />}
+                      >
+                        Payment For Shop
+                      </Button>
+                    </ListItem>
                   </>
 
                   : ""
               }
               {
-                user !== null && user.role === 'SHOP' ?
+                user !== null && user.role == 'SHOP' ?
                   <>
                     <ListItem component="div">
                       <Button
@@ -367,68 +381,67 @@ function SidebarMenu() {
             </List>
           </SubMenuWrapper>
         </List>
-        {
-          user !== null && user.role == 'ADMIN' ?
-            <List
-              component="div"
-              subheader={
-                <ListSubheader component="div" disableSticky>
-                  Extra Pages
-                </ListSubheader>
-              }
-            >
-              <SubMenuWrapper>
-                <List component="div">
-                  <ListItem component="div">
-                    <Button
-                      disableRipple
-                      component={RouterLink}
-                      onClick={closeSidebar}
-                      to="/status/404"
-                      startIcon={<CheckBoxTwoToneIcon />}
-                    >
-                      Error 404
-                    </Button>
-                  </ListItem>
-                  <ListItem component="div">
-                    <Button
-                      disableRipple
-                      component={RouterLink}
-                      onClick={closeSidebar}
-                      to="/status/500"
-                      startIcon={<CameraFrontTwoToneIcon />}
-                    >
-                      Error 500
-                    </Button>
-                  </ListItem>
-                  <ListItem component="div">
-                    <Button
-                      disableRipple
-                      component={RouterLink}
-                      onClick={closeSidebar}
-                      to="/status/coming-soon"
-                      startIcon={<ChromeReaderModeTwoToneIcon />}
-                    >
-                      Coming Soon
-                    </Button>
-                  </ListItem>
-                  <ListItem component="div">
-                    <Button
-                      disableRipple
-                      component={RouterLink}
-                      onClick={closeSidebar}
-                      to="/status/maintenance"
-                      startIcon={<WorkspacePremiumTwoToneIcon />}
-                    >
-                      Maintenance
-                    </Button>
-                  </ListItem>
-                </List>
-              </SubMenuWrapper>
-            </List>
-
-            : ""
-        }
+        {user !== null && user.role == 'ADMIN' ? (
+          <List
+            component="div"
+            subheader={
+              <ListSubheader component="div" disableSticky>
+                Extra Pages
+              </ListSubheader>
+            }
+          >
+            <SubMenuWrapper>
+              <List component="div">
+                <ListItem component="div">
+                  <Button
+                    disableRipple
+                    component={RouterLink}
+                    onClick={closeSidebar}
+                    to="/status/404"
+                    startIcon={<CheckBoxTwoToneIcon />}
+                  >
+                    Error 404
+                  </Button>
+                </ListItem>
+                <ListItem component="div">
+                  <Button
+                    disableRipple
+                    component={RouterLink}
+                    onClick={closeSidebar}
+                    to="/status/500"
+                    startIcon={<CameraFrontTwoToneIcon />}
+                  >
+                    Error 500
+                  </Button>
+                </ListItem>
+                <ListItem component="div">
+                  <Button
+                    disableRipple
+                    component={RouterLink}
+                    onClick={closeSidebar}
+                    to="/status/coming-soon"
+                    startIcon={<ChromeReaderModeTwoToneIcon />}
+                  >
+                    Coming Soon
+                  </Button>
+                </ListItem>
+                <ListItem component="div">
+                  <Button
+                    disableRipple
+                    component={RouterLink}
+                    onClick={closeSidebar}
+                    to="/status/maintenance"
+                    startIcon={<WorkspacePremiumTwoToneIcon />}
+                  >
+                    Maintenance
+                  </Button>
+                </ListItem>
+              </List>
+            </SubMenuWrapper>
+          </List>
+        ) : (
+          ''
+        )}
       </MenuWrapper>
     </>
   );
