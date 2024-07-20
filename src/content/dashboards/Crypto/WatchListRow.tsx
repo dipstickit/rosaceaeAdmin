@@ -20,6 +20,7 @@ import TrendingUpTwoToneIcon from '@mui/icons-material/TrendingUpTwoTone';
 import TrendingFlatTwoToneIcon from '@mui/icons-material/TrendingFlatTwoTone';
 import { FC } from 'react';
 import { WatchListRowProp } from './WatchList';
+import numeral from 'numeral';
 
 const AvatarWrapper = styled(Avatar)(
   ({ theme }) => `
@@ -49,7 +50,7 @@ const AvatarWrapper = styled(Avatar)(
 );
 
 const WatchListRow: FC<WatchListRowProp> = ({ dayList, revenueList,
-  orderList, totalOrder, totalCompletedBooking, revenueBooking,
+  orderList, totalOrder, totalCompletedBooking, revenueBooking, user,
   month, revenueMonthly, completedBookingList, completedBookingRevenueList
 }) => {
   const theme = useTheme();
@@ -348,7 +349,7 @@ const WatchListRow: FC<WatchListRowProp> = ({ dayList, revenueList,
                     pr: 1
                   }}
                 >
-                  {revenueMonthly} ₫
+                  {user.role === 'ADMIN' ? numeral(revenueMonthly * 3 / 100).format('0,0') : numeral(revenueMonthly).format('0,0')} ₫
                 </Typography>
               </Box>
             </Box>
@@ -461,7 +462,7 @@ const WatchListRow: FC<WatchListRowProp> = ({ dayList, revenueList,
                     pr: 1
                   }}
                 >
-                  {revenueBooking} ₫
+                  {numeral(revenueBooking).format('0,0')} ₫
                 </Typography>
               </Box>
             </Box>

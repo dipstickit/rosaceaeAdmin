@@ -14,6 +14,7 @@ import Chart from 'react-apexcharts';
 import type { ApexOptions } from 'apexcharts';
 import { FC } from 'react';
 import { WatchListColumnProp } from './WatchList';
+import numeral from 'numeral';
 
 const AvatarWrapper = styled(Avatar)(
   ({ theme }) => `
@@ -429,7 +430,7 @@ const WatchListColumn: FC<WatchListColumnProp> = ({ dayList, revenueList,
                     mb: 1
                   }}
                 >
-                  {user.role === 'ADMIN' ? revenueMonthly * 3 / 100 : revenueMonthly} ₫
+                  {user.role === 'ADMIN' ? numeral(revenueMonthly * 3 / 100).format('0,0') : numeral(revenueMonthly).format('0,0')} ₫
                 </Typography>
               </Box>
             </Box>
@@ -529,7 +530,7 @@ const WatchListColumn: FC<WatchListColumnProp> = ({ dayList, revenueList,
                     mb: 1
                   }}
                 >
-                  {revenueBooking} ₫
+                  {numeral(revenueBooking).format('0,0')} ₫
                 </Typography>
               </Box>
             </Box>

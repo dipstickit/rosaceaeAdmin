@@ -24,6 +24,7 @@ import { FC, useState } from 'react';
 import { Send } from '@mui/icons-material';
 import { ChartSeries } from '.';
 import { User } from 'src/types/user.type';
+import numeral from 'numeral';
 
 const AvatarSuccess = styled(Avatar)(
   ({ theme }) => `
@@ -165,7 +166,6 @@ const AccountBalance: FC<AccountBalanceProp> = ({
     )
   })
 
-
   return (
     <Card>
       <Grid spacing={0} container>
@@ -224,7 +224,7 @@ const AccountBalance: FC<AccountBalanceProp> = ({
             </Box>
             <Box>
               <Typography variant="h1" gutterBottom>
-                {accountBalance} ₫
+                {numeral(accountBalance).format('0,0')} ₫
               </Typography>
             </Box>
             <ListItemText
@@ -239,7 +239,7 @@ const AccountBalance: FC<AccountBalanceProp> = ({
             />
             <Box>
               <Typography variant="h1" gutterBottom>
-                {user.role === 'ADMIN' ? accountBalance * 3 / 100 : revenueBooking} ₫
+                {user.role === 'ADMIN' ? numeral(accountBalance * 3 / 100).format('0,0') : numeral(revenueBooking).format('0,0')} ₫
               </Typography>
             </Box>
           </Box>

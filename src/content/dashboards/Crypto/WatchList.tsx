@@ -73,6 +73,7 @@ export interface WatchListRowProp {
   completedBookingRevenueList: number[]
   month: number
   year: number
+  user: User
   revenueMonthly: number
   revenueBooking: number
   totalOrder: number
@@ -194,6 +195,7 @@ const WatchList: FC<WatchListProp> = ({
         year={today.getFullYear()}
         revenueMonthly={accountBalance}
         revenueBooking={revenueBooking}
+        user={user}
         orderList={orderList}
         totalOrder={totalOrder}
         completedBookingList={completedBookingList}
